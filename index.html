@@ -175,89 +175,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="shell编程"><a href="#shell编程" class="headerlink" title="shell编程"></a>shell编程</h2><ul>
-<li>定义<strong>变量</strong>时，不使用<code>$</code>，等号两边不能有空格,使用变量时使用<code>$</code>。   </li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">例如：</div><div class="line">val='abc'   (正确)</div><div class="line">val = 'abc' (错误) </div><div class="line">echo $&#123;val&#125; (使用变量)</div></pre></td></tr></table></figure>
-<ul>
-<li><strong>字符串：</strong></li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">获取字符串长度:$&#123;#abc&#125;,结果返回3;截取字符串:$&#123;abc:1:2&#125;。</div><div class="line">例如：</div><div class="line">str='abcdefg'</div><div class="line">echo $&#123;str:1:2&#125;</div></pre></td></tr></table></figure>
-<blockquote>
-<p>结果返回：bc；意思是重二个字符开始，截取两个字符；这里是重0开始计算的。</p>
-</blockquote>
-<ul>
-<li><p><strong>数组：</strong>  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">定义数组：arr=(val1 val2 val3 ... valn) 或 arr[0]=val0</div><div class="line">使用数组元素：<span class="variable">$&#123;arr[0]&#125;</span>  </div><div class="line">输出数组元素：<span class="variable">$&#123;arr[*]&#125;</span> 或 <span class="variable">$&#123;arr[@]&#125;</span>  </div><div class="line">获取数组长度：<span class="variable">$&#123;#arr[*]&#125;</span> 或 <span class="variable">$&#123;#arr[@]&#125;</span></div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>运算符</strong>  </p>
-<blockquote>
-<p>计算数值时使用：<code>expr 表达式</code> 或 <code>$((表达式))</code>，如果使用 <code>expr</code> 时，乘法使用 <code>\*</code>，使用运算符时，使用<code>[]</code>,并且运算符两边都要有空格，例如：<code>if [ $a -eq $b ] then fi</code></p>
-</blockquote>
-</li>
-</ul>
-<h6 id="关系运算符"><a href="#关系运算符" class="headerlink" title="关系运算符"></a>关系运算符</h6><pre><code>-eq 检测两个数是都相等，相等返回 true  
--ne 检测两个数是都相等，不相等返回true  
--gt 大于号  
--lt 小于号  
--ge 大于等于
--le 小于等于
-</code></pre><h6 id="布尔运算符"><a href="#布尔运算符" class="headerlink" title="布尔运算符"></a>布尔运算符</h6><pre><code>!  非  
--o 或  
--a 与
-</code></pre><h6 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h6><pre><code>&amp;&amp; 逻辑的AND
-|| 逻辑的OR
-</code></pre><blockquote>
-<p>注意：使用逻辑运算符时，if语句需要使用<code>[[ 表达式 ]]</code>；  </p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">例如：</div><div class="line">a=10</div><div class="line">b=10</div><div class="line">if [[ $a -lt 100 &amp;&amp; $b -gt 100 ]]</div><div class="line">then</div><div class="line">	echo "返回 true"</div><div class="line">else</div><div class="line">	echo "返回 false"</div><div class="line">fi</div></pre></td></tr></table></figure>
-<h6 id="字符串运算符"><a href="#字符串运算符" class="headerlink" title="字符串运算符"></a>字符串运算符</h6><pre><code>=   检测两个字符串是否相等，相等返回true    例：[ $a = $b ]  
-!=  检测两个字符串是否相等，不相等返回true  例：[ $a != $b ]  
--z  检测字符串长度是否为0，为0返回true　　　例：[ -z $a ]  
--n  检测字符串长度是否为0，不为0返回true    例：[ -n $a ]  
-str 检测字符串是否为空，不为空返回true      例：[ $a ]  
-</code></pre><h6 id="文件测试运算符"><a href="#文件测试运算符" class="headerlink" title="文件测试运算符"></a>文件测试运算符</h6><blockquote>
-<p>$file 为文件路径</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[ -b $file ] 检测文件是否是块设备文件，是返回true  </div><div class="line">[ -c $file ] 检测文件是否是字符设备文件，如果是，则返回 true  </div><div class="line">[ -d $file ] 检测文件是否是目录，如果是，则返回 true  </div><div class="line">[ -f $file ] 检测文件是否是普通文件（既不是目录，也不是设备文件），如果是，则返回 true  </div><div class="line">[ -g $file ] 检测文件是否设置了 SGID 位，如果是，则返回 true  </div><div class="line">[ -k $file ] 检测文件是否设置了粘着位(Sticky Bit)，如果是，则返回 true  </div><div class="line">[ -p $file ] 检测文件是否是有名管道，如果是，则返回 true  </div><div class="line">[ -u $file ] 检测文件是否设置了 SUID 位，如果是，则返回 true  </div><div class="line">[ -r $file ] 检测文件是否可读，如果是，则返回 true  </div><div class="line">[ -w $file ] 检测文件是否可写，如果是，则返回 true  </div><div class="line">[ -x $file ] 检测文件是否可执行，如果是，则返回 true  </div><div class="line">[ -s $file ] 检测文件是否为空（文件大小是否大于0），不为空返回 true</div><div class="line">[ -e $file ] 检测文件（包括目录）是否存在，如果是，则返回 true</div></pre></td></tr></table></figure>
-<ul>
-<li><p><strong>test命令</strong><br><code>[]</code>作为基本运算符使用时，内部不能有空格  </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">例如：  </div><div class="line">a=5</div><div class="line">b=5</div><div class="line">res=$[a+b]</div><div class="line">echo $res # 结果为10</div></pre></td></tr></table></figure>
-</li>
-<li><p><strong>read</strong><br><code>read</code> 等待用户输入。  </p>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">例：</div><div class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></div><div class="line">read name</div><div class="line">echo "输入的值name等于 $&#123;name&#125;"</div></pre></td></tr></table></figure>
-<ul>
-<li><strong>流程控制</strong>  <h6 id="if语句："><a href="#if语句：" class="headerlink" title="if语句："></a>if语句：</h6></li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">if condition</div><div class="line">then</div><div class="line">	command</div><div class="line">fi</div><div class="line">写成一行：if [ $(ps -ef | grep -c "ssh") -gt 1 ]; then echo "true"; fi</div><div class="line"></div><div class="line">if else:</div><div class="line">if condition</div><div class="line">then</div><div class="line">	command1</div><div class="line">else</div><div class="line">	command2</div><div class="line">fi</div><div class="line"></div><div class="line">if else-if else:</div><div class="line">if condition1</div><div class="line">then</div><div class="line">	command1</div><div class="line">elif condition2</div><div class="line">then</div><div class="line">	command2</div><div class="line">else</div><div class="line">	command3</div><div class="line">fi</div></pre></td></tr></table></figure>
-<h6 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">for var in item1 item2 ... itemN</div><div class="line">do</div><div class="line">	command1</div><div class="line">	...</div><div class="line">	commandN</div><div class="line">done</div><div class="line"></div><div class="line">写成一行：for var in item1 ... itemN; do cmooand1;command2... done;</div></pre></td></tr></table></figure>
-<h6 id="while循环，与until循环用法相同（结果为真时退出循环）"><a href="#while循环，与until循环用法相同（结果为真时退出循环）" class="headerlink" title="while循环，与until循环用法相同（结果为真时退出循环）"></a>while循环，与until循环用法相同（结果为真时退出循环）</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">例：</div><div class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></div><div class="line">int=1</div><div class="line">while(( $int&lt;=5 ))</div><div class="line">do</div><div class="line">	echo $int</div><div class="line">	let "int++"</div><div class="line">done</div></pre></td></tr></table></figure>
-<blockquote>
-<p>使用了 <code>let</code> 命令，用于执行一个或多个表达式，变量计算中不需要加上 <code>$</code> 来表示变量。</p>
-</blockquote>
-<h6 id="case"><a href="#case" class="headerlink" title="case"></a>case</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">例：</div><div class="line">read aNum</div><div class="line">case $aNum in</div><div class="line">	1) echo '1'</div><div class="line">	;;  # 两个；表示break，跳出</div><div class="line">	2|3) echo '2'</div><div class="line">	;;</div><div class="line">	*) echo 'none'</div><div class="line">		break # 跳出所有循环，continue跳出当前循环</div><div class="line">	;;</div><div class="line">esac</div></pre></td></tr></table></figure>
-<ul>
-<li><strong>函数</strong>  <h6 id="定义函数"><a href="#定义函数" class="headerlink" title="定义函数"></a>定义函数</h6></li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[function] funcName[()]&#123;</div><div class="line">	command</div><div class="line">	[return n] # n为0-255之间的数字</div><div class="line">&#125;</div><div class="line"></div><div class="line">funcName  # 调用函数funcName</div></pre></td></tr></table></figure>
-<blockquote>
-<p>1.可以带function fun()定义，也可以直接fun()定义，不到任何参数<br>2.参数返回，可以显示的加：return返回，如果不加，将以最后一条命令运行结果，作为返回值。</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">例：</div><div class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></div><div class="line">function funcName()&#123;</div><div class="line">	echo 'this is a function!'</div><div class="line">&#125;</div><div class="line"><span class="meta">#</span><span class="bash"> 开始执行函数</span></div><div class="line">funcName</div><div class="line"><span class="meta">#</span><span class="bash"> 函数执行结束</span></div></pre></td></tr></table></figure>
-<h6 id="函数参数"><a href="#函数参数" class="headerlink" title="函数参数"></a>函数参数</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">例：</div><div class="line">funWithParam()&#123;</div><div class="line">	echo "第一个参数：$1"</div><div class="line">	echo "第二个参数：$2"</div><div class="line">	echo "第五个参数：$&#123;5&#125;"</div><div class="line">	echo "参数总个数：$#"</div><div class="line">	echo "作为字符串输出所有参数：$* !"</div><div class="line">&#125;</div><div class="line">funWidthParam 1 2 3 4 5 6 7  #调用函数传参</div></pre></td></tr></table></figure>
-<blockquote>
-<p>备注：<code>$#</code> 传递到脚本的参数个数<br><code>$*</code> 以一个单字符串显示所有向脚本传递的参数；<br><code>$$</code> 脚本运行的当前进程ID号；<br><code>$!</code> 后台运行的最优一个进程的ID号<br><code>$@</code> 与<code>$*</code>相同，但是使用时加引号，并在引号中返回每个参数；<br><code>$-</code> 显示<code>Shell</code>使用的当前选项，与<code>set</code>命令功能相同<br><code>$?</code> 显示最后命令的退出状态。<code>0</code>表示没有错误，其他任何值表明有错误。</p>
-</blockquote>
-<ul>
-<li><strong>Shell文件包含</strong><br>Shell包含外部脚本语法合适如下：</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">. filename    # 注意点号（.）和文件名中间有一个空格</div><div class="line">或</div><div class="line">source filename</div></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>注：</strong>被包含的文件不需要可执行权限</p>
-</blockquote>
-
+        <h2 id="shell编程"><a href="#shell编程" class="headerlink" title="shell编程"></a>shell编程</h2><p>总结一下shell编程的语法规则以及注意事项。<br>
+        
+          <a class="article-more-a" href="/2017/12/18/shell-学习笔记/#more">more >></a>
+        
       
 
       
@@ -280,73 +201,6 @@ str 检测字符串是否为空，不为空返回true      例：[ $a ]
 		</ul>
 	</div>
 
-      
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/12/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/12/hello-world/" class="archive-article-date">
-  	<time datetime="2017-10-12T09:27:07.248Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
       
 
       

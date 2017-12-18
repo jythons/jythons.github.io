@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://jythons.92kungfuboy.com">
   <title>shell 学习笔记 | Jythons&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="shell编程 定义变量时，不使用$，等号两边不能有空格,使用变量时使用$。     1234例如：val=&apos;abc&apos;   (正确)val = &apos;abc&apos; (错误) echo $&amp;#123;val&amp;#125; (使用变量)  字符串：  1234获取字符串长度:$&amp;#123;#abc&amp;#125;,结果返回3;截取字符串:$&amp;#123;abc:1:2&amp;#125;。例如：str=&apos;abcdefg&apos;ec">
+  <meta name="description" content="shell编程总结一下shell编程的语法规则以及注意事项。">
 <meta name="keywords" content="shell,学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="shell 学习笔记">
 <meta property="og:url" content="http://jythons.92kungfuboy.com/2017/12/18/shell-学习笔记/index.html">
 <meta property="og:site_name" content="Jythons&#39;s blog">
-<meta property="og:description" content="shell编程 定义变量时，不使用$，等号两边不能有空格,使用变量时使用$。     1234例如：val=&apos;abc&apos;   (正确)val = &apos;abc&apos; (错误) echo $&amp;#123;val&amp;#125; (使用变量)  字符串：  1234获取字符串长度:$&amp;#123;#abc&amp;#125;,结果返回3;截取字符串:$&amp;#123;abc:1:2&amp;#125;。例如：str=&apos;abcdefg&apos;ec">
+<meta property="og:description" content="shell编程总结一下shell编程的语法规则以及注意事项。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-12-18T03:36:35.437Z">
+<meta property="og:updated_time" content="2017-12-18T03:49:05.547Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="shell 学习笔记">
-<meta name="twitter:description" content="shell编程 定义变量时，不使用$，等号两边不能有空格,使用变量时使用$。     1234例如：val=&apos;abc&apos;   (正确)val = &apos;abc&apos; (错误) echo $&amp;#123;val&amp;#125; (使用变量)  字符串：  1234获取字符串长度:$&amp;#123;#abc&amp;#125;,结果返回3;截取字符串:$&amp;#123;abc:1:2&amp;#125;。例如：str=&apos;abcdefg&apos;ec">
+<meta name="twitter:description" content="shell编程总结一下shell编程的语法规则以及注意事项。">
   
     <link rel="alternative" href="/atom.xml" title="Jythons&#39;s blog" type="application/atom+xml">
   
@@ -175,7 +175,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="shell编程"><a href="#shell编程" class="headerlink" title="shell编程"></a>shell编程</h2><ul>
+        <h2 id="shell编程"><a href="#shell编程" class="headerlink" title="shell编程"></a>shell编程</h2><p>总结一下shell编程的语法规则以及注意事项。<br><a id="more"></a></p>
+<ul>
 <li>定义<strong>变量</strong>时，不使用<code>$</code>，等号两边不能有空格,使用变量时使用<code>$</code>。   </li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">例如：</div><div class="line">val='abc'   (正确)</div><div class="line">val = 'abc' (错误) </div><div class="line">echo $&#123;val&#125; (使用变量)</div></pre></td></tr></table></figure>
@@ -363,16 +364,6 @@ str 检测字符串是否为空，不为空返回true      例：[ $a ]
 </article>
 
   
-<nav id="article-nav">
-  
-  
-    <a href="/2017/10/12/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
