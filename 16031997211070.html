@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	Nginx的集群负载均衡解析 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">个人小站，记录生活，和日常学习笔记</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="shell.html">Shell</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Nginx的集群负载均衡解析</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">单节点</h2>
+
+<p>服务器挂了，服务停止</p>
+
+<h2 id="toc_1">集群</h2>
+
+<p>一台服务器挂了，服务还可以继续执行</p>
+
+<h2 id="toc_2">Nginx集群负载均衡</h2>
+
+<p>客户端不会直接访问到服务，会先经过nginx反向代理，由nginx分配请求到后端的服务器。</p>
+
+<h2 id="toc_3">四层负载均衡</h2>
+
+<p>基于IP+端口的负载均衡，通过转发请求到后台服务器，并记录请求是那个服务器处理的，后续的请求会使用同一台服务器去处理，四层负载均衡是在传输层的，主要基于TCP和UDP</p>
+
+<h3 id="toc_4">F5硬负载均衡</h3>
+
+<p>优点：基于硬件的，功能强大，性能和稳定性比较高。<br/>
+缺点：价格昂贵，商业级别的</p>
+
+<h3 id="toc_5">LVS四层负载均衡</h3>
+
+<p>Linux内核的，和协议没有什么关系</p>
+
+<h3 id="toc_6">Haproxy 四层负载均衡</h3>
+
+<p>支持转发功能，灵活性高，除了四层以外还可以做7层的负载均衡</p>
+
+<h3 id="toc_7">Nginx四层负载均衡</h3>
+
+<p>通常使用Nginx做7层负载均衡，以7层为主，基于HTTP做的负载均衡，老版本是在1.9版本后加了一个stream模块，可以实现4层协议的转发代理。</p>
+
+<h2 id="toc_8">七层负载均衡</h2>
+
+<h3 id="toc_9">Nginx七层负载均衡</h3>
+
+<p>对http和mail协议做负载均衡</p>
+
+<h3 id="toc_10">Haproxy七层负载均衡</h3>
+
+<h3 id="toc_11">apache七层负载均衡</h3>
+
+<p>性能远不如nginx的高，当并发达到百万级别以后，性能会越来越差</p>
+
+<h2 id="toc_12">DNS地域负载均衡</h2>
+
+<p>举例：在浏览器打开一个网址，先请求DNS服务器，DNS会根据我当前所在的地域，根据就近原则，返回一个最近的IP地址</p>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>

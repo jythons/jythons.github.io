@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	nginx处理web请求机制解析 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">个人小站，记录生活，和日常学习笔记</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="shell.html">Shell</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">nginx处理web请求机制解析</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<span id="more"></span><!-- more -->
+
+<h3 id="toc_0">worker抢占机制</h3>
+
+<p>worker进程抢占accept_mutex互斥锁，谁先抢到，谁与client建立连接</p>
+
+<h3 id="toc_1">传统服务器事件处理</h3>
+
+<p>客户端与worker进程连接并阻塞时，其他的请求会等待第一个请求处理完毕才可以被执行。</p>
+
+<h3 id="toc_2">Nginx事件处理</h3>
+
+<p>nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器的模式，所以当第一个请求被阻塞时，也可以同事处理接下来的其他请求（use epoll, linux的epoll模型，可以同时处理6-8万个请求）</p>
+
+<h3 id="toc_3">配置nginx的最大连接数</h3>
+
+<p>在nginx.conf配置文件内</p>
+
+<pre><code class="language-text">events {
+    # 默认使用epoll
+    use epoll;
+    # 每个worker允许连接的客户端最大连接数
+    worker_connections 1024;
+}
+</code></pre>
+
+<h3 id="toc_4">nginx.conf配置结构</h3>
+
+<ul>
+<li>main 全局配置</li>
+<li>event 配置工作模式以及连接数</li>
+<li>sendfile on; 使用高效文件传输，提升传输性能</li>
+<li>tcp_nopush on; sendfile启用后才能使用，是指当数据表积累一定大小后才发送，提高了效率</li>
+<li>keepalive_timeout 设置客户端与服务端请求的超时时间，保证客户端多次请求的时候不会重复建立新的链接，节约资源损耗：keepalive_timeout 65;</li>
+<li>gzip on; gzip启用压缩，html/css压缩后传输更快</li>
+<li>http http模块相关配置
+<ul>
+<li>server 虚拟主机模块 
+<ul>
+<li>listen 监听端口</li>
+<li>server_name localhost、IP、域名</li>
+<li>location 请求路由映射，匹配拦截</li>
+<li>root 请求位置</li>
+<li>index 首页设置</li>
+</ul></li>
+<li>location 路由规则，表达式</li>
+<li>upstream 集群，内网服务器</li>
+</ul></li>
+</ul>
+
+<h3 id="toc_5">设定日志格式，main为定义的格式名称，如此access_log就可以直接使用这个变量了</h3>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>参数意义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>$remote_addr</td>
+<td>客户端IP</td>
+</tr>
+<tr>
+<td>$remote_user</td>
+<td>远程客户端用户名，一般为：’-’</td>
+</tr>
+<tr>
+<td>$time_local</td>
+<td>时间和时区</td>
+</tr>
+<tr>
+<td>$request</td>
+<td>请求的URL以及method</td>
+</tr>
+<tr>
+<td>$status</td>
+<td>响应状态码</td>
+</tr>
+<tr>
+<td>$body_bytes_send</td>
+<td>响应客户端内容字节数</td>
+</tr>
+<tr>
+<td>$http_referer</td>
+<td>记录用户从哪个链接跳转过来的</td>
+</tr>
+<tr>
+<td>$http_user_agent</td>
+<td>用户所使用的代理，一般来时都是浏览器</td>
+</tr>
+<tr>
+<td>http_x_forwarded_for</td>
+<td>通过代理服务器来记录客户端的IP</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="toc_6">日志配置格式</h4>
+
+<p><code>error_log [日志文件路径] [日志级别：notice|info]</code> </p>
+
+<h5 id="toc_7">日志级别（由低到高）</h5>
+
+<ul>
+<li>debug</li>
+<li>info</li>
+<li>notice</li>
+<li>warn</li>
+<li>error</li>
+<li>crit</li>
+</ul>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>

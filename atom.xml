@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Jythons小站]]></title>
+  <link href="jythons.github.io/atom.xml" rel="self"/>
+  <link href="jythons.github.io/"/>
+  <updated>2020-11-01T00:29:17+08:00</updated>
+  <id>jythons.github.io/</id>
+  <author>
+    <name><![CDATA[]]></name>
+    
+  </author>
+  <generator uri="http://www.coderforart.com/">CoderForArt</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx中配置SSL证书]]></title>
+    <link href="jythons.github.io/16041606361898.html"/>
+    <updated>2020-11-01T00:10:36+08:00</updated>
+    <id>jythons.github.io/16041606361898.html</id>
+    <content type="html"><![CDATA[
+<p>Nginx默认访问使用的是http协议，如果要使用https协议，需要为网站配置SSL证书，因为https是安全的，对传输的数据进行了加密。使用https，必须要有一个域名，并且域名需要备案之后才可以使用。<br/>
+申请完SSL证书后，会得到两个文件，一个是.crt后缀的文件是证书文件，还有一个是.key文件，是密钥文件。<br/>
+<span id="more"></span><!-- more --></p>
+
+<h2 id="toc_0">新增Nginx的SSL模块</h2>
+
+<blockquote>
+<p>要在nginx中配置https，就必须安装ssl模块，也就是：http_ssl_module。</p>
+</blockquote>
+
+<ul>
+<li>进入到nginx的解压目录：/home/jythons/package/nginx-1.18.0</li>
+<li>新增ssl模块（原来的那些模块需要保留）</li>
+</ul>
+
+<pre><code class="language-text">./configure \
+--prefix=/usr/local/nginx \
+--pid-path=/var/run/nginx/nginx.pid \
+--lock-path=/var/lock/nginx.lock \
+--error-log-path=/var/log/nginx/error.log \
+--http-log-path=/var/log/nginx/access.log \
+--with-http_gzip_static_module \
+--http-client-body-temp-path=/var/temp/nginx/client \
+--http-proxy-temp-path=/var/temp/nginx/proxy \
+--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
+--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
+--http-scgi-temp-path=/var/temp/nginx/scgi \
+--with-http_ssl_module
+
+</code></pre>
+
+<ul>
+<li>编译和安装</li>
+</ul>
+
+<pre><code class="language-text">make
+make install
+</code></pre>
+
+<h2 id="toc_1">Nginx配置HTTPS</h2>
+
+<ul>
+<li>把ssl证书 *.crt和私钥 *.key 拷贝到/usr/local/nginx/conf 目录中。</li>
+<li>新增server监听443端口</li>
+</ul>
+
+<pre><code class="language-text">#配置上游服务器
+upstream tomcats {
+        server 192.168.3.26:8080;
+        server 192.168.3.27:8080;
+        server 192.168.3.28:8080;
+}
+
+server {
+    listen 443;
+    server_name www.tomcats.com;
+    
+    # 开启ssl
+    ssl on;
+    # 配置ssl证书
+    ssl_certificate 1_www.tomcats.com_bundle.crt;
+    # 配置证书密钥
+    ssl_certificate_key 1_www.tomcats.com.key;
+    
+    # ssl会话cache
+    ssl_session_cache shared:SSL:1m;
+    # ssl会话超时时间
+    ssl_session_timeout 5m;
+    
+    # 配置加密套件，写法遵循openssl标准
+    ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+    ssl_prefer_server_ciphers on;
+    
+    location / {
+        proxy_pass http://tomcats;
+    }
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx控制浏览器缓存]]></title>
+    <link href="jythons.github.io/16038978992618.html"/>
+    <updated>2020-10-28T23:11:39+08:00</updated>
+    <id>jythons.github.io/16038978992618.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">原理图</h2>
+
+<p><img src="media/16038978992618/Nginx%E6%8E%A7%E5%88%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98.png" alt="Nginx控制浏览器缓存"/></p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">设置缓存的指令：expires指令</h2>
+
+<p>expires [time] 设置多少秒后缓存过期；例：expires 10s<br/>
+expires @[time] 设置到那个时间点缓存过期；例：expires @22h30m<br/>
+expires -[time] 表示在现在缓存的多长时间以前就过期；例：expires -1h<br/>
+expires epoch 表示不去缓存<br/>
+expires off 表示Nginx端关闭缓存，在浏览器上不会体现出来；<br/>
+expires max 表示缓存的一个最大的时间，表示永不过期。</p>
+
+<h2 id="toc_2">在Nginx中的使用方法</h2>
+
+<pre><code class="language-text">location /static {
+    alias /home/static;
+    expires 10s;
+}
+</code></pre>
+
+<p><img src="media/16038978992618/header%E6%98%BE%E7%A4%BA%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4.png" alt="header显示过期时间"/></p>
+
+<h2 id="toc_3">Nginx反向代理缓存</h2>
+
+<pre><code class="language-text">#配置上游服务器
+upstream tomcats {
+        server 192.168.3.26:8080;
+        server 192.168.3.27:8080;
+        server 192.168.3.28:8080;
+}
+
+# 设置缓存保存的目录, 
+# keys_zone 设置共享内存空间，和大小
+# max_size 设置缓存大小
+# inactive 超过此时间，则缓存自动清理, 8h:8小时，8m:8分钟，8s:8秒
+# use_temp_path 关闭临时目录，临时目录会对nginx造成性能影响
+proxy_cache_path /usr/local/nginx/upsteam_cache keys_zone=mycache:5m max_size=1g inactive=8h use_temp_path=off;
+
+server {
+        listen 80;
+        server_name www.tomcats.com;
+        
+        # 开启并且使用缓存，mycache对应上方proxy_cache_path配置
+        proxy_cache mycache;
+        # 针对200和304状态码，设置缓存过期时间
+        proxy_cache_valid 200 304 8h
+        
+        location / {
+                proxy_pass http://tomcats;
+        }
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[负载均衡之url_hash]]></title>
+    <link href="jythons.github.io/16038966099434.html"/>
+    <updated>2020-10-28T22:50:09+08:00</updated>
+    <id>jythons.github.io/16038966099434.html</id>
+    <content type="html"><![CDATA[
+<p>从字面上可以看出，他是基于URL的hash算法，根据URL获得的hash值将请求分配到不同的节点上<br/>
+<img src="media/16038966099434/URL-hash.png" alt="URL-hash"/></p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">Nginx配置</h2>
+
+<pre><code class="language-text">upstream tomcats {
+        hash $request_uri; 
+        server 192.168.3.26:8080;
+        server 192.168.3.27:8080;
+        server 192.168.3.28:8080;
+}
+
+server {
+        listen 80;
+        server_name www.tomcats.com;
+
+        location / {
+                proxy_pass http://tomcats;
+        }
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[负载均衡之ip_hash]]></title>
+    <link href="jythons.github.io/16038139816578.html"/>
+    <updated>2020-10-27T23:53:01+08:00</updated>
+    <id>jythons.github.io/16038139816578.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">hash算法</h2>
+
+<blockquote>
+<p>hash(ip) % node_counts = index<br/>
+通过对客户端IP进行哈希然后根据上方公式分配到对应的服务器处理，之后的每次请求，只要客户端的IP没有变化，所有的请求都会请求到这台服务器上。<br/>
+由于nginx的ip_hash算法是根据IP的前三个数值进行的hash，所以内网使用时，只会访问同一台服务器上。如果有人进行不正当的大量请求，这时所有的请求都会转发到同一台服务器上，这时会造成这台服务器的负载升高。<br/>
+当使用ip_hash的方式进行负载均衡时，如果要临时移除一台服务器时，不能直接将这个server删除，要将这要服务器标记为down。<br/>
+该算法，在增加或减少节点时，都需要重新计算。</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<pre><code class="language-text">upstream tomcats {
+        ip_hash; # 使用ip_hash的方式实现负载均衡
+        server 192.168.3.26:8080;
+        server 192.168.3.27:8080;
+        server 192.168.3.28:8080;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[shell编程]]></title>
+    <link href="jythons.github.io/16038138353128.html"/>
+    <updated>2020-10-27T23:50:35+08:00</updated>
+    <id>jythons.github.io/16038138353128.html</id>
+    <content type="html"><![CDATA[
+<p>总结一下shell编程的语法规则以及注意事项。<br/>
+<span id="more"></span><!-- more --></p>
+
+<ul>
+<li>定义<strong>变量</strong>时，不使用<code>$</code>，等号两边不能有空格,使用变量时使用<code>$</code>。<br/></li>
+</ul>
+
+<pre><code class="language-shell">例如：
+val=&#39;abc&#39;   (正确)
+val = &#39;abc&#39; (错误) 
+echo ${val} (使用变量)
+</code></pre>
+
+<ul>
+<li><strong>字符串：</strong></li>
+</ul>
+
+<pre><code class="language-shell">获取字符串长度:${#abc},结果返回3;截取字符串:${abc:1:2}。
+例如：
+str=&#39;abcdefg&#39;
+echo ${str:1:2}
+</code></pre>
+
+<blockquote>
+<p>结果返回：bc；意思是重二个字符开始，截取两个字符；这里是重0开始计算的。</p>
+</blockquote>
+
+<ul>
+<li><p><strong>数组：</strong>  </p>
+<pre><code class="language-bash">定义数组：arr=(val1 val2 val3 ... valn) 或 arr[0]=val0
+使用数组元素：${arr[0]}  <br/>
+输出数组元素：${arr[*]} 或 ${arr[@]}  <br/>
+获取数组长度：${#arr[*]} 或 ${#arr[@]}
+</code></pre></li>
+<li><p><strong>运算符</strong>  </p>
+<blockquote>
+<p>计算数值时使用：<code>expr 表达式</code> 或 <code>$((表达式))</code>，如果使用 <code>expr</code> 时，乘法使用 <code>\*</code>，使用运算符时，使用<code>[]</code>,并且运算符两边都要有空格，例如：<code>if [ $a -eq $b ] then fi</code></p>
+</blockquote></li>
+</ul>
+
+<h6 id="toc_0">关系运算符</h6>
+
+<pre><code class="language-text">-eq 检测两个数是都相等，相等返回 true  
+-ne 检测两个数是都相等，不相等返回true  
+-gt 大于号  
+-lt 小于号  
+-ge 大于等于
+-le 小于等于
+</code></pre>
+
+<h6 id="toc_1">布尔运算符</h6>
+
+<pre><code class="language-text">!  非  
+-o 或  
+-a 与
+</code></pre>
+
+<h6 id="toc_2">逻辑运算符</h6>
+
+<pre><code class="language-text">&amp;&amp; 逻辑的AND
+|| 逻辑的OR
+</code></pre>
+
+<blockquote>
+<p>注意：使用逻辑运算符时，if语句需要使用<code>[[ 表达式 ]]</code>；  </p>
+</blockquote>
+
+<pre><code class="language-shell">例如：
+a=10
+b=10
+if [[ $a -lt 100 &amp;&amp; $b -gt 100 ]]
+then
+    echo &quot;返回 true&quot;
+else
+    echo &quot;返回 false&quot;
+fi
+</code></pre>
+
+<h6 id="toc_3">字符串运算符</h6>
+
+<pre><code class="language-text">=   检测两个字符串是否相等，相等返回true    例：[ $a = $b ]  
+!=  检测两个字符串是否相等，不相等返回true  例：[ $a != $b ]  
+-z  检测字符串长度是否为0，为0返回true　　　例：[ -z $a ]  
+-n  检测字符串长度是否为0，不为0返回true    例：[ -n $a ]  
+str 检测字符串是否为空，不为空返回true      例：[ $a ]  
+</code></pre>
+
+<h6 id="toc_4">文件测试运算符</h6>
+
+<blockquote>
+<p>$file 为文件路径</p>
+</blockquote>
+
+<pre><code class="language-shell">[ -b $file ] 检测文件是否是块设备文件，是返回true  
+[ -c $file ] 检测文件是否是字符设备文件，如果是，则返回 true  
+[ -d $file ] 检测文件是否是目录，如果是，则返回 true  
+[ -f $file ] 检测文件是否是普通文件（既不是目录，也不是设备文件），如果是，则返回 true  
+[ -g $file ] 检测文件是否设置了 SGID 位，如果是，则返回 true  
+[ -k $file ] 检测文件是否设置了粘着位(Sticky Bit)，如果是，则返回 true  
+[ -p $file ] 检测文件是否是有名管道，如果是，则返回 true  
+[ -u $file ] 检测文件是否设置了 SUID 位，如果是，则返回 true  
+[ -r $file ] 检测文件是否可读，如果是，则返回 true  
+[ -w $file ] 检测文件是否可写，如果是，则返回 true  
+[ -x $file ] 检测文件是否可执行，如果是，则返回 true  
+[ -s $file ] 检测文件是否为空（文件大小是否大于0），不为空返回 true
+[ -e $file ] 检测文件（包括目录）是否存在，如果是，则返回 true
+</code></pre>
+
+<ul>
+<li><p><strong>test命令</strong><br/><br/>
+<code>[]</code>作为基本运算符使用时，内部不能有空格  </p>
+<pre><code class="language-shell">例如：  
+a=5<br/>
+b=5<br/>
+res=$[a+b]<br/>
+echo $res # 结果为10
+</code></pre></li>
+<li><p><strong>read</strong><br/><br/>
+<code>read</code> 等待用户输入。  </p></li>
+</ul>
+
+<pre><code class="language-shell">例：
+#!/bin/sh
+read name
+echo &quot;输入的值name等于 ${name}&quot;
+</code></pre>
+
+<ul>
+<li><strong>流程控制</strong><br/>
+###### if语句：<br/></li>
+</ul>
+
+<pre><code class="language-shell">if condition
+then
+    command
+fi
+写成一行：if [ $(ps -ef | grep -c &quot;ssh&quot;) -gt 1 ]; then echo &quot;true&quot;; fi
+
+if else:
+if condition
+then
+    command1
+else
+    command2
+fi
+
+if else-if else:
+if condition1
+then
+    command1
+elif condition2
+then
+    command2
+else
+    command3
+fi
+</code></pre>
+
+<h6 id="toc_5">for循环</h6>
+
+<pre><code class="language-shell">for var in item1 item2 ... itemN
+do
+    command1
+    ...
+    commandN
+done
+
+写成一行：for var in item1 ... itemN; do cmooand1;command2... done;
+</code></pre>
+
+<h6 id="toc_6">while循环，与until循环用法相同（结果为真时退出循环）</h6>
+
+<pre><code class="language-shell">例：
+#!/bin/sh
+int=1
+while(( $int&lt;=5 ))
+do
+    echo $int
+    let &quot;int++&quot;
+done
+</code></pre>
+
+<blockquote>
+<p>使用了 <code>let</code> 命令，用于执行一个或多个表达式，变量计算中不需要加上 <code>$</code> 来表示变量。</p>
+</blockquote>
+
+<h6 id="toc_7">case</h6>
+
+<pre><code class="language-shell">例：
+read aNum
+case $aNum in
+    1) echo &#39;1&#39;
+    ;;  # 两个；表示break，跳出
+    2|3) echo &#39;2&#39;
+    ;;
+    *) echo &#39;none&#39;
+        break # 跳出所有循环，continue跳出当前循环
+    ;;
+esac
+</code></pre>
+
+<ul>
+<li><strong>函数</strong><br/>
+###### 定义函数</li>
+</ul>
+
+<pre><code class="language-shell">[function] funcName[()]{
+    command
+    [return n] # n为0-255之间的数字
+}
+
+funcName  # 调用函数funcName
+</code></pre>
+
+<blockquote>
+<p>1.可以带function fun()定义，也可以直接fun()定义，不到任何参数<br/><br/>
+2.参数返回，可以显示的加：return返回，如果不加，将以最后一条命令运行结果，作为返回值。</p>
+</blockquote>
+
+<pre><code class="language-shell">例：
+#!/bin/sh
+function funcName(){
+    echo &#39;this is a function!&#39;
+}
+# 开始执行函数
+funcName
+# 函数执行结束
+</code></pre>
+
+<h6 id="toc_8">函数参数</h6>
+
+<pre><code class="language-shell">例：
+funWithParam(){
+    echo &quot;第一个参数：$1&quot;
+    echo &quot;第二个参数：$2&quot;
+    echo &quot;第五个参数：${5}&quot;
+    echo &quot;参数总个数：$#&quot;
+    echo &quot;作为字符串输出所有参数：$* !&quot;
+}
+funWidthParam 1 2 3 4 5 6 7  #调用函数传参
+</code></pre>
+
+<blockquote>
+<p>备注：<code>$#</code> 传递到脚本的参数个数<br/><br/>
+<code>$*</code> 以一个单字符串显示所有向脚本传递的参数；<br/><br/>
+<code>$$</code> 脚本运行的当前进程ID号；<br/><br/>
+<code>$!</code> 后台运行的最优一个进程的ID号<br/><br/>
+<code>$@</code> 与<code>$*</code>相同，但是使用时加引号，并在引号中返回每个参数；<br/><br/>
+<code>$-</code> 显示<code>Shell</code>使用的当前选项，与<code>set</code>命令功能相同<br/><br/>
+<code>$?</code> 显示最后命令的退出状态。<code>0</code>表示没有错误，其他任何值表明有错误。</p>
+</blockquote>
+
+<ul>
+<li><strong>Shell文件包含</strong><br/>
+Shell包含外部脚本语法合适如下：</li>
+</ul>
+
+<pre><code class="language-shell">. filename    # 注意点号（.）和文件名中间有一个空格
+或
+source filename
+</code></pre>
+
+<blockquote>
+<p><strong>注：</strong>被包含的文件不需要可执行权限</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[一致性哈希算法]]></title>
+    <link href="jythons.github.io/16038127730075.html"/>
+    <updated>2020-10-27T23:32:53+08:00</updated>
+    <id>jythons.github.io/16038127730075.html</id>
+    <content type="html"><![CDATA[
+<blockquote>
+<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<p><img src="media/16038127730075/%E4%B8%80%E8%87%B4%E6%80%A7hash.png" alt="一致性hash"/></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx Tomcat集群搭建]]></title>
+    <link href="jythons.github.io/16032063964658.html"/>
+    <updated>2020-10-20T23:06:36+08:00</updated>
+    <id>jythons.github.io/16032063964658.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">Nginx配置</h2>
+
+<pre><code class="language-text">#配置上游服务器
+upstream tomcats {
+        server 192.168.3.26:8080;
+        server 192.168.3.27:8080;
+        server 192.168.3.28:8080;
+}
+
+server {
+        listen 80;
+        server_name www.tomcats.com;
+
+        location / {
+                proxy_pass http://tomcats;
+        }
+}
+</code></pre>
+
+<h2 id="toc_1">使用JMeter测试但节点与集群并发异常率</h2>
+
+<p>JMeter是apache的一个基于java的测试工具<br/>
+下载地址：<a href="https://jmeter.apache.org/download_jmeter.cgi">https://jmeter.apache.org/download_jmeter.cgi</a></p>
+
+<h2 id="toc_2">负载均衡之轮询</h2>
+
+<p>nginx负载均衡默认的策略是轮询</p>
+
+<h2 id="toc_3">负载均衡之加权轮询</h2>
+
+<p>通过配置权重，来实现轮训，权重越大，被分配流量越多。</p>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 weight=1;
+        server 192.168.3.27:8080 weight=2;
+        server 192.168.3.28:8080 weight=5;
+}
+</code></pre>
+
+<h2 id="toc_4">upstream指令参数</h2>
+
+<h3 id="toc_5">max_conns</h3>
+
+<blockquote>
+<p>指配置到上游的每个服务器的最大链接数，根据每个服务器能够承受的最大流量，起到保险丝的作用。默认值是0，代表不做任何限制。1.11.5版本之前只有商业版才能使用。如果是在共享内存使用的话，nginx每个work工作进程都可以使用。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 max_conns=1;
+        server 192.168.3.27:8080 max_conns=2;
+        server 192.168.3.28:8080 max_conns=5;
+}
+</code></pre>
+
+<h3 id="toc_6">slow_start</h3>
+
+<blockquote>
+<p>慢启动，主要用于，当某个服务器加入到集群后，不希望直接加入，需要启动一些软件之后在加入到集群，例如：启动监控服务等。如果该服务器配置的权重是10，设置了该值之后，他会慢慢的将权重加到10，对于hash和random方式的负载均衡是不支持的。对于单个服务器，这个参数是不适用的，需要至少有两个才行。 (商业版才能使用这个参数)</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 weight=6 slow_start=60s;
+        server 192.168.3.27:8080 weight=2;
+        server 192.168.3.28:8080 weight=2;
+}
+</code></pre>
+
+<h3 id="toc_7">down</h3>
+
+<blockquote>
+<p>标识服务器为不可用状态。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 down;
+        server 192.168.3.27:8080 weight=2;
+        server 192.168.3.28:8080 weight=2;
+}
+</code></pre>
+
+<h3 id="toc_8">backup</h3>
+
+<blockquote>
+<p>标识服务器只有在其他服务器挂掉之后才会启用，相当于备用机。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 backup;
+        server 192.168.3.27:8080 weight=2;
+        server 192.168.3.28:8080 weight=2;
+}
+</code></pre>
+
+<h3 id="toc_9">max_fails</h3>
+
+<blockquote>
+<p>最大失败次数，如果服务器请求失败次数，达到最大的失败次数，那么nginx就会把对应的服务器剔除，请求就不会到达该服务器。</p>
+
+<h3 id="toc_10">fail_timeout</h3>
+
+<p>配合<code>max_fails</code>参数使用，当请求失败次数达到最大时，在接下来的错误时间段内，请求不会到达这台服务器，等到<code>fail_timeout</code>时间之后，nginx会再次尝试请求这台服务器。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 max_fails=2 fail_timeout=15s;
+        server 192.168.3.27:8080 max_fails=2 fail_timeout=15s;
+        server 192.168.3.28:8080 max_fails=2 fail_timeout=15s;
+}
+</code></pre>
+
+<h2 id="toc_11">使用Keepalived提高吞吐量</h2>
+
+<blockquote>
+<p>Keepalive的作用是将链接作为长链接，大大的减少了链接创建和断开时间上的消耗。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080;
+        server 192.168.3.27:8080;
+        server 192.168.3.28:8080;
+        keepalive 32;
+}
+
+server {
+        listen 80;
+        server_name www.tomcats.com;
+
+        location / {
+                proxy_pass http://tomcats;
+                proxy_http_version 1.1; #http 版本
+                proxy_set_header Connection &quot;&quot;; #清空header Connection参数内容
+        }
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx的集群负载均衡解析]]></title>
+    <link href="jythons.github.io/16031997211070.html"/>
+    <updated>2020-10-20T21:15:21+08:00</updated>
+    <id>jythons.github.io/16031997211070.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">单节点</h2>
+
+<p>服务器挂了，服务停止</p>
+
+<h2 id="toc_1">集群</h2>
+
+<p>一台服务器挂了，服务还可以继续执行</p>
+
+<h2 id="toc_2">Nginx集群负载均衡</h2>
+
+<p>客户端不会直接访问到服务，会先经过nginx反向代理，由nginx分配请求到后端的服务器。</p>
+
+<h2 id="toc_3">四层负载均衡</h2>
+
+<p>基于IP+端口的负载均衡，通过转发请求到后台服务器，并记录请求是那个服务器处理的，后续的请求会使用同一台服务器去处理，四层负载均衡是在传输层的，主要基于TCP和UDP</p>
+
+<h3 id="toc_4">F5硬负载均衡</h3>
+
+<p>优点：基于硬件的，功能强大，性能和稳定性比较高。<br/>
+缺点：价格昂贵，商业级别的</p>
+
+<h3 id="toc_5">LVS四层负载均衡</h3>
+
+<p>Linux内核的，和协议没有什么关系</p>
+
+<h3 id="toc_6">Haproxy 四层负载均衡</h3>
+
+<p>支持转发功能，灵活性高，除了四层以外还可以做7层的负载均衡</p>
+
+<h3 id="toc_7">Nginx四层负载均衡</h3>
+
+<p>通常使用Nginx做7层负载均衡，以7层为主，基于HTTP做的负载均衡，老版本是在1.9版本后加了一个stream模块，可以实现4层协议的转发代理。</p>
+
+<h2 id="toc_8">七层负载均衡</h2>
+
+<h3 id="toc_9">Nginx七层负载均衡</h3>
+
+<p>对http和mail协议做负载均衡</p>
+
+<h3 id="toc_10">Haproxy七层负载均衡</h3>
+
+<h3 id="toc_11">apache七层负载均衡</h3>
+
+<p>性能远不如nginx的高，当并发达到百万级别以后，性能会越来越差</p>
+
+<h2 id="toc_12">DNS地域负载均衡</h2>
+
+<p>举例：在浏览器打开一个网址，先请求DNS服务器，DNS会根据我当前所在的地域，根据就近原则，返回一个最近的IP地址</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx的模块化体系]]></title>
+    <link href="jythons.github.io/15985425740195.html"/>
+    <updated>2020-08-27T23:36:14+08:00</updated>
+    <id>jythons.github.io/15985425740195.html</id>
+    <content type="html"><![CDATA[
+<ul>
+<li>event module 事件模块，操作系统层面的事件处理机制</li>
+<li>phase handle 用于处理客户端的请求，以及相应内容的响应</li>
+<li>output filter 返回响应时，需要通过该模块，相当于过滤器，例如：gzip，将大的文件过滤成小的文件</li>
+<li>upstream 反向代理模块，会把服务器请求转发到真实的服务器地址</li>
+<li>load balancer 负载均衡器，实现集群和负载均衡的配置</li>
+<li>extend module 继承模块，使用第三方模块时需要用到</li>
+</ul>
+
+<span id="more"></span><!-- more -->
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx中配置静态资源防盗链]]></title>
+    <link href="jythons.github.io/15985421341710.html"/>
+    <updated>2020-08-27T23:28:54+08:00</updated>
+    <id>jythons.github.io/15985421341710.html</id>
+    <content type="html"><![CDATA[
+<p>配置防盗链也是在Nginx.conf配置文件的Server配置块内配置如下信息：<br/>
+<span id="more"></span><!-- more --></p>
+
+<pre><code class="language-text">#对源站点验证
+valid_referers *.imooc.com;
+#非法引入会进入下放判断
+if ($invalid_referer) {
+    return 404;
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx跨域]]></title>
+    <link href="jythons.github.io/15985411668268.html"/>
+    <updated>2020-08-27T23:12:46+08:00</updated>
+    <id>jythons.github.io/15985411668268.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">CROS跨域资源共享</h2>
+
+<ul>
+<li>Cross-Origin Resource Sharing</li>
+<li>允许浏览器向跨Origin的服务器发起js请求获取响应</li>
+<li>Jsonp、SpringBoot Cors、Nginx</li>
+</ul>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">在Nginx配置跨域</h2>
+
+<p>在Nginx.conf配置文件的Server块内配置如下内容：</p>
+
+<pre><code class="language-text">server {
+    ...
+    #允许跨域请求的域，*代表所有
+    add_header &#39;Access-Control-Allow-Origin&#39; *;
+    #允许带上Cookie请求
+    add_header &#39;Access-Control-Allow-Credentials&#39; &#39;true&#39;;
+    #允许请求的方法，比如 GET/POST/PUT/DELETE
+    add_header &#39;Access-Control-Allow-Methods&#39; *;
+    #允许请求的header
+    add_header &#39;Access-Control-Allow-Headers&#39; *;
+    ...
+}    
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[虚拟主机 - 使用Nginx为静态资源]]></title>
+    <link href="jythons.github.io/15984524087390.html"/>
+    <updated>2020-08-26T22:33:28+08:00</updated>
+    <id>jythons.github.io/15984524087390.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">root与alias</h2>
+
+<p>假如服务器路径为：<code>/home/user/files/img/face.png</code></p>
+
+<span id="more"></span><!-- more -->
+
+<h3 id="toc_1">root路径完全匹配访问</h3>
+
+<p>配置的时候为：</p>
+
+<pre><code class="language-text">location /user {
+    root /home
+}
+</code></pre>
+
+<p>用户访问的时候请求为：url：port/user/files/files/img/face.png</p>
+
+<h3 id="toc_2">alias可以为你的路径做一个别名，对用户透明</h3>
+
+<p>配置的时候为：</p>
+
+<pre><code class="language-text">location /hello {
+    root /home/user
+}
+</code></pre>
+
+<p>用户访问的请求为：URL：port/hello/files/img/face.png</p>
+
+<h2 id="toc_3">location的匹配规则解析</h2>
+
+<ul>
+<li><p>/：默认匹配，普通匹配</p>
+<pre><code class="language-text">location / {
+    root /home;<br/>
+}
+</code></pre></li>
+<li><p>=：精确匹配</p>
+<pre><code class="language-text">location = /home/img/face.png {
+    root /home;<br/>
+}
+</code></pre></li>
+<li><p>～*：匹配正则表达式，不区分大小写</p>
+<pre><code class="language-text">#符合图片的显示
+location ~\. (GIF|jpg|png|jpeg) {<br/>
+    root /home;<br/>
+}
+</code></pre></li>
+<li><p>～：匹配正则表达式，区分大小写</p>
+<pre><code class="language-text">#GIF必须大写才能匹配到
+location ~ \. (GIF|jpg|png|jpeg) {<br/>
+    root /home;<br/>
+}
+</code></pre></li>
+<li><p><sup>～：以某个字符路径开头</sup></p>
+<pre><code class="language-text">location ^~ /user/img {
+    root /home;<br/>
+}
+</code></pre></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx日志切割]]></title>
+    <link href="jythons.github.io/15984510722035.html"/>
+    <updated>2020-08-26T22:11:12+08:00</updated>
+    <id>jythons.github.io/15984510722035.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">手动切割</h2>
+
+<p>现有的日志都会存在于<code>access.log</code>文件中，但是随着时间的推移，这个文件的内容会越来越多，体积会越来越大，不便于运维人员查看，所以我们可以通过把这个大的日志文件切割为多份不同的小文件作为日志，切割规则可以以天为单位，如果每天有几百G或者几个T的日志的话，则可以按需以每半天或者每小时对日志切割以下。<br/>
+<span id="more"></span><!-- more --><br/>
+1.创建一个shell可执行文件：<code>cut_my_log.sh</code>, 内容为：</p>
+
+<pre><code class="language-text">#!/bin/bash
+LOG_PATH=&quot;/var/log/nginx/&quot;
+RECORD_TIME=$(date -d &quot;yesterday&quot; +%Y-%m-%d+%H:%M)
+PID=/var/run/nginx/nginx.pid
+mv ${LOG_PATH}/access.log ${LOG_PATH}/access.${RECORD_TIME}.log
+mv ${LOG_PATH}/ERROR.log ${LOG_PATH}/error.${RECORD_TIME}.log
+
+#向Nginx主进程发送信号，用于重新打开日志文件
+kill -USR1 `cat $PID`
+</code></pre>
+
+<p>2.为cut_my_log.sh添加可执行的权限</p>
+
+<pre><code class="language-text">chmod +x cut_my_log.sh
+</code></pre>
+
+<p>3.测试日志切割后的结果</p>
+
+<pre><code class="language-text">./cut_my_log.sh
+</code></pre>
+
+<h2 id="toc_1">自动切割</h2>
+
+<p>使用Linux系统的crontab，定时执行。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx日志切割 - 手动]]></title>
+    <link href="jythons.github.io/15983730157845.html"/>
+    <updated>2020-08-26T00:30:15+08:00</updated>
+    <id>jythons.github.io/15983730157845.html</id>
+    <content type="html"><![CDATA[
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[nginx常用命令解析]]></title>
+    <link href="jythons.github.io/15983719742857.html"/>
+    <updated>2020-08-26T00:12:54+08:00</updated>
+    <id>jythons.github.io/15983719742857.html</id>
+    <content type="html"><![CDATA[
+<ol>
+<li>启动: <code>nginx</code></li>
+<li>关闭
+<ol>
+<li>nginx -s stop 这种方式是比较暴力的方式，直接停止nginx，正在请求的进程会直接停止</li>
+<li>nginx -s quit 优雅的停止，当没有用户请求时，会关闭（只针对http请求）</li>
+</ol></li>
+<li>检查语法：nginx -t</li>
+<li>查看版本：nginx -v</li>
+<li>查看版本以及配置信息：nginx -V</li>
+<li>手动置顶nginx核心配置文件：nginx -c filename(nginx.conf的路径)</li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Q:nginx.pid打开失败以及失效的解决办法]]></title>
+    <link href="jythons.github.io/15983710849309.html"/>
+    <updated>2020-08-25T23:58:04+08:00</updated>
+    <id>jythons.github.io/15983710849309.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">问题背景</h2>
+
+<p>当我们执行<code>./nginx</code>或<code>./nginx -s reload</code>命令时，显示：<code>open() &quot;/var/run/nginx/nginx.pid&quot;</code>没有那个问价或目录<br/>
+<span id="more"></span><!-- more --></p>
+
+<h2 id="toc_1">问题原因</h2>
+
+<p>原因是因为<code>/var/run/nginx</code>这个目录不见了。我们需要重新创建这个目录</p>
+
+<h2 id="toc_2">解决办法</h2>
+
+<p>1.首先创建这个目录</p>
+
+<pre><code class="language-text">mkdir /var/run/nginx -p
+</code></pre>
+
+<p>2.创建好文件夹后，进入到nginx跟目录下使用<code>./sbin/nginx -t</code>, 检查nginx配置是否正确，再使用<code>./sbin/nginx -s reload</code>重新加载配置文件。<br/>
+3.如果执行以上命令出现：无效的PID错误时，需要手动的方式指定一个nginx配置文件，命令如下：</p>
+
+<pre><code class="language-text">./sbin/nginx -c /nginx跟目录/conf/nginx.conf
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[nginx处理web请求机制解析]]></title>
+    <link href="jythons.github.io/15978511625761.html"/>
+    <updated>2020-08-19T23:32:42+08:00</updated>
+    <id>jythons.github.io/15978511625761.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h3 id="toc_0">worker抢占机制</h3>
+
+<p>worker进程抢占accept_mutex互斥锁，谁先抢到，谁与client建立连接</p>
+
+<h3 id="toc_1">传统服务器事件处理</h3>
+
+<p>客户端与worker进程连接并阻塞时，其他的请求会等待第一个请求处理完毕才可以被执行。</p>
+
+<h3 id="toc_2">Nginx事件处理</h3>
+
+<p>nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器的模式，所以当第一个请求被阻塞时，也可以同事处理接下来的其他请求（use epoll, linux的epoll模型，可以同时处理6-8万个请求）</p>
+
+<h3 id="toc_3">配置nginx的最大连接数</h3>
+
+<p>在nginx.conf配置文件内</p>
+
+<pre><code class="language-text">events {
+    # 默认使用epoll
+    use epoll;
+    # 每个worker允许连接的客户端最大连接数
+    worker_connections 1024;
+}
+</code></pre>
+
+<h3 id="toc_4">nginx.conf配置结构</h3>
+
+<ul>
+<li>main 全局配置</li>
+<li>event 配置工作模式以及连接数</li>
+<li>sendfile on; 使用高效文件传输，提升传输性能</li>
+<li>tcp_nopush on; sendfile启用后才能使用，是指当数据表积累一定大小后才发送，提高了效率</li>
+<li>keepalive_timeout 设置客户端与服务端请求的超时时间，保证客户端多次请求的时候不会重复建立新的链接，节约资源损耗：keepalive_timeout 65;</li>
+<li>gzip on; gzip启用压缩，html/css压缩后传输更快</li>
+<li>http http模块相关配置
+<ul>
+<li>server 虚拟主机模块 
+<ul>
+<li>listen 监听端口</li>
+<li>server_name localhost、IP、域名</li>
+<li>location 请求路由映射，匹配拦截</li>
+<li>root 请求位置</li>
+<li>index 首页设置</li>
+</ul></li>
+<li>location 路由规则，表达式</li>
+<li>upstream 集群，内网服务器</li>
+</ul></li>
+</ul>
+
+<h3 id="toc_5">设定日志格式，main为定义的格式名称，如此access_log就可以直接使用这个变量了</h3>
+
+<table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>参数意义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>$remote_addr</td>
+<td>客户端IP</td>
+</tr>
+<tr>
+<td>$remote_user</td>
+<td>远程客户端用户名，一般为：’-’</td>
+</tr>
+<tr>
+<td>$time_local</td>
+<td>时间和时区</td>
+</tr>
+<tr>
+<td>$request</td>
+<td>请求的URL以及method</td>
+</tr>
+<tr>
+<td>$status</td>
+<td>响应状态码</td>
+</tr>
+<tr>
+<td>$body_bytes_send</td>
+<td>响应客户端内容字节数</td>
+</tr>
+<tr>
+<td>$http_referer</td>
+<td>记录用户从哪个链接跳转过来的</td>
+</tr>
+<tr>
+<td>$http_user_agent</td>
+<td>用户所使用的代理，一般来时都是浏览器</td>
+</tr>
+<tr>
+<td>http_x_forwarded_for</td>
+<td>通过代理服务器来记录客户端的IP</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="toc_6">日志配置格式</h4>
+
+<p><code>error_log [日志文件路径] [日志级别：notice|info]</code> </p>
+
+<h5 id="toc_7">日志级别（由低到高）</h5>
+
+<ul>
+<li>debug</li>
+<li>info</li>
+<li>notice</li>
+<li>warn</li>
+<li>error</li>
+<li>crit</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[nginx进程模型]]></title>
+    <link href="jythons.github.io/15978504673218.html"/>
+    <updated>2020-08-19T23:21:07+08:00</updated>
+    <id>jythons.github.io/15978504673218.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<ul>
+<li>master进程：主进程</li>
+<li>worker进程：工作进程</li>
+</ul>
+
+<blockquote>
+<p>master进程负责监听请求，接受到请求后交给worker进程处理，master进程同时还会监听worker进程，如果有worker进程挂掉，master会重新启动一个新的worker进程。</p>
+</blockquote>
+
+<p>设置worker进程数量：<br/>
+<code>nginx.conf文件，worker_processes num, num表示worker进程数量</code></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[nginx安装]]></title>
+    <link href="jythons.github.io/15978477399142.html"/>
+    <updated>2020-08-19T22:35:39+08:00</updated>
+    <id>jythons.github.io/15978477399142.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h3 id="toc_0">安装依赖环境</h3>
+
+<p>1.安装gcc环境</p>
+
+<ul>
+<li>yum install gcc-c++</li>
+</ul>
+
+<p>2.安装PCRE库，用于解析正则表达式</p>
+
+<ul>
+<li>yum install -y pcre pcre-devel</li>
+</ul>
+
+<p>3.zlib压缩和解压依赖</p>
+
+<ul>
+<li>yum install -y zlib zlib-devel</li>
+</ul>
+
+<p>4.SSL安全的加密的套接字协议层，用于HTTP安全传输，也就是HTTPS</p>
+
+<ul>
+<li>yum install -y openssl openssl-devel</li>
+</ul>
+
+<h3 id="toc_1">解压，需要注意，解压后得到的是源码，源码需要便衣后才能安装</h3>
+
+<blockquote>
+<p>下载地址：<a href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></p>
+
+<pre><code class="language-text">tar -zxvf nginx-1.18.1.tar.gz
+</code></pre>
+</blockquote>
+
+<h3 id="toc_2">编译之前，先创建nginx临时目录，如果不创建，在启动nginx的过程中会报错</h3>
+
+<blockquote>
+<pre><code class="language-text">    mkdir /var/temp/nginx -p
+</code></pre>
+</blockquote>
+
+<h3 id="toc_3">在nginx目录，输入如下命令进行配置，目的是为了创建makefile文件</h3>
+
+<blockquote>
+<p>注：\ 代表在命令行中换行，用于提高可读性</p>
+
+<pre><code class="language-text">./configure \
+--prefix=/usr/local/nginx \
+--pid-path=/var/run/nginx/nginx.pid \
+--lock-path=/var/lock/nginx.lock \
+--error-log-path=/var/log/nginx/error.log \
+--http-log-path=/var/log/nginx/access.log \
+--with-http_gzip_static_module \
+--http-client-body-temp-path=/var/temp/nginx/client \
+--http-proxy-temp-path=/var/temp/nginx/proxy \
+--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
+--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
+--http-scgi-temp-path=/var/temp/nginx/scgi
+</code></pre>
+</blockquote>
+
+<h3 id="toc_4">编译、安装</h3>
+
+<blockquote>
+<pre><code class="language-text">make &amp;&amp; make install
+</code></pre>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[第一天]]></title>
+    <link href="jythons.github.io/15951758323755.html"/>
+    <updated>2020-07-20T00:23:52+08:00</updated>
+    <id>jythons.github.io/15951758323755.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">大型网站具备的特点</h2>
+
+<ul>
+<li>高并发</li>
+<li>高可用</li>
+<li>大数据</li>
+<li>迭代周期短</li>
+<li>用户量庞大</li>
+<li>可持续发展</li>
+<li>安全级别高</li>
+<li>可弹性、可伸缩</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

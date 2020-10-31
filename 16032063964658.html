@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	Nginx Tomcat集群搭建 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">个人小站，记录生活，和日常学习笔记</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="shell.html">Shell</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Nginx Tomcat集群搭建</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">Nginx配置</h2>
+
+<pre><code class="language-text">#配置上游服务器
+upstream tomcats {
+        server 192.168.3.26:8080;
+        server 192.168.3.27:8080;
+        server 192.168.3.28:8080;
+}
+
+server {
+        listen 80;
+        server_name www.tomcats.com;
+
+        location / {
+                proxy_pass http://tomcats;
+        }
+}
+</code></pre>
+
+<h2 id="toc_1">使用JMeter测试但节点与集群并发异常率</h2>
+
+<p>JMeter是apache的一个基于java的测试工具<br/>
+下载地址：<a href="https://jmeter.apache.org/download_jmeter.cgi">https://jmeter.apache.org/download_jmeter.cgi</a></p>
+
+<h2 id="toc_2">负载均衡之轮询</h2>
+
+<p>nginx负载均衡默认的策略是轮询</p>
+
+<h2 id="toc_3">负载均衡之加权轮询</h2>
+
+<p>通过配置权重，来实现轮训，权重越大，被分配流量越多。</p>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 weight=1;
+        server 192.168.3.27:8080 weight=2;
+        server 192.168.3.28:8080 weight=5;
+}
+</code></pre>
+
+<h2 id="toc_4">upstream指令参数</h2>
+
+<h3 id="toc_5">max_conns</h3>
+
+<blockquote>
+<p>指配置到上游的每个服务器的最大链接数，根据每个服务器能够承受的最大流量，起到保险丝的作用。默认值是0，代表不做任何限制。1.11.5版本之前只有商业版才能使用。如果是在共享内存使用的话，nginx每个work工作进程都可以使用。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 max_conns=1;
+        server 192.168.3.27:8080 max_conns=2;
+        server 192.168.3.28:8080 max_conns=5;
+}
+</code></pre>
+
+<h3 id="toc_6">slow_start</h3>
+
+<blockquote>
+<p>慢启动，主要用于，当某个服务器加入到集群后，不希望直接加入，需要启动一些软件之后在加入到集群，例如：启动监控服务等。如果该服务器配置的权重是10，设置了该值之后，他会慢慢的将权重加到10，对于hash和random方式的负载均衡是不支持的。对于单个服务器，这个参数是不适用的，需要至少有两个才行。 (商业版才能使用这个参数)</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 weight=6 slow_start=60s;
+        server 192.168.3.27:8080 weight=2;
+        server 192.168.3.28:8080 weight=2;
+}
+</code></pre>
+
+<h3 id="toc_7">down</h3>
+
+<blockquote>
+<p>标识服务器为不可用状态。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 down;
+        server 192.168.3.27:8080 weight=2;
+        server 192.168.3.28:8080 weight=2;
+}
+</code></pre>
+
+<h3 id="toc_8">backup</h3>
+
+<blockquote>
+<p>标识服务器只有在其他服务器挂掉之后才会启用，相当于备用机。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 backup;
+        server 192.168.3.27:8080 weight=2;
+        server 192.168.3.28:8080 weight=2;
+}
+</code></pre>
+
+<h3 id="toc_9">max_fails</h3>
+
+<blockquote>
+<p>最大失败次数，如果服务器请求失败次数，达到最大的失败次数，那么nginx就会把对应的服务器剔除，请求就不会到达该服务器。</p>
+
+<h3 id="toc_10">fail_timeout</h3>
+
+<p>配合<code>max_fails</code>参数使用，当请求失败次数达到最大时，在接下来的错误时间段内，请求不会到达这台服务器，等到<code>fail_timeout</code>时间之后，nginx会再次尝试请求这台服务器。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080 max_fails=2 fail_timeout=15s;
+        server 192.168.3.27:8080 max_fails=2 fail_timeout=15s;
+        server 192.168.3.28:8080 max_fails=2 fail_timeout=15s;
+}
+</code></pre>
+
+<h2 id="toc_11">使用Keepalived提高吞吐量</h2>
+
+<blockquote>
+<p>Keepalive的作用是将链接作为长链接，大大的减少了链接创建和断开时间上的消耗。</p>
+</blockquote>
+
+<pre><code class="language-text">upstream tomcats {
+        server 192.168.3.26:8080;
+        server 192.168.3.27:8080;
+        server 192.168.3.28:8080;
+        keepalive 32;
+}
+
+server {
+        listen 80;
+        server_name www.tomcats.com;
+
+        location / {
+                proxy_pass http://tomcats;
+                proxy_http_version 1.1; #http 版本
+                proxy_set_header Connection &quot;&quot;; #清空header Connection参数内容
+        }
+}
+</code></pre>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>
