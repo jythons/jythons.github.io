@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-01T01:15:01+08:00</updated>
+  <updated>2020-11-01T01:17:23+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Nginx中配置SSL证书1]]></title>
+    <title type="html"><![CDATA[Nginx中配置SSL证书]]></title>
     <link href="jythons.github.io/16041606361898.html"/>
     <updated>2020-11-01T00:10:36+08:00</updated>
     <id>jythons.github.io/16041606361898.html</id>
