@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-02T00:32:32+08:00</updated>
+  <updated>2020-11-02T00:40:22+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,16 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[LVS简介]]></title>
+    <link href="jythons.github.io/16042488055175.html"/>
+    <updated>2020-11-02T00:40:05+08:00</updated>
+    <id>jythons.github.io/16042488055175.html</id>
+    <content type="html"><![CDATA[
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Keepalived 双机热备原理]]></title>
@@ -1530,37 +1540,6 @@ kill -USR1 `cat $PID`
 <li>查看版本以及配置信息：nginx -V</li>
 <li>手动置顶nginx核心配置文件：nginx -c filename(nginx.conf的路径)</li>
 </ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Q:nginx.pid打开失败以及失效的解决办法]]></title>
-    <link href="jythons.github.io/15983710849309.html"/>
-    <updated>2020-08-25T23:58:04+08:00</updated>
-    <id>jythons.github.io/15983710849309.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">问题背景</h2>
-
-<p>当我们执行<code>./nginx</code>或<code>./nginx -s reload</code>命令时，显示：<code>open() &quot;/var/run/nginx/nginx.pid&quot;</code>没有那个问价或目录<br/>
-<span id="more"></span><!-- more --></p>
-
-<h2 id="toc_1">问题原因</h2>
-
-<p>原因是因为<code>/var/run/nginx</code>这个目录不见了。我们需要重新创建这个目录</p>
-
-<h2 id="toc_2">解决办法</h2>
-
-<p>1.首先创建这个目录</p>
-
-<pre><code class="language-text">mkdir /var/run/nginx -p
-</code></pre>
-
-<p>2.创建好文件夹后，进入到nginx跟目录下使用<code>./sbin/nginx -t</code>, 检查nginx配置是否正确，再使用<code>./sbin/nginx -s reload</code>重新加载配置文件。<br/>
-3.如果执行以上命令出现：无效的PID错误时，需要手动的方式指定一个nginx配置文件，命令如下：</p>
-
-<pre><code class="language-text">./sbin/nginx -c /nginx跟目录/conf/nginx.conf
-</code></pre>
 
 ]]></content>
   </entry>
