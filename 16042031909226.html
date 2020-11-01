@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	动静分离的那些事 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">个人小站，记录生活，和日常学习笔记</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="shell.html">Shell</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">动静分离的那些事</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<h2 id="toc_0">动静分离的特点</h2>
+
+<h3 id="toc_1">分布式</h3>
+
+<p>动静分离的本质就是分布式，把动态接口和静态的资源分开这样的话就可以减少后台服务器的压力，提高了静态资源的访问速度，因为静态资源是可以被缓存的，一旦有了缓存的话，用户访问的速度就回更快。后端就不需要再去渲染页面，以往的开发，html、jsp是需要服务器去渲染的，现在采用动静分离，静态资源都是交给客户端去渲染。<br/>
+<span id="more"></span><!-- more --></p>
+
+<h3 id="toc_2">前后端解耦</h3>
+
+<p>前后端分离的开发模式，前后端分开开发，分开部署。</p>
+
+<h3 id="toc_3">静态归Nginx</h3>
+
+<p>静态资源，例如：js、css、html等静态资源都交由Nginx管理，从Nginx里面去读去和加载静态资源的。</p>
+
+<h3 id="toc_4">接口的服务化</h3>
+
+<p>因为是动静分离，所以接口都是单独的去部署，通过集群去部署，这样就可以封装一些接口和数据，让前端去调用。</p>
+
+<h2 id="toc_5">动静分离</h2>
+
+<h3 id="toc_6">静态数据</h3>
+
+<p>例如像css、js、html、images、audios、videos这些，如果需要修改，Nginx会根据最后一次的修改时间来刷新数据。</p>
+
+<h3 id="toc_7">动态数据</h3>
+
+<p>动态数据往往都是以一个接口的形式去请求，动态数据可能第一次去请求和第二次去请求获得的结果是一样的。例如文章，文章列表数据。</p>
+
+<h2 id="toc_8">动静分离的方式</h2>
+
+<h3 id="toc_9">CDN</h3>
+
+<p>CDN是一个内容分发网络，他可以根据客户端的地域去选择最近的服务器来获取资源，加速访问速度。</p>
+
+<h3 id="toc_10">Nginx</h3>
+
+<p>根据url来判断请求的是静态资源还是动态资源，如果是请求的静态资源，就将请求转发到静态资源集群，如果请求的动态资源，就将请求转发到动态资源的上游服务器。</p>
+
+<h2 id="toc_11">动静分离的问题</h2>
+
+<h3 id="toc_12">跨域</h3>
+
+<p>解决方式：</p>
+
+<ul>
+<li>SpringBoot</li>
+<li>Nginx</li>
+<li>jsonp</li>
+</ul>
+
+<h3 id="toc_13">分布式会话</h3>
+
+<ul>
+<li>分布式缓存中间件，例如：redis</li>
+</ul>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>
