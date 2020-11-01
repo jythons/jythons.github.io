@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Nginx跨域 - Jythons小站
+  	Nginx高可用集群架构 - Jythons小站
   	
 	</title>
 
@@ -123,35 +123,49 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Nginx跨域</h1>
+		<h1 class="title" itemprop="name">Nginx高可用集群架构</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<h2 id="toc_0">CROS跨域资源共享</h2>
+			<h2 id="toc_0">高可用 HA（High Availability）</h2>
+
+<h3 id="toc_1">Keepalived双机主备原理</h3>
+
+<p>反向代理服务器，分为主节点和一个备用节点，当主节点挂掉之后，自动切换为备用节点。<br/>
+<img src="media/16042095103845/HA%E9%AB%98%E5%8F%AF%E7%94%A8.png" alt="HA高可用"/><br/>
+<span id="more"></span><!-- more --></p>
+
+<h3 id="toc_2">Keepalived概念</h3>
 
 <ul>
-<li>Cross-Origin Resource Sharing</li>
-<li>允许浏览器向跨Origin的服务器发起js请求获取响应</li>
-<li>Jsonp、SpringBoot Cors、Nginx</li>
+<li>解决单点故障，不单单是在nginx上使用，也可以在redis等集群服务上使用。</li>
+<li>组件免费</li>
+<li>可以实现高可用HA机制</li>
+<li>基于VRRP协议</li>
 </ul>
 
-<span id="more"></span><!-- more -->
+<h3 id="toc_3">虚拟路由冗余协议 VRRP</h3>
 
-<h2 id="toc_1">在Nginx配置跨域</h2>
+<blockquote>
+<p>VRRP即虚拟路由冗余协议(Virtual Router Redundancy Protocol)，它是为了避免路由器出现单点故障的一种容错协议。 </p>
+</blockquote>
 
-<p>在Nginx.conf配置文件的Server块内配置如下内容：</p>
+<ul>
+<li>解决内网单机故障的路由协议</li>
+<li>通过该协议，可以构建有多个路由器 MASTER BACKUP</li>
+<li>虚拟IP - VIP（Virtual IP Address）</li>
+</ul>
 
-<pre><code class="language-text">server {
-    ...
-    #允许跨域请求的域，*代表所有
-    add_header &#39;Access-Control-Allow-Origin&#39; *;
-    #允许带上Cookie请求
-    add_header &#39;Access-Control-Allow-Credentials&#39; &#39;true&#39;;
-    #允许请求的方法，比如 GET/POST/PUT/DELETE
-    add_header &#39;Access-Control-Allow-Methods&#39; *;
-    #允许请求的header
-    add_header &#39;Access-Control-Allow-Headers&#39; *;
-    ...
-}    
-</code></pre>
+<h3 id="toc_4">Keepalived双机主备原理</h3>
+
+<p>用户以前是直接请求到Nginx，有了Keepalived之后，用户先请求到虚拟IP，由于虚拟IP是和Nginx的Master节点绑定的，所以，请求会到达Master节点的Nginx。<br/><br/>
+<img src="media/16042095103845/%E8%99%9A%E6%8B%9FIP%E8%AE%BF%E9%97%AEMaster-nginx.png" alt="虚拟IP访问Master-nginx"/></p>
+
+<p>虚拟IP会对Nginx做心跳检测，如果主节点Nginx挂掉之后，虚拟IP就会和Nginx的备用节点绑定，用户的请求还是先请求到虚拟IP，然后请求到备用节点的Nginx。<br/>
+<img src="media/16042095103845/%E8%99%9A%E6%8B%9FIP%E8%AE%BF%E9%97%AE%E5%A4%87%E7%94%A8Nginx%E8%8A%82%E7%82%B9.png" alt="虚拟IP访问备用Nginx节点"/></p>
+
+<blockquote>
+<p>不管是使用多个还是一个备用节点，要保证备用节点的配置和主节点的服务器配置是相同的。<br/>
+例如，主节点可以同时处理1000个请求，备用节点可以同时处理100个请求，当主节点挂掉之后，请求会全部打到备用节点，这时由于备用节点的配置比较低，不能同时处理100个以上的请求，因此，备用节点会瞬间挂掉。</p>
+</blockquote>
 
 		</div>
 	</article>
