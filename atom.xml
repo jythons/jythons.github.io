@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-01T16:04:36+08:00</updated>
+  <updated>2020-11-02T00:32:32+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,246 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Keepalived 双机热备原理]]></title>
+    <link href="jythons.github.io/16042463644403.html"/>
+    <updated>2020-11-01T23:59:24+08:00</updated>
+    <id>jythons.github.io/16042463644403.html</id>
+    <content type="html"><![CDATA[
+<p>双机主备的缺点：如果在主节点比较稳定，一直没有问题的话，这时备用节点的服务器一直不使用，这样会造成成本开销加大。<br/>
+因此就要采用双机热备的策略，将备用节点利用起来，在没有问题时，备用节点用来做其他的事情。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">原理图</h2>
+
+<p><img src="media/16042463644403/keeplived%E5%8F%8C%E4%B8%BB%E7%83%AD%E5%A4%87.png" alt="keeplived双主热备"/></p>
+
+<blockquote>
+<p>关于DNS轮训，可以在腾讯云或者阿里云控制台配置。</p>
+</blockquote>
+
+<h2 id="toc_1">原理</h2>
+
+<p>当主节点没有问题时，两个节点各自维护自己的服务请求，当其中一个节点发生故障时，发生故障的节点虚拟IP会与另一个没有故障的 Nginx 绑定，将请求发送到没有故障的节点，当故障恢复后，在自动绑定回原来节点的Nginx。这里就不再区分主节点和备用节点，两个节点互为主备。</p>
+
+<h2 id="toc_2">实现</h2>
+
+<blockquote>
+<p>规则：以一个虚拟IP分组归为同一个路由</p>
+</blockquote>
+
+<p><strong>主节点配置：</strong></p>
+
+<pre><code class="language-text">global_defs {
+    router_id keep_171
+}
+
+vrrp_script check_nginx_alive {
+    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
+    ! 每隔两秒运行上一行脚本
+    interval 2
+    ! 如果脚本运行成功，则升级权重+10
+    weight 10
+    ! 如果脚本运行失败，则降级权重-10
+    # weight -10
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens33
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    track_script {
+        check_nginx_alive # 追踪 nginx 脚本
+    }
+    virtual_ipaddress {
+        192.168.1.161
+    }
+}
+
+vrrp_instance VI_2 {
+    state BACKUP
+    interface ens33
+    virtual_router_id 52
+    priority 80
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.1.162
+    }
+}
+</code></pre>
+
+<p><strong>备用节点配置：</strong></p>
+
+<pre><code class="language-text">global_defs {
+    router_id keep_171
+}
+
+vrrp_script check_nginx_alive {
+    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
+    ! 每隔两秒运行上一行脚本
+    interval 2
+    ! 如果脚本运行成功，则升级权重+10
+    weight 10
+    ! 如果脚本运行失败，则降级权重-10
+    # weight -10
+}
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface ens33
+    virtual_router_id 51
+    priority 80
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.1.161
+    }
+}
+
+vrrp_instance VI_2 {
+    state MASTER
+    interface ens33
+    virtual_router_id 52
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    track_script {
+        check_nginx_alive # 追踪 nginx 脚本
+    }
+    virtual_ipaddress {
+        192.168.1.162
+    }
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Keepalived配置Nginx自动重启]]></title>
+    <link href="jythons.github.io/16042438752112.html"/>
+    <updated>2020-11-01T23:17:55+08:00</updated>
+    <id>jythons.github.io/16042438752112.html</id>
+    <content type="html"><![CDATA[
+<p>当主节点 Nginx 服务挂掉之后，Keepalived 还会继续挂在主节点上运行，这时请求网站时，网站是不能访问的，这时需要将 Nginx 重新启动，否则网站是不能访问的，如果 Nginx 不能再次启动，这时就需要将 Keepalived 主节点切换成备用节点。这时就需要写一个脚本，来实现这个功能。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">Keepalived自动重启Nginx服务</h2>
+
+<blockquote>
+<p>将自动重启 Nginx 服务的脚本写在 Keepalived 主配置文件同级目录下（/etc/keepalived）</p>
+</blockquote>
+
+<p><strong>检测 Nginx 服务是否存活脚本如下：</strong></p>
+
+<pre><code class="language-text">file_name check_nginx_alive_or_not.sh
+
+#!/bin/bash
+A=`ps -C nginx --no-header | wc -l`
+# 判断 nginx 是否宕机，如果宕机了，尝试重启
+if [ $A -eq 0 ];then
+    /usr/local/nginx/sbin/nginx
+    # 等待一小会再次检查 nginx，如果没有启动成功，则停止Keepalived，使其启动备用机
+    sleep 3
+    if [ `ps -C nginx --no-header | wc -l` -eq 0 ];then
+        killall keepalived
+    fi
+fi
+</code></pre>
+
+<p><strong>然后到 Keepalived 主配置文件内添加一个脚本的监听。</strong></p>
+
+<blockquote>
+<p>在主配置文件中定一个脚本：vrrp_script，然后在 VI_1 节点配置调用。<br/>
+配置完成后重启Keepalived：systemctl restart keepalived</p>
+</blockquote>
+
+<pre><code class="language-text">! 全局配置
+global_defs {
+   ! 配置切换通知的email
+   notification_email {
+     acassen@firewall.loc
+     failover@firewall.loc
+     sysadmin@firewall.loc
+   }
+   ! 配置发件人
+   notification_email_from Alexandre.Cassen@firewall.loc
+   ! 配置邮箱服务器地址
+   smtp_server 192.168.200.1
+   ! 配置链接邮箱服务器的超时时间
+   smtp_connect_timeout 30
+   ! 路由ID：当前安装Keepalived节点主机的标识符，全局唯一
+   router_id LVS_DEVEL
+   ! 全局vrrp协议配置
+   vrrp_skip_check_adv_addr
+   vrrp_strict
+   vrrp_garp_interval 0
+   vrrp_gna_interval 0
+}
+
+! 添加自动启动Nginx监听
+vrrp_script check_nginx_alive {
+    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
+    ! 每隔两秒运行上一行脚本
+    interval 2
+    ! 如果脚本运行成功，则升级权重+10
+    weight 10
+    ! 如果脚本运行失败，则降级权重-10
+    # weight -10
+}
+
+! 计算机节点，基于vrrp协议的一个实例
+vrrp_instance VI_1 {
+    ! 表示状态，当前服务器的nginx的主节点，MASTER/BACKUP
+    state MASTER
+    ! 当前实例绑定的网卡
+    interface eth0
+    ! 保证主备节点一致即可
+    virtual_router_id 51
+    ! 权重，master权重一般高于backup，如果有多个，那就是选举，谁的权重高，谁就当选
+    priority 100
+    ! 主备之间同步检查时间间隔，单位秒
+    advert_int 2
+    ! 认证权限密码。防止非法节点进入
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    
+    track_script {
+        check_nginx_alive # 追踪 nginx 脚本
+    }
+    
+    ! 虚拟出来的ip，可以有多个（vip）
+    virtual_ipaddress {
+        192.168.200.16
+        192.168.200.17
+        192.168.200.18
+    }
+}
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Keepalived]]></title>
@@ -221,8 +461,35 @@ virtual_server 10.10.10.3 1358 {
 
 <h2 id="toc_3">启动 Keepalived</h2>
 
-<p><code>cd /usr/local/keepalived/sbin</code><br/>
-<code>./keepalived</code></p>
+<pre><code class="language-text">cd /usr/local/keepalived/sbin
+./keepalived
+</code></pre>
+
+<h2 id="toc_4">关闭 Keepalived</h2>
+
+<p><code>ps -ef | grep keepalived</code>, 查出进程号，直接kill -9 进程ID。</p>
+
+<h2 id="toc_5">Keepalived 注册为系统服务</h2>
+
+<p>进入Keepalived的安装目录（安装包解压后的文件夹内），里面有一个keepalived文件夹，进入，里面有一个 etc 文件夹。拷贝 etc/init.d/keepalived 到系统目录/etc/init.d/ 文件夹下。</p>
+
+<pre><code class="language-shell">cp ./keepalived/etc/init.d/keepalived /etc/init.d/
+cp ./keepalived/etc/sysconfig/keepalived /etc/sysconfig/
+</code></pre>
+
+<p>然后刷新系统服务，使刚加进去的服务生效。</p>
+
+<pre><code class="language-text">systemctl daemon-reload
+</code></pre>
+
+<p>这样就可以在系统服务中使用Keepalived了。</p>
+
+<h3 id="toc_6">系统中使用Keepalived</h3>
+
+<pre><code class="language-text">systemctl start keepalived.service    # 启动Keepalived服务
+systemctl stop keepalived.service     # 停止Keepalived服务
+systemctl restart keepalived.service  # 重新启动Keepalived服务
+</code></pre>
 
 ]]></content>
   </entry>
@@ -1294,153 +1561,6 @@ kill -USR1 `cat $PID`
 
 <pre><code class="language-text">./sbin/nginx -c /nginx跟目录/conf/nginx.conf
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[nginx处理web请求机制解析]]></title>
-    <link href="jythons.github.io/15978511625761.html"/>
-    <updated>2020-08-19T23:32:42+08:00</updated>
-    <id>jythons.github.io/15978511625761.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h3 id="toc_0">worker抢占机制</h3>
-
-<p>worker进程抢占accept_mutex互斥锁，谁先抢到，谁与client建立连接</p>
-
-<h3 id="toc_1">传统服务器事件处理</h3>
-
-<p>客户端与worker进程连接并阻塞时，其他的请求会等待第一个请求处理完毕才可以被执行。</p>
-
-<h3 id="toc_2">Nginx事件处理</h3>
-
-<p>nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器的模式，所以当第一个请求被阻塞时，也可以同事处理接下来的其他请求（use epoll, linux的epoll模型，可以同时处理6-8万个请求）</p>
-
-<h3 id="toc_3">配置nginx的最大连接数</h3>
-
-<p>在nginx.conf配置文件内</p>
-
-<pre><code class="language-text">events {
-    # 默认使用epoll
-    use epoll;
-    # 每个worker允许连接的客户端最大连接数
-    worker_connections 1024;
-}
-</code></pre>
-
-<h3 id="toc_4">nginx.conf配置结构</h3>
-
-<ul>
-<li>main 全局配置</li>
-<li>event 配置工作模式以及连接数</li>
-<li>sendfile on; 使用高效文件传输，提升传输性能</li>
-<li>tcp_nopush on; sendfile启用后才能使用，是指当数据表积累一定大小后才发送，提高了效率</li>
-<li>keepalive_timeout 设置客户端与服务端请求的超时时间，保证客户端多次请求的时候不会重复建立新的链接，节约资源损耗：keepalive_timeout 65;</li>
-<li>gzip on; gzip启用压缩，html/css压缩后传输更快</li>
-<li>http http模块相关配置
-<ul>
-<li>server 虚拟主机模块 
-<ul>
-<li>listen 监听端口</li>
-<li>server_name localhost、IP、域名</li>
-<li>location 请求路由映射，匹配拦截</li>
-<li>root 请求位置</li>
-<li>index 首页设置</li>
-</ul></li>
-<li>location 路由规则，表达式</li>
-<li>upstream 集群，内网服务器</li>
-</ul></li>
-</ul>
-
-<h3 id="toc_5">设定日志格式，main为定义的格式名称，如此access_log就可以直接使用这个变量了</h3>
-
-<table>
-<thead>
-<tr>
-<th>参数名</th>
-<th>参数意义</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>$remote_addr</td>
-<td>客户端IP</td>
-</tr>
-<tr>
-<td>$remote_user</td>
-<td>远程客户端用户名，一般为：’-’</td>
-</tr>
-<tr>
-<td>$time_local</td>
-<td>时间和时区</td>
-</tr>
-<tr>
-<td>$request</td>
-<td>请求的URL以及method</td>
-</tr>
-<tr>
-<td>$status</td>
-<td>响应状态码</td>
-</tr>
-<tr>
-<td>$body_bytes_send</td>
-<td>响应客户端内容字节数</td>
-</tr>
-<tr>
-<td>$http_referer</td>
-<td>记录用户从哪个链接跳转过来的</td>
-</tr>
-<tr>
-<td>$http_user_agent</td>
-<td>用户所使用的代理，一般来时都是浏览器</td>
-</tr>
-<tr>
-<td>http_x_forwarded_for</td>
-<td>通过代理服务器来记录客户端的IP</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_6">日志配置格式</h4>
-
-<p><code>error_log [日志文件路径] [日志级别：notice|info]</code> </p>
-
-<h5 id="toc_7">日志级别（由低到高）</h5>
-
-<ul>
-<li>debug</li>
-<li>info</li>
-<li>notice</li>
-<li>warn</li>
-<li>error</li>
-<li>crit</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[nginx进程模型]]></title>
-    <link href="jythons.github.io/15978504673218.html"/>
-    <updated>2020-08-19T23:21:07+08:00</updated>
-    <id>jythons.github.io/15978504673218.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<ul>
-<li>master进程：主进程</li>
-<li>worker进程：工作进程</li>
-</ul>
-
-<blockquote>
-<p>master进程负责监听请求，接受到请求后交给worker进程处理，master进程同时还会监听worker进程，如果有worker进程挂掉，master会重新启动一个新的worker进程。</p>
-</blockquote>
-
-<p>设置worker进程数量：<br/>
-<code>nginx.conf文件，worker_processes num, num表示worker进程数量</code></p>
 
 ]]></content>
   </entry>

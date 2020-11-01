@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Keepalived - Jythons小站
+  	Keepalived配置Nginx自动重启 - Jythons小站
   	
 	</title>
 
@@ -123,36 +123,41 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Keepalived</h1>
+		<h1 class="title" itemprop="name">Keepalived配置Nginx自动重启</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<h2 id="toc_0">IP规划</h2>
-
-<p><img src="media/16042148155872/keepalived-IP%E8%A7%84%E5%88%92.png" alt="keepalived-IP规划"/></p>
-
-<blockquote>
-<p>keepalived官网<a href="https://www.keepalived.org/index.html">地址</a></p>
-</blockquote>
+			<p>当主节点 Nginx 服务挂掉之后，Keepalived 还会继续挂在主节点上运行，这时请求网站时，网站是不能访问的，这时需要将 Nginx 重新启动，否则网站是不能访问的，如果 Nginx 不能再次启动，这时就需要将 Keepalived 主节点切换成备用节点。这时就需要写一个脚本，来实现这个功能。</p>
 
 <span id="more"></span><!-- more -->
 
-<h2 id="toc_1">安装Keepalived</h2>
-
-<ol>
-<li><a href="https://www.keepalived.org/software/keepalived-2.1.5.tar.gz">下载安装包</a></li>
-<li>解压：tar -zxvf keepalived-2.1.5.tar.gz</li>
-<li>cd keepalived-2.1.5</li>
-<li>./configure --prefix=/usr/local/keepalived --sysconf=/etc</li>
-<li>make &amp;&amp; make install</li>
-</ol>
+<h2 id="toc_0">Keepalived自动重启Nginx服务</h2>
 
 <blockquote>
-<p>--prefix: 安装目录；--sysconf: 同步核心配置到/etc目录下，<code>/etc/keepalived/keepalived.conf</code>，固定位置，改成其他位置则keepalived启动不了，<code>/var/log/messages</code>中会报错。<br/>
-配置过程中可能会出现警告信息，如下所示：<br/>
-<code>*** WARNING - this build will not support IPVS with IPv6. Please install libnl/libnl-devel ...</code><br/>
-解决办法：安装libnl/libnl-3依赖，<code>yum -y install libnl libnl-devel</code>, 然后重新安装步骤的第4步和第五部一下，此时OK。</p>
+<p>将自动重启 Nginx 服务的脚本写在 Keepalived 主配置文件同级目录下（/etc/keepalived）</p>
 </blockquote>
 
-<h2 id="toc_2">Keepalived 核心配置文件</h2>
+<p><strong>检测 Nginx 服务是否存活脚本如下：</strong></p>
+
+<pre><code class="language-text">file_name check_nginx_alive_or_not.sh
+
+#!/bin/bash
+A=`ps -C nginx --no-header | wc -l`
+# 判断 nginx 是否宕机，如果宕机了，尝试重启
+if [ $A -eq 0 ];then
+    /usr/local/nginx/sbin/nginx
+    # 等待一小会再次检查 nginx，如果没有启动成功，则停止Keepalived，使其启动备用机
+    sleep 3
+    if [ `ps -C nginx --no-header | wc -l` -eq 0 ];then
+        killall keepalived
+    fi
+fi
+</code></pre>
+
+<p><strong>然后到 Keepalived 主配置文件内添加一个脚本的监听。</strong></p>
+
+<blockquote>
+<p>在主配置文件中定一个脚本：vrrp_script，然后在 VI_1 节点配置调用。<br/>
+配置完成后重启Keepalived：systemctl restart keepalived</p>
+</blockquote>
 
 <pre><code class="language-text">! 全局配置
 global_defs {
@@ -176,6 +181,18 @@ global_defs {
    vrrp_garp_interval 0
    vrrp_gna_interval 0
 }
+
+! 添加自动启动Nginx监听
+vrrp_script check_nginx_alive {
+    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
+    ! 每隔两秒运行上一行脚本
+    interval 2
+    ! 如果脚本运行成功，则升级权重+10
+    weight 10
+    ! 如果脚本运行失败，则降级权重-10
+    # weight -10
+}
+
 ! 计算机节点，基于vrrp协议的一个实例
 vrrp_instance VI_1 {
     ! 表示状态，当前服务器的nginx的主节点，MASTER/BACKUP
@@ -193,6 +210,11 @@ vrrp_instance VI_1 {
         auth_type PASS
         auth_pass 1111
     }
+    
+    track_script {
+        check_nginx_alive # 追踪 nginx 脚本
+    }
+    
     ! 虚拟出来的ip，可以有多个（vip）
     virtual_ipaddress {
         192.168.200.16
@@ -200,161 +222,6 @@ vrrp_instance VI_1 {
         192.168.200.18
     }
 }
-! 下方都是虚拟主机，这里不需要可以删除
-virtual_server 192.168.200.100 443 {
-    delay_loop 6
-    lb_algo rr
-    lb_kind NAT
-    persistence_timeout 50
-    protocol TCP
-
-    real_server 192.168.201.100 443 {
-        weight 1
-        SSL_GET {
-            url {
-              path /
-              digest ff20ad2481f97b1754ef3e12ecd3a9cc
-            }
-            url {
-              path /mrtg/
-              digest 9b3a0c85a887a256d6939da88aabd8cd
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-}
-
-virtual_server 10.10.10.2 1358 {
-    delay_loop 6
-    lb_algo rr
-    lb_kind NAT
-    persistence_timeout 50
-    protocol TCP
-
-    sorry_server 192.168.200.200 1358
-
-    real_server 192.168.200.2 1358 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /testurl/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl2/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl3/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-    
-    real_server 192.168.200.3 1358 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /testurl/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334c
-            }
-            url {
-              path /testurl2/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334c
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-}
-
-virtual_server 10.10.10.3 1358 {
-    delay_loop 3
-    lb_algo rr
-    lb_kind NAT
-    persistence_timeout 50
-    protocol TCP
-
-    real_server 192.168.200.4 1358 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /testurl/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl2/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl3/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-    
-    real_server 192.168.200.5 1358 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /testurl/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl2/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl3/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-}
-</code></pre>
-
-<h2 id="toc_3">启动 Keepalived</h2>
-
-<pre><code class="language-text">cd /usr/local/keepalived/sbin
-./keepalived
-</code></pre>
-
-<h2 id="toc_4">关闭 Keepalived</h2>
-
-<p><code>ps -ef | grep keepalived</code>, 查出进程号，直接kill -9 进程ID。</p>
-
-<h2 id="toc_5">Keepalived 注册为系统服务</h2>
-
-<p>进入Keepalived的安装目录（安装包解压后的文件夹内），里面有一个keepalived文件夹，进入，里面有一个 etc 文件夹。拷贝 etc/init.d/keepalived 到系统目录/etc/init.d/ 文件夹下。</p>
-
-<pre><code class="language-shell">cp ./keepalived/etc/init.d/keepalived /etc/init.d/
-cp ./keepalived/etc/sysconfig/keepalived /etc/sysconfig/
-</code></pre>
-
-<p>然后刷新系统服务，使刚加进去的服务生效。</p>
-
-<pre><code class="language-text">systemctl daemon-reload
-</code></pre>
-
-<p>这样就可以在系统服务中使用Keepalived了。</p>
-
-<h3 id="toc_6">系统中使用Keepalived</h3>
-
-<pre><code class="language-text">systemctl start keepalived.service    # 启动Keepalived服务
-systemctl stop keepalived.service     # 停止Keepalived服务
-systemctl restart keepalived.service  # 重新启动Keepalived服务
 </code></pre>
 
 		</div>

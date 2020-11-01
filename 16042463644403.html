@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Jythons小站
+  	Keepalived 双机热备原理 - Jythons小站
   	
 	</title>
 
@@ -121,133 +121,144 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-08-19T23:32:42+08:00" itemprop="datePublished">2020/08/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15978511625761.html" itemprop="url">
-		nginx处理web请求机制解析</a></h1>
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Keepalived 双机热备原理</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
-			
+			<p>双机主备的缺点：如果在主节点比较稳定，一直没有问题的话，这时备用节点的服务器一直不使用，这样会造成成本开销加大。<br/>
+因此就要采用双机热备的策略，将备用节点利用起来，在没有问题时，备用节点用来做其他的事情。</p>
 
-			 
-			<a href="15978511625761.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">原理图</h2>
+
+<p><img src="media/16042463644403/keeplived%E5%8F%8C%E4%B8%BB%E7%83%AD%E5%A4%87.png" alt="keeplived双主热备"/></p>
+
+<blockquote>
+<p>关于DNS轮训，可以在腾讯云或者阿里云控制台配置。</p>
+</blockquote>
+
+<h2 id="toc_1">原理</h2>
+
+<p>当主节点没有问题时，两个节点各自维护自己的服务请求，当其中一个节点发生故障时，发生故障的节点虚拟IP会与另一个没有故障的 Nginx 绑定，将请求发送到没有故障的节点，当故障恢复后，在自动绑定回原来节点的Nginx。这里就不再区分主节点和备用节点，两个节点互为主备。</p>
+
+<h2 id="toc_2">实现</h2>
+
+<blockquote>
+<p>规则：以一个虚拟IP分组归为同一个路由</p>
+</blockquote>
+
+<p><strong>主节点配置：</strong></p>
+
+<pre><code class="language-text">global_defs {
+    router_id keep_171
+}
+
+vrrp_script check_nginx_alive {
+    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
+    ! 每隔两秒运行上一行脚本
+    interval 2
+    ! 如果脚本运行成功，则升级权重+10
+    weight 10
+    ! 如果脚本运行失败，则降级权重-10
+    # weight -10
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens33
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    track_script {
+        check_nginx_alive # 追踪 nginx 脚本
+    }
+    virtual_ipaddress {
+        192.168.1.161
+    }
+}
+
+vrrp_instance VI_2 {
+    state BACKUP
+    interface ens33
+    virtual_router_id 52
+    priority 80
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.1.162
+    }
+}
+</code></pre>
+
+<p><strong>备用节点配置：</strong></p>
+
+<pre><code class="language-text">global_defs {
+    router_id keep_171
+}
+
+vrrp_script check_nginx_alive {
+    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
+    ! 每隔两秒运行上一行脚本
+    interval 2
+    ! 如果脚本运行成功，则升级权重+10
+    weight 10
+    ! 如果脚本运行失败，则降级权重-10
+    # weight -10
+}
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface ens33
+    virtual_router_id 51
+    priority 80
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    virtual_ipaddress {
+        192.168.1.161
+    }
+}
+
+vrrp_instance VI_2 {
+    state MASTER
+    interface ens33
+    virtual_router_id 52
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    track_script {
+        check_nginx_alive # 追踪 nginx 脚本
+    }
+    virtual_ipaddress {
+        192.168.1.162
+    }
+}
+</code></pre>
+
 		</div>
-
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-08-19T23:21:07+08:00" itemprop="datePublished">2020/08/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15978504673218.html" itemprop="url">
-		nginx进程模型</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
+	<div class="share-comment">
+	 
 
-			 
-			<a href="15978504673218.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
+	  
 
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-08-19T22:35:39+08:00" itemprop="datePublished">2020/08/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15978477399142.html" itemprop="url">
-		nginx安装</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
+	  
 
-			 
-			<a href="15978477399142.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-07-20T00:23:52+08:00" itemprop="datePublished">2020/07/20</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Java.html'>Java</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15951758323755.html" itemprop="url">
-		第一天</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">大型网站具备的特点</h2>
-
-<ul>
-<li>高并发</li>
-<li>高可用</li>
-<li>大数据</li>
-<li>迭代周期短</li>
-<li>用户量庞大</li>
-<li>可持续发展</li>
-<li>安全级别高</li>
-<li>可弹性、可伸缩</li>
-</ul>
-
-
-			
-			
-		</div>
-
-	</article>
-  
-
-</div>
-<nav id="pagenavi">
-	 <a class="prev" href="all_1.html">Prev</a>  
-	
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
-
-</nav>
-
-</div>
-
-
-
-        </div>
+	</div>
+</div>        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2014
 Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
