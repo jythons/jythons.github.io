@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-01T15:08:28+08:00</updated>
+  <updated>2020-11-01T16:04:36+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,220 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Keepalived]]></title>
+    <link href="jythons.github.io/16042148155872.html"/>
+    <updated>2020-11-01T15:13:35+08:00</updated>
+    <id>jythons.github.io/16042148155872.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">IP规划</h2>
+
+<p><img src="media/16042148155872/keepalived-IP%E8%A7%84%E5%88%92.png" alt="keepalived-IP规划"/></p>
+
+<blockquote>
+<p>keepalived官网<a href="https://www.keepalived.org/index.html">地址</a></p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">安装Keepalived</h2>
+
+<ol>
+<li><a href="https://www.keepalived.org/software/keepalived-2.1.5.tar.gz">下载安装包</a></li>
+<li>解压：tar -zxvf keepalived-2.1.5.tar.gz</li>
+<li>cd keepalived-2.1.5</li>
+<li>./configure --prefix=/usr/local/keepalived --sysconf=/etc</li>
+<li>make &amp;&amp; make install</li>
+</ol>
+
+<blockquote>
+<p>--prefix: 安装目录；--sysconf: 同步核心配置到/etc目录下，<code>/etc/keepalived/keepalived.conf</code>，固定位置，改成其他位置则keepalived启动不了，<code>/var/log/messages</code>中会报错。<br/>
+配置过程中可能会出现警告信息，如下所示：<br/>
+<code>*** WARNING - this build will not support IPVS with IPv6. Please install libnl/libnl-devel ...</code><br/>
+解决办法：安装libnl/libnl-3依赖，<code>yum -y install libnl libnl-devel</code>, 然后重新安装步骤的第4步和第五部一下，此时OK。</p>
+</blockquote>
+
+<h2 id="toc_2">Keepalived 核心配置文件</h2>
+
+<pre><code class="language-text">! 全局配置
+global_defs {
+   ! 配置切换通知的email
+   notification_email {
+     acassen@firewall.loc
+     failover@firewall.loc
+     sysadmin@firewall.loc
+   }
+   ! 配置发件人
+   notification_email_from Alexandre.Cassen@firewall.loc
+   ! 配置邮箱服务器地址
+   smtp_server 192.168.200.1
+   ! 配置链接邮箱服务器的超时时间
+   smtp_connect_timeout 30
+   ! 路由ID：当前安装Keepalived节点主机的标识符，全局唯一
+   router_id LVS_DEVEL
+   ! 全局vrrp协议配置
+   vrrp_skip_check_adv_addr
+   vrrp_strict
+   vrrp_garp_interval 0
+   vrrp_gna_interval 0
+}
+! 计算机节点，基于vrrp协议的一个实例
+vrrp_instance VI_1 {
+    ! 表示状态，当前服务器的nginx的主节点，MASTER/BACKUP
+    state MASTER
+    ! 当前实例绑定的网卡
+    interface eth0
+    ! 保证主备节点一致即可
+    virtual_router_id 51
+    ! 权重，master权重一般高于backup，如果有多个，那就是选举，谁的权重高，谁就当选
+    priority 100
+    ! 主备之间同步检查时间间隔，单位秒
+    advert_int 2
+    ! 认证权限密码。防止非法节点进入
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    ! 虚拟出来的ip，可以有多个（vip）
+    virtual_ipaddress {
+        192.168.200.16
+        192.168.200.17
+        192.168.200.18
+    }
+}
+! 下方都是虚拟主机，这里不需要可以删除
+virtual_server 192.168.200.100 443 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+
+    real_server 192.168.201.100 443 {
+        weight 1
+        SSL_GET {
+            url {
+              path /
+              digest ff20ad2481f97b1754ef3e12ecd3a9cc
+            }
+            url {
+              path /mrtg/
+              digest 9b3a0c85a887a256d6939da88aabd8cd
+            }
+            connect_timeout 3
+            retry 3
+            delay_before_retry 3
+        }
+    }
+}
+
+virtual_server 10.10.10.2 1358 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+
+    sorry_server 192.168.200.200 1358
+
+    real_server 192.168.200.2 1358 {
+        weight 1
+        HTTP_GET {
+            url {
+              path /testurl/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            url {
+              path /testurl2/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            url {
+              path /testurl3/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            connect_timeout 3
+            retry 3
+            delay_before_retry 3
+        }
+    }
+    
+    real_server 192.168.200.3 1358 {
+        weight 1
+        HTTP_GET {
+            url {
+              path /testurl/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334c
+            }
+            url {
+              path /testurl2/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334c
+            }
+            connect_timeout 3
+            retry 3
+            delay_before_retry 3
+        }
+    }
+}
+
+virtual_server 10.10.10.3 1358 {
+    delay_loop 3
+    lb_algo rr
+    lb_kind NAT
+    persistence_timeout 50
+    protocol TCP
+
+    real_server 192.168.200.4 1358 {
+        weight 1
+        HTTP_GET {
+            url {
+              path /testurl/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            url {
+              path /testurl2/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            url {
+              path /testurl3/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            connect_timeout 3
+            retry 3
+            delay_before_retry 3
+        }
+    }
+    
+    real_server 192.168.200.5 1358 {
+        weight 1
+        HTTP_GET {
+            url {
+              path /testurl/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            url {
+              path /testurl2/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            url {
+              path /testurl3/test.jsp
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            connect_timeout 3
+            retry 3
+            delay_before_retry 3
+        }
+    }
+}
+</code></pre>
+
+<h2 id="toc_3">启动 Keepalived</h2>
+
+<p><code>cd /usr/local/keepalived/sbin</code><br/>
+<code>./keepalived</code></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Nginx高可用集群架构]]></title>
@@ -1227,86 +1441,6 @@ kill -USR1 `cat $PID`
 
 <p>设置worker进程数量：<br/>
 <code>nginx.conf文件，worker_processes num, num表示worker进程数量</code></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[nginx安装]]></title>
-    <link href="jythons.github.io/15978477399142.html"/>
-    <updated>2020-08-19T22:35:39+08:00</updated>
-    <id>jythons.github.io/15978477399142.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h3 id="toc_0">安装依赖环境</h3>
-
-<p>1.安装gcc环境</p>
-
-<ul>
-<li>yum install gcc-c++</li>
-</ul>
-
-<p>2.安装PCRE库，用于解析正则表达式</p>
-
-<ul>
-<li>yum install -y pcre pcre-devel</li>
-</ul>
-
-<p>3.zlib压缩和解压依赖</p>
-
-<ul>
-<li>yum install -y zlib zlib-devel</li>
-</ul>
-
-<p>4.SSL安全的加密的套接字协议层，用于HTTP安全传输，也就是HTTPS</p>
-
-<ul>
-<li>yum install -y openssl openssl-devel</li>
-</ul>
-
-<h3 id="toc_1">解压，需要注意，解压后得到的是源码，源码需要便衣后才能安装</h3>
-
-<blockquote>
-<p>下载地址：<a href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></p>
-
-<pre><code class="language-text">tar -zxvf nginx-1.18.1.tar.gz
-</code></pre>
-</blockquote>
-
-<h3 id="toc_2">编译之前，先创建nginx临时目录，如果不创建，在启动nginx的过程中会报错</h3>
-
-<blockquote>
-<pre><code class="language-text">    mkdir /var/temp/nginx -p
-</code></pre>
-</blockquote>
-
-<h3 id="toc_3">在nginx目录，输入如下命令进行配置，目的是为了创建makefile文件</h3>
-
-<blockquote>
-<p>注：\ 代表在命令行中换行，用于提高可读性</p>
-
-<pre><code class="language-text">./configure \
---prefix=/usr/local/nginx \
---pid-path=/var/run/nginx/nginx.pid \
---lock-path=/var/lock/nginx.lock \
---error-log-path=/var/log/nginx/error.log \
---http-log-path=/var/log/nginx/access.log \
---with-http_gzip_static_module \
---http-client-body-temp-path=/var/temp/nginx/client \
---http-proxy-temp-path=/var/temp/nginx/proxy \
---http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
---http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
---http-scgi-temp-path=/var/temp/nginx/scgi
-</code></pre>
-</blockquote>
-
-<h3 id="toc_4">编译、安装</h3>
-
-<blockquote>
-<pre><code class="language-text">make &amp;&amp; make install
-</code></pre>
-</blockquote>
 
 ]]></content>
   </entry>
