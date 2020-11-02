@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	LVS - Jythons小站
+  	LVS的三种模式 - Jythons小站
   	
 	</title>
 
@@ -123,107 +123,52 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-02T23:50:52+08:00" itemprop="datePublished">2020/11/02</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16043322529866.html" itemprop="url">
-		搭建 LVS-DR 模式</a></h1>
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">LVS的三种模式</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
-			<p>。。。</p>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-02T23:24:05+08:00" itemprop="datePublished">2020/11/02</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16043306453976.html" itemprop="url">
-		LVS的三种模式</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
 			<blockquote>
 <p>NAT，基于网络地址转换；<br/>
 TUN，基于IP隧道的模式；<br/>
 DR，直接路由模式。</p>
 </blockquote>
 
+<span id="more"></span><!-- more -->
 
+<h2 id="toc_0">LVS 模式之 NAT</h2>
 
-			 
-			<a href="16043306453976.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
+<p>网络地址转换<br/>
+<img src="media/16043306453976/NAT%E6%A8%A1%E5%9E%8B.png" alt="NAT模型"/></p>
+
+<p>NAT模型和Nginx相同，LVS需要同时处理请求和返回，这样在流量比较大的情况下，会出现负载过高的问题。<br/>
+NAT模型对外使用虚拟IP，与上游服务器交互使用的是私网IP，上游服务器是不能与客户端直接交互的。</p>
+
+<h2 id="toc_1">LVS 模式之 TUN</h2>
+
+<p>隧道模式<br/>
+<img src="media/16043306453976/TUN%E6%A8%A1%E5%9E%8B.png" alt="TUN模型"/></p>
+
+<p>TUN是基于隧道的通信方式，所有的服务器都需要通过隧道通信，使用TUN模型，所有的响应都不会经过LVS，在上游服务器处理完请求后，他会直接将响应返回给客户端，可以减轻上行请求的压力，大大提高了并发以及吞吐量。但是这个模型有一个硬性的要求，每一个服务器节点都要配备一个网卡，这样，每个服务器几点就回暴漏在公网。</p>
+
+<h2 id="toc_2">LVS 模式之 DR</h2>
+
+<p>直接路由模式<br/>
+<img src="media/16043306453976/DR%E6%A8%A1%E5%9E%8B.png" alt="DR模型"/></p>
+
+<p>DR模型和TUN模型相似，LVS只处理请求，响应由每个服务器节点返回，但是不同的是，服务器节点返回响应统一由路由返回，这样上游的服务器节点就不会暴漏在公网上面，大大提高的安全性。<br/>
+用户通过虚拟IP访问，响应时，在路由出也构建一个虚拟IP来统一返回响应。对于用户来说，通过虚拟IP，将服务器给隐藏了起来</p>
+
 		</div>
-
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-02T00:40:05+08:00" itemprop="datePublished">2020/11/02</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042488055175.html" itemprop="url">
-		LVS简介</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>LVS (Linux Virtual Server)，linux虚拟服务，他是由章文嵩博士主导的开源的负载均衡项目，LVS（ipvs）被Linux系统默认集成到了Linux内核中；<br/>
-LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是7层的负载均衡，是在内容层对请求报文的负载均衡），四层负载均衡是一个基于IP+Port的负载均衡。<br/>
-<a href="http://www.linux-vs.org/index/html">官网地址</a></p>
-
-
-
-			 
-			<a href="16042488055175.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
-  
-
-</div>
-<nav id="pagenavi">
+	<div class="share-comment">
 	 
-	
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
-</nav>
+	  
 
-</div>
+	  
 
-
-
-        </div>
+	</div>
+</div>        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2020
 Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>

@@ -127,7 +127,35 @@
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 		<h1 class="title" itemprop="name">LVS简介</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
+			<p>LVS (Linux Virtual Server)，linux虚拟服务，他是由章文嵩博士主导的开源的负载均衡项目，LVS（ipvs）被Linux系统默认集成到了Linux内核中；<br/>
+LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是7层的负载均衡，是在内容层对请求报文的负载均衡），四层负载均衡是一个基于IP+Port的负载均衡。<br/>
+<a href="http://www.linux-vs.org/index/html">官网地址</a></p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">LVS 网络拓扑图</h2>
+
+<p><img src="media/16042488055175/%E6%88%AA%E5%B1%8F2020-11-02%20%E4%B8%8B%E5%8D%8811.06.28.png" alt="截屏2020-11-02 下午11.06.28"/></p>
+
+<h2 id="toc_1">为什么要使用 LVS + Nginx</h2>
+
+<ul>
+<li>LVS基于四层，工作效率高，接收到请求之后可以直接转发，要比单个Nginx的性能要高几十倍</li>
+<li>单个Nginx承受不了压力，需要集群</li>
+<li>LVS充当Nginx集群的调度者，LVS是不会处理请求的报文的，因此承受负载的能力会更高</li>
+<li>Nginx接受请求来回，LVS可以直接受不响应</li>
+</ul>
+
+<h3 id="toc_2">Nginx网络拓扑图</h3>
+
+<p><img src="media/16042488055175/Nginx%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%9B%BE.png" alt="Nginx网络拓扑图"/><br/>
+Nginx在实现负载均衡时，需要处理请求，并处理返回结果，因此会大大增加Nginx的负载，举个例子，如果一个饭店进来吃饭和吃完饭出去的人都走同一个门，那么这个门会非常的堵。</p>
+
+<h3 id="toc_3">LVS网络拓扑图</h3>
+
+<p><img src="media/16042488055175/LVS%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%9B%BE.png" alt="LVS网络拓扑图"/><br/>
+LVS实现负载均衡时，LVS接受所有的请求，将请求转发给上游服务器，上游服务器处理完请求，经过LVS的某种模式，直接返回给客户端，这样大大减少了LVS的负载，并提高了整个系统的并发能力。</p>
+
 		</div>
 	</article>
 	<div class="share-comment">

@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-02T00:40:22+08:00</updated>
+  <updated>2020-11-02T23:51:59+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,11 +14,90 @@
 
   
   <entry>
+    <title type="html"><![CDATA[搭建 LVS-DR 模式]]></title>
+    <link href="jythons.github.io/16043322529866.html"/>
+    <updated>2020-11-02T23:50:52+08:00</updated>
+    <id>jythons.github.io/16043322529866.html</id>
+    <content type="html"><![CDATA[
+<p>。。。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[LVS的三种模式]]></title>
+    <link href="jythons.github.io/16043306453976.html"/>
+    <updated>2020-11-02T23:24:05+08:00</updated>
+    <id>jythons.github.io/16043306453976.html</id>
+    <content type="html"><![CDATA[
+<blockquote>
+<p>NAT，基于网络地址转换；<br/>
+TUN，基于IP隧道的模式；<br/>
+DR，直接路由模式。</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">LVS 模式之 NAT</h2>
+
+<p>网络地址转换<br/>
+<img src="media/16043306453976/NAT%E6%A8%A1%E5%9E%8B.png" alt="NAT模型"/></p>
+
+<p>NAT模型和Nginx相同，LVS需要同时处理请求和返回，这样在流量比较大的情况下，会出现负载过高的问题。<br/>
+NAT模型对外使用虚拟IP，与上游服务器交互使用的是私网IP，上游服务器是不能与客户端直接交互的。</p>
+
+<h2 id="toc_1">LVS 模式之 TUN</h2>
+
+<p>隧道模式<br/>
+<img src="media/16043306453976/TUN%E6%A8%A1%E5%9E%8B.png" alt="TUN模型"/></p>
+
+<p>TUN是基于隧道的通信方式，所有的服务器都需要通过隧道通信，使用TUN模型，所有的响应都不会经过LVS，在上游服务器处理完请求后，他会直接将响应返回给客户端，可以减轻上行请求的压力，大大提高了并发以及吞吐量。但是这个模型有一个硬性的要求，每一个服务器节点都要配备一个网卡，这样，每个服务器几点就回暴漏在公网。</p>
+
+<h2 id="toc_2">LVS 模式之 DR</h2>
+
+<p>直接路由模式<br/>
+<img src="media/16043306453976/DR%E6%A8%A1%E5%9E%8B.png" alt="DR模型"/></p>
+
+<p>DR模型和TUN模型相似，LVS只处理请求，响应由每个服务器节点返回，但是不同的是，服务器节点返回响应统一由路由返回，这样上游的服务器节点就不会暴漏在公网上面，大大提高的安全性。<br/>
+用户通过虚拟IP访问，响应时，在路由出也构建一个虚拟IP来统一返回响应。对于用户来说，通过虚拟IP，将服务器给隐藏了起来</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[LVS简介]]></title>
     <link href="jythons.github.io/16042488055175.html"/>
     <updated>2020-11-02T00:40:05+08:00</updated>
     <id>jythons.github.io/16042488055175.html</id>
     <content type="html"><![CDATA[
+<p>LVS (Linux Virtual Server)，linux虚拟服务，他是由章文嵩博士主导的开源的负载均衡项目，LVS（ipvs）被Linux系统默认集成到了Linux内核中；<br/>
+LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是7层的负载均衡，是在内容层对请求报文的负载均衡），四层负载均衡是一个基于IP+Port的负载均衡。<br/>
+<a href="http://www.linux-vs.org/index/html">官网地址</a></p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">LVS 网络拓扑图</h2>
+
+<p><img src="media/16042488055175/%E6%88%AA%E5%B1%8F2020-11-02%20%E4%B8%8B%E5%8D%8811.06.28.png" alt="截屏2020-11-02 下午11.06.28"/></p>
+
+<h2 id="toc_1">为什么要使用 LVS + Nginx</h2>
+
+<ul>
+<li>LVS基于四层，工作效率高，接收到请求之后可以直接转发，要比单个Nginx的性能要高几十倍</li>
+<li>单个Nginx承受不了压力，需要集群</li>
+<li>LVS充当Nginx集群的调度者，LVS是不会处理请求的报文的，因此承受负载的能力会更高</li>
+<li>Nginx接受请求来回，LVS可以直接受不响应</li>
+</ul>
+
+<h3 id="toc_2">Nginx网络拓扑图</h3>
+
+<p><img src="media/16042488055175/Nginx%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%9B%BE.png" alt="Nginx网络拓扑图"/><br/>
+Nginx在实现负载均衡时，需要处理请求，并处理返回结果，因此会大大增加Nginx的负载，举个例子，如果一个饭店进来吃饭和吃完饭出去的人都走同一个门，那么这个门会非常的堵。</p>
+
+<h3 id="toc_3">LVS网络拓扑图</h3>
+
+<p><img src="media/16042488055175/LVS%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%9B%BE.png" alt="LVS网络拓扑图"/><br/>
+LVS实现负载均衡时，LVS接受所有的请求，将请求转发给上游服务器，上游服务器处理完请求，经过LVS的某种模式，直接返回给客户端，这样大大减少了LVS的负载，并提高了整个系统的并发能力。</p>
 
 ]]></content>
   </entry>
@@ -1478,68 +1557,6 @@ location ~ \. (GIF|jpg|png|jpeg) {<br/>
 }
 </code></pre></li>
 </ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Nginx日志切割]]></title>
-    <link href="jythons.github.io/15984510722035.html"/>
-    <updated>2020-08-26T22:11:12+08:00</updated>
-    <id>jythons.github.io/15984510722035.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">手动切割</h2>
-
-<p>现有的日志都会存在于<code>access.log</code>文件中，但是随着时间的推移，这个文件的内容会越来越多，体积会越来越大，不便于运维人员查看，所以我们可以通过把这个大的日志文件切割为多份不同的小文件作为日志，切割规则可以以天为单位，如果每天有几百G或者几个T的日志的话，则可以按需以每半天或者每小时对日志切割以下。<br/>
-<span id="more"></span><!-- more --><br/>
-1.创建一个shell可执行文件：<code>cut_my_log.sh</code>, 内容为：</p>
-
-<pre><code class="language-text">#!/bin/bash
-LOG_PATH=&quot;/var/log/nginx/&quot;
-RECORD_TIME=$(date -d &quot;yesterday&quot; +%Y-%m-%d+%H:%M)
-PID=/var/run/nginx/nginx.pid
-mv ${LOG_PATH}/access.log ${LOG_PATH}/access.${RECORD_TIME}.log
-mv ${LOG_PATH}/ERROR.log ${LOG_PATH}/error.${RECORD_TIME}.log
-
-#向Nginx主进程发送信号，用于重新打开日志文件
-kill -USR1 `cat $PID`
-</code></pre>
-
-<p>2.为cut_my_log.sh添加可执行的权限</p>
-
-<pre><code class="language-text">chmod +x cut_my_log.sh
-</code></pre>
-
-<p>3.测试日志切割后的结果</p>
-
-<pre><code class="language-text">./cut_my_log.sh
-</code></pre>
-
-<h2 id="toc_1">自动切割</h2>
-
-<p>使用Linux系统的crontab，定时执行。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[nginx常用命令解析]]></title>
-    <link href="jythons.github.io/15983719742857.html"/>
-    <updated>2020-08-26T00:12:54+08:00</updated>
-    <id>jythons.github.io/15983719742857.html</id>
-    <content type="html"><![CDATA[
-<ol>
-<li>启动: <code>nginx</code></li>
-<li>关闭
-<ol>
-<li>nginx -s stop 这种方式是比较暴力的方式，直接停止nginx，正在请求的进程会直接停止</li>
-<li>nginx -s quit 优雅的停止，当没有用户请求时，会关闭（只针对http请求）</li>
-</ol></li>
-<li>检查语法：nginx -t</li>
-<li>查看版本：nginx -v</li>
-<li>查看版本以及配置信息：nginx -V</li>
-<li>手动置顶nginx核心配置文件：nginx -c filename(nginx.conf的路径)</li>
-</ol>
 
 ]]></content>
   </entry>
