@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Nginx跨域 - Jythons小站
+  	搭建Keepalived + LVS + Nginx 高可用集群负载均衡 - Jythons小站
   	
 	</title>
 
@@ -125,35 +125,117 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Nginx跨域</h1>
+		<h1 class="title" itemprop="name">搭建Keepalived + LVS + Nginx 高可用集群负载均衡</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<h2 id="toc_0">CROS跨域资源共享</h2>
+			<p><img src="media/16048487950121/%E5%8D%95%E4%B8%AA%E5%85%A5%E5%8F%A3%E5%9B%BE%E7%89%87.png" alt="单个入口图片"/></p>
 
-<ul>
-<li>Cross-Origin Resource Sharing</li>
-<li>允许浏览器向跨Origin的服务器发起js请求获取响应</li>
-<li>Jsonp、SpringBoot Cors、Nginx</li>
-</ul>
+<p>当前配置的只有一个LVS负载均衡服务器，当这个服务器挂掉之后，后面所有的请求都无法到达上游RS服务器，整个服务就回挂掉，因此就需要在添加一台备用机，使用Keepalived实现主备自动切换，保证服务24小时可用。如下图所示：<br/>
+<img src="media/16048487950121/%E4%B8%BB%E5%A4%87LVS%E5%88%87%E6%8D%A2.png" alt="主备LVS切换"/><br/>
+使用Keepalived不但可以使LVS主备自动切换，还可以检测RS服务器是否可用，如果有挂掉的RS服务器，则会自动剔除，避免将请求转发到挂掉的RS服务器。</p>
 
 <span id="more"></span><!-- more -->
 
-<h2 id="toc_1">在Nginx配置跨域</h2>
+<h2 id="toc_0">在LVS服务器上配置Keepalived</h2>
 
-<p>在Nginx.conf配置文件的Server块内配置如下内容：</p>
+<p>首先安装Keepalived，安装方法见：<a href="/16042148155872.html">Keepalived安装</a><br/>
+然后编辑：keepalived.conf 配置文件</p>
 
-<pre><code class="language-text">server {
-    ...
-    #允许跨域请求的域，*代表所有
-    add_header &#39;Access-Control-Allow-Origin&#39; *;
-    #允许带上Cookie请求
-    add_header &#39;Access-Control-Allow-Credentials&#39; &#39;true&#39;;
-    #允许请求的方法，比如 GET/POST/PUT/DELETE
-    add_header &#39;Access-Control-Allow-Methods&#39; *;
-    #允许请求的header
-    add_header &#39;Access-Control-Allow-Headers&#39; *;
-    ...
-}    
+<pre><code class="language-text">! 全局配置
+global_defs {
+   ! 路由ID：当前安装Keepalived节点主机的标识符，全局唯一
+   router_id LVS_151
+}
+
+! 计算机节点，基于vrrp协议的一个实例
+vrrp_instance VI_1 {
+    ! 表示状态，当前服务器的nginx的主节点，MASTER/BACKUP
+    state MASTER
+    ! 当前实例绑定的网卡
+    interface ens33
+    ! 保证主备节点一致即可
+    virtual_router_id 41
+    ! 权重，master权重一般高于backup，如果有多个，那就是选举，谁的权重高，谁就当选
+    priority 100
+    ! 主备之间同步检查时间间隔，单位秒
+    advert_int 1
+    ! 认证权限密码。防止非法节点进入
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    
+    ! 虚拟出来的ip，可以有多个（vip）
+    virtual_ipaddress {
+        192.168.1.150
+    }
+}
+# 这里是LVS的配置，virtual_server是LVS服务，real_server是服务节点
+virtual_server 192.168.1.150 80 {
+    # 健康检查的时间，单位：秒
+    delay_loop 6
+    # 配置负载均衡的算法，默认是轮询，lb就是负载均衡的意思
+    lb_algo rr
+    # 设置LVS模式 NAT｜TUN｜DR
+    lb_kind DR
+    # 多少秒内多次请求转发到同一个服务器，设置会话持久化的时间
+    persistence_timeout 50
+    # 协议 -t
+    protocol TCP
+
+    # 负载均衡的真实服务器，也就是nginx节点的具体的真实IP地址
+    real_server 192.168.1.171 80 {
+        # 轮询的默认权重配比设置为1
+        weight 1
+        # 设置健康检查
+        TCP_CHECK {
+            # 检查80端口
+            connect_port 80
+            # 超时时间 单位：秒
+            connect_timeout 2 
+            # 重试次数
+            nb_get_retry 2
+            # 重试间隔时间，单位：秒
+            delay_before_retry 3
+        }
+    }
+    real_server 192.168.1.172 80 {
+        # 轮询的默认权重配比设置为1
+        weight 1
+        # 设置健康检查
+        TCP_CHECK {
+            # 检查80端口
+            connect_port 80
+            # 超时时间 单位：秒
+            connect_timeout 2 
+            # 重试次数
+            nb_get_retry 2
+            # 重试间隔时间，单位：秒
+            delay_before_retry 3
+        }
+    }
+}
 </code></pre>
+
+<p>配置好以上配置后，清除ipvsadm的配置</p>
+
+<pre><code class="language-text">ipvsadm -C
+</code></pre>
+
+<p>这样ipvs的配置就全被清除了，接下来重启Keepalived服务</p>
+
+<pre><code class="language-text">systemctl restart keepalived
+</code></pre>
+
+<p>查看ipvs的配置是否成功：</p>
+
+<pre><code class="language-text">ipvsadm -Ln
+</code></pre>
+
+<blockquote>
+<p>如果没有输出内容，可能是keepalived的配置文件错误。<br/>
+配置好MASTER之后，再将master的keepalived配置复制到backup节点配置一下，<br/>
+修改router_id LVS_152, state BACKUP, priority 50, 权重官方建议和MASTER相差50即可</p>
+</blockquote>
 
 		</div>
 	</article>

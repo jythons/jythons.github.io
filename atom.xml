@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-02T23:51:59+08:00</updated>
+  <updated>2020-11-08T21:36:28+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,12 +14,350 @@
 
   
   <entry>
+    <title type="html"><![CDATA[搭建Keepalived + LVS + Nginx 高可用集群负载均衡]]></title>
+    <link href="jythons.github.io/16048487950121.html"/>
+    <updated>2020-11-08T23:19:55+08:00</updated>
+    <id>jythons.github.io/16048487950121.html</id>
+    <content type="html"><![CDATA[
+<p><img src="media/16048487950121/%E5%8D%95%E4%B8%AA%E5%85%A5%E5%8F%A3%E5%9B%BE%E7%89%87.png" alt="单个入口图片"/></p>
+
+<p>当前配置的只有一个LVS负载均衡服务器，当这个服务器挂掉之后，后面所有的请求都无法到达上游RS服务器，整个服务就回挂掉，因此就需要在添加一台备用机，使用Keepalived实现主备自动切换，保证服务24小时可用。如下图所示：<br/>
+<img src="media/16048487950121/%E4%B8%BB%E5%A4%87LVS%E5%88%87%E6%8D%A2.png" alt="主备LVS切换"/><br/>
+使用Keepalived不但可以使LVS主备自动切换，还可以检测RS服务器是否可用，如果有挂掉的RS服务器，则会自动剔除，避免将请求转发到挂掉的RS服务器。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">在LVS服务器上配置Keepalived</h2>
+
+<p>首先安装Keepalived，安装方法见：<a href="/16042148155872.html">Keepalived安装</a><br/>
+然后编辑：keepalived.conf 配置文件</p>
+
+<pre><code class="language-text">! 全局配置
+global_defs {
+   ! 路由ID：当前安装Keepalived节点主机的标识符，全局唯一
+   router_id LVS_151
+}
+
+! 计算机节点，基于vrrp协议的一个实例
+vrrp_instance VI_1 {
+    ! 表示状态，当前服务器的nginx的主节点，MASTER/BACKUP
+    state MASTER
+    ! 当前实例绑定的网卡
+    interface ens33
+    ! 保证主备节点一致即可
+    virtual_router_id 41
+    ! 权重，master权重一般高于backup，如果有多个，那就是选举，谁的权重高，谁就当选
+    priority 100
+    ! 主备之间同步检查时间间隔，单位秒
+    advert_int 1
+    ! 认证权限密码。防止非法节点进入
+    authentication {
+        auth_type PASS
+        auth_pass 1111
+    }
+    
+    ! 虚拟出来的ip，可以有多个（vip）
+    virtual_ipaddress {
+        192.168.1.150
+    }
+}
+# 这里是LVS的配置，virtual_server是LVS服务，real_server是服务节点
+virtual_server 192.168.1.150 80 {
+    # 健康检查的时间，单位：秒
+    delay_loop 6
+    # 配置负载均衡的算法，默认是轮询，lb就是负载均衡的意思
+    lb_algo rr
+    # 设置LVS模式 NAT｜TUN｜DR
+    lb_kind DR
+    # 多少秒内多次请求转发到同一个服务器，设置会话持久化的时间
+    persistence_timeout 50
+    # 协议 -t
+    protocol TCP
+
+    # 负载均衡的真实服务器，也就是nginx节点的具体的真实IP地址
+    real_server 192.168.1.171 80 {
+        # 轮询的默认权重配比设置为1
+        weight 1
+        # 设置健康检查
+        TCP_CHECK {
+            # 检查80端口
+            connect_port 80
+            # 超时时间 单位：秒
+            connect_timeout 2 
+            # 重试次数
+            nb_get_retry 2
+            # 重试间隔时间，单位：秒
+            delay_before_retry 3
+        }
+    }
+    real_server 192.168.1.172 80 {
+        # 轮询的默认权重配比设置为1
+        weight 1
+        # 设置健康检查
+        TCP_CHECK {
+            # 检查80端口
+            connect_port 80
+            # 超时时间 单位：秒
+            connect_timeout 2 
+            # 重试次数
+            nb_get_retry 2
+            # 重试间隔时间，单位：秒
+            delay_before_retry 3
+        }
+    }
+}
+</code></pre>
+
+<p>配置好以上配置后，清除ipvsadm的配置</p>
+
+<pre><code class="language-text">ipvsadm -C
+</code></pre>
+
+<p>这样ipvs的配置就全被清除了，接下来重启Keepalived服务</p>
+
+<pre><code class="language-text">systemctl restart keepalived
+</code></pre>
+
+<p>查看ipvs的配置是否成功：</p>
+
+<pre><code class="language-text">ipvsadm -Ln
+</code></pre>
+
+<blockquote>
+<p>如果没有输出内容，可能是keepalived的配置文件错误。<br/>
+配置好MASTER之后，再将master的keepalived配置复制到backup节点配置一下，<br/>
+修改router_id LVS_152, state BACKUP, priority 50, 权重官方建议和MASTER相差50即可</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[LVS的持久化机制]]></title>
+    <link href="jythons.github.io/16048478935893.html"/>
+    <updated>2020-11-08T23:04:53+08:00</updated>
+    <id>jythons.github.io/16048478935893.html</id>
+    <content type="html"><![CDATA[
+<p>如果一个用户短时间内多次提交请求，那么他的请求都会转发到第一次请求的RS服务器，这个时间段默认是300秒。<br/>
+配置方式：</p>
+
+<pre><code class="language-text"># 详细信息使用：man ipvsadm
+ipvsadm -E -t 192.168.1.150:80 -s rr -p [time] 
+</code></pre>
+
+<blockquote>
+<p>-E 编辑服务，-t 服务地址</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<p>通过以上配置，在访问的时候，经过time秒后，访问依然只请求到了一个服务器，这是因为有一个tcp或udp的链接超时时间，可以通过以下配置，修改超时时间。</p>
+
+<pre><code class="language-text">ipvsadm --set 1 1 1
+</code></pre>
+
+<blockquote>
+<p>ipvsadm -Lnc 查看是否有链接</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[搭建 LVS-DR 模式]]></title>
     <link href="jythons.github.io/16043322529866.html"/>
     <updated>2020-11-02T23:50:52+08:00</updated>
     <id>jythons.github.io/16043322529866.html</id>
     <content type="html"><![CDATA[
-<p>。。。</p>
+<h2 id="toc_0">服务器与 IP 约定</h2>
+
+<p><img src="media/16043322529866/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8EIP%E7%BA%A6%E5%AE%9A.png" alt="服务器与IP约定"/></p>
+
+<p>首先需要有一个LVS，LVS需要有两个IP，分别是：DIP（Direct IP）和VIP (Virtual IP)；DIP就是内网IP，用于与内网上游服务器通信使用；VIP是虚拟IP，用于客户端交互使用。<br/>
+然后上游服务器Nginx，Nginx服务器需要配置两个IP，分别是：RIP（Real Server IP）和VIP (Virtual IP); RIP也是内网IP，VIP也是虚拟IP，用户的请求处理完毕，通过VIP返回给客户端；Nginx服务器的VIP要和LVS的虚拟IP保持一致。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">开始搭建 LVS</h2>
+
+<h3 id="toc_2">配置虚拟IP</h3>
+
+<p>第一步，首先要关闭服务器网络配置管理器，如果不关闭，可能会引起接口网络的冲突，因为是在本地使用虚拟机的关系。</p>
+
+<pre><code class="language-text"># 关闭网络配置管理器
+systemctl stop NetworkManager
+systemctl disable NetworkManager
+</code></pre>
+
+<p>同样 Nginx 服务器也需要关闭网络配置管理器。</p>
+
+<p>第二步，构建LVS的IP。</p>
+
+<pre><code class="language-text"># 进入网卡配置文件目录
+cd /etc/sysconfig/network-script/
+# 拷贝一份网卡配置文件，起一个别名
+cp ifcfg-ens33 ifcfg-ens33:1
+</code></pre>
+
+<p>然后配置ifcfg-ens33:1文件, 配置如下：</p>
+
+<pre><code class="language-text">BOOTPROTO=static
+# 与网卡名称要保持统一
+DEVICE=ens33:1
+ONBOOT=yes
+IPADDR=192.168.1.150
+NETMASK=255.255.255.0
+</code></pre>
+
+<p>配置好网卡后，重启网卡：</p>
+
+<pre><code class="language-text">service network restart
+ip addr # 查看IP地址是否生效
+</code></pre>
+
+<p>到这里，虚拟IP就配置好了。</p>
+
+<h3 id="toc_3">配置集群管理工具</h3>
+
+<p>虚拟IP配置好了以后，接下来就需要配置集群管理工具。</p>
+
+<blockquote>
+<p>ipvs 是lvs自带的工具，ipvsadm需要安装。</p>
+</blockquote>
+
+<p>安装ipvsadm：</p>
+
+<pre><code class="language-text">yum install ipvsadm
+</code></pre>
+
+<p>接下来执行如下命令查看集群列表</p>
+
+<pre><code class="language-text">ipvsadm -Ln
+</code></pre>
+
+<blockquote>
+<p>阿里云云服务器不支持虚拟IP配置，需要购买他们的负载均衡服务，腾讯云服务器支持配置虚拟IP，但是要额外的去购买的，因为是建立在网卡之上的，需要使用成本的，腾讯云支持虚拟IP的最大数量是10个。</p>
+</blockquote>
+
+<h3 id="toc_4">配置RIS节点的IP</h3>
+
+<p>LVS服务器配置好以后，接下来去配置RIS节点服务器的IP，也就是Nginx所在的服务器。<br/>
+首先也需要配置一个虚拟IP，这个IP用于返回数据报文。<br/>
+首先进入到网卡配置文件所在的目录：</p>
+
+<pre><code class="language-text"># 进入网卡配置文件目录
+cd /etc/sysconfig/network-script/
+</code></pre>
+
+<p>在这个目录下，有一个 ifcfg-lo 配置文件，这个是服务器本地环回接口，我们要构建一个虚拟IP，这个IP不能被用户访问到，只是在返回报文时使用。<br/>
+复制一份 ifcfg-lo 配置文件为：ifcfg-lo:1。</p>
+
+<pre><code class="language-text">cp ifcfg-lo ifcfg-lo:1
+</code></pre>
+
+<p>修改成如下配置：</p>
+
+<pre><code class="language-text"># BOOTPROTO=static
+# 与网卡名称要保持统一
+DEVICE=lo:1
+ONBOOT=yes
+IPADDR=192.168.1.150
+NETMASK=255.255.255.255
+NETWORK=127.0.0.1
+BROADCAST=127.255.255.255
+NAME=loopback
+</code></pre>
+
+<h3 id="toc_5">RS服务器配置ARP</h3>
+
+<h4 id="toc_6">arp-ignore: ARP 响应级别（处理请求）</h4>
+
+<ul>
+<li>0: 只要本机配置了ip，就能响应请求（在lvs是不适用的）</li>
+<li>1: 请求的目标地址到达对应的网络接口，才会响应请求（这个才是需要的）</li>
+</ul>
+
+<blockquote>
+<p>配置LVS时，RS服务器需要配置一个环回地址，这个地址不能处理请求，所以要将 arp-ihnore配置成 1，请求哪个ip，哪个IP才会处理请求。</p>
+</blockquote>
+
+<h4 id="toc_7">arp-announce：ARP通告行为（返回响应）</h4>
+
+<ul>
+<li>0: 本机上任何网络接口都向外通告，所有的网卡都能接受到通告（在lvs是不适用的）</li>
+<li>1: 尽可能避免本网卡与不匹配的目标进行通告（在lvs是不适用的，要一定，不能尽可能）</li>
+<li>2: 只在本网卡通告（这个才是需要的） </li>
+</ul>
+
+<blockquote>
+<p>RS 服务器的环回IP是用来响应客户端请求的，所以不能使用其他IP来返回，必须使用环回地址返回，因为客户端请求的是VIP，所以接收请求也必须使用RS服务器上和VIP相同的环回IP才能使客户端识别。</p>
+</blockquote>
+
+<h3 id="toc_8">配置RS服务器APR</h3>
+
+<pre><code class="language-text"># 打开配置文件
+vim /etc/sysctl.conf
+# 配置如下内容：
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.default.arp_ignore = 1
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 2
+net.ipv4.conf.default.arp_announce = 2
+net.ipv4.conf.lo.arp_announce = 2
+# 保存后，刷新一下网卡
+sysctl -p
+</code></pre>
+
+<blockquote>
+<p>all：表示所有网卡<br/>
+default：表示默认网卡<br/>
+lo：环回网卡</p>
+</blockquote>
+
+<h3 id="toc_9">RS 服务器配置路由</h3>
+
+<pre><code class="language-text"># 临时配置路由，开机回失效，需要添加到开机启动配置文件内
+route add -host 192.168.1.150 dev lo:1
+# 永久添加, 执行如下命令
+echo &quot;route add -host 192.168.1.150 dev lo:1&quot; &gt;&gt; /etc/rc.local
+</code></pre>
+
+<blockquote>
+<p>通过192.168.1.150这个地址去接收请求，然后交给lo:1这个网卡去处理<br/>
+使用 route -n 查看路由</p>
+</blockquote>
+
+<h3 id="toc_10">使用ipvsadm配置集群规则</h3>
+
+<h4 id="toc_11">配置LVS服务以及节点</h4>
+
+<pre><code class="language-text"># 添加服务
+ipvsadm -A -t 192.168.1.150:80 -s rr
+# 查看配置列表
+ipvsadm -Ln
+</code></pre>
+
+<blockquote>
+<p>添加一个服务，-A 添加一个服务，-t tcp,添加服务地址，-s 负载均衡算法，rr 轮询，轮询是负载均衡里用的比较多的算法。</p>
+</blockquote>
+
+<pre><code class="language-text"># 构建服务
+ipvsadm -a -t 192.168.1.150:80 -r 192.168.1.171:80 -g
+</code></pre>
+
+<blockquote>
+<p>配置服务，-a 添加一个服务节点，-t 服务地址，表示为哪个服务地址添加节点，-r real server 的意思，写RS服务器的IP地址, -g 表示是DR模式。</p>
+</blockquote>
+
+<h4 id="toc_12">验证DR模式</h4>
+
+<pre><code class="language-text"># 查看LVS运行状态
+ipvsadm -Ln
+</code></pre>
+
+<blockquote>
+<p>DR 模式是LVS只负责接收请求，返回请求交给RS，通过上面的命令，查看InPkts有数据，而OutPkts为0，说明DR模式生效了。 </p>
+</blockquote>
 
 ]]></content>
   </entry>
@@ -1451,112 +1789,6 @@ if ($invalid_referer) {
     return 404;
 }
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Nginx跨域]]></title>
-    <link href="jythons.github.io/15985411668268.html"/>
-    <updated>2020-08-27T23:12:46+08:00</updated>
-    <id>jythons.github.io/15985411668268.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">CROS跨域资源共享</h2>
-
-<ul>
-<li>Cross-Origin Resource Sharing</li>
-<li>允许浏览器向跨Origin的服务器发起js请求获取响应</li>
-<li>Jsonp、SpringBoot Cors、Nginx</li>
-</ul>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_1">在Nginx配置跨域</h2>
-
-<p>在Nginx.conf配置文件的Server块内配置如下内容：</p>
-
-<pre><code class="language-text">server {
-    ...
-    #允许跨域请求的域，*代表所有
-    add_header &#39;Access-Control-Allow-Origin&#39; *;
-    #允许带上Cookie请求
-    add_header &#39;Access-Control-Allow-Credentials&#39; &#39;true&#39;;
-    #允许请求的方法，比如 GET/POST/PUT/DELETE
-    add_header &#39;Access-Control-Allow-Methods&#39; *;
-    #允许请求的header
-    add_header &#39;Access-Control-Allow-Headers&#39; *;
-    ...
-}    
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[虚拟主机 - 使用Nginx为静态资源]]></title>
-    <link href="jythons.github.io/15984524087390.html"/>
-    <updated>2020-08-26T22:33:28+08:00</updated>
-    <id>jythons.github.io/15984524087390.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">root与alias</h2>
-
-<p>假如服务器路径为：<code>/home/user/files/img/face.png</code></p>
-
-<span id="more"></span><!-- more -->
-
-<h3 id="toc_1">root路径完全匹配访问</h3>
-
-<p>配置的时候为：</p>
-
-<pre><code class="language-text">location /user {
-    root /home
-}
-</code></pre>
-
-<p>用户访问的时候请求为：url：port/user/files/files/img/face.png</p>
-
-<h3 id="toc_2">alias可以为你的路径做一个别名，对用户透明</h3>
-
-<p>配置的时候为：</p>
-
-<pre><code class="language-text">location /hello {
-    root /home/user
-}
-</code></pre>
-
-<p>用户访问的请求为：URL：port/hello/files/img/face.png</p>
-
-<h2 id="toc_3">location的匹配规则解析</h2>
-
-<ul>
-<li><p>/：默认匹配，普通匹配</p>
-<pre><code class="language-text">location / {
-    root /home;<br/>
-}
-</code></pre></li>
-<li><p>=：精确匹配</p>
-<pre><code class="language-text">location = /home/img/face.png {
-    root /home;<br/>
-}
-</code></pre></li>
-<li><p>～*：匹配正则表达式，不区分大小写</p>
-<pre><code class="language-text">#符合图片的显示
-location ~\. (GIF|jpg|png|jpeg) {<br/>
-    root /home;<br/>
-}
-</code></pre></li>
-<li><p>～：匹配正则表达式，区分大小写</p>
-<pre><code class="language-text">#GIF必须大写才能匹配到
-location ~ \. (GIF|jpg|png|jpeg) {<br/>
-    root /home;<br/>
-}
-</code></pre></li>
-<li><p><sup>～：以某个字符路径开头</sup></p>
-<pre><code class="language-text">location ^~ /user/img {
-    root /home;<br/>
-}
-</code></pre></li>
-</ul>
 
 ]]></content>
   </entry>

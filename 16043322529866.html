@@ -90,9 +90,9 @@
 						
 						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
 						
-						  <li id=""><a target="_self" href="shell.html">Shell</a></li>
+						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
 						
-						  <li id=""><a target="_self" href="lvs.html">LVS</a></li>
+						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
 						
 						</ul>
 					</nav>
@@ -127,7 +127,195 @@
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 		<h1 class="title" itemprop="name">搭建 LVS-DR 模式</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<p>。。。</p>
+			<h2 id="toc_0">服务器与 IP 约定</h2>
+
+<p><img src="media/16043322529866/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8EIP%E7%BA%A6%E5%AE%9A.png" alt="服务器与IP约定"/></p>
+
+<p>首先需要有一个LVS，LVS需要有两个IP，分别是：DIP（Direct IP）和VIP (Virtual IP)；DIP就是内网IP，用于与内网上游服务器通信使用；VIP是虚拟IP，用于客户端交互使用。<br/>
+然后上游服务器Nginx，Nginx服务器需要配置两个IP，分别是：RIP（Real Server IP）和VIP (Virtual IP); RIP也是内网IP，VIP也是虚拟IP，用户的请求处理完毕，通过VIP返回给客户端；Nginx服务器的VIP要和LVS的虚拟IP保持一致。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">开始搭建 LVS</h2>
+
+<h3 id="toc_2">配置虚拟IP</h3>
+
+<p>第一步，首先要关闭服务器网络配置管理器，如果不关闭，可能会引起接口网络的冲突，因为是在本地使用虚拟机的关系。</p>
+
+<pre><code class="language-text"># 关闭网络配置管理器
+systemctl stop NetworkManager
+systemctl disable NetworkManager
+</code></pre>
+
+<p>同样 Nginx 服务器也需要关闭网络配置管理器。</p>
+
+<p>第二步，构建LVS的IP。</p>
+
+<pre><code class="language-text"># 进入网卡配置文件目录
+cd /etc/sysconfig/network-script/
+# 拷贝一份网卡配置文件，起一个别名
+cp ifcfg-ens33 ifcfg-ens33:1
+</code></pre>
+
+<p>然后配置ifcfg-ens33:1文件, 配置如下：</p>
+
+<pre><code class="language-text">BOOTPROTO=static
+# 与网卡名称要保持统一
+DEVICE=ens33:1
+ONBOOT=yes
+IPADDR=192.168.1.150
+NETMASK=255.255.255.0
+</code></pre>
+
+<p>配置好网卡后，重启网卡：</p>
+
+<pre><code class="language-text">service network restart
+ip addr # 查看IP地址是否生效
+</code></pre>
+
+<p>到这里，虚拟IP就配置好了。</p>
+
+<h3 id="toc_3">配置集群管理工具</h3>
+
+<p>虚拟IP配置好了以后，接下来就需要配置集群管理工具。</p>
+
+<blockquote>
+<p>ipvs 是lvs自带的工具，ipvsadm需要安装。</p>
+</blockquote>
+
+<p>安装ipvsadm：</p>
+
+<pre><code class="language-text">yum install ipvsadm
+</code></pre>
+
+<p>接下来执行如下命令查看集群列表</p>
+
+<pre><code class="language-text">ipvsadm -Ln
+</code></pre>
+
+<blockquote>
+<p>阿里云云服务器不支持虚拟IP配置，需要购买他们的负载均衡服务，腾讯云服务器支持配置虚拟IP，但是要额外的去购买的，因为是建立在网卡之上的，需要使用成本的，腾讯云支持虚拟IP的最大数量是10个。</p>
+</blockquote>
+
+<h3 id="toc_4">配置RIS节点的IP</h3>
+
+<p>LVS服务器配置好以后，接下来去配置RIS节点服务器的IP，也就是Nginx所在的服务器。<br/>
+首先也需要配置一个虚拟IP，这个IP用于返回数据报文。<br/>
+首先进入到网卡配置文件所在的目录：</p>
+
+<pre><code class="language-text"># 进入网卡配置文件目录
+cd /etc/sysconfig/network-script/
+</code></pre>
+
+<p>在这个目录下，有一个 ifcfg-lo 配置文件，这个是服务器本地环回接口，我们要构建一个虚拟IP，这个IP不能被用户访问到，只是在返回报文时使用。<br/>
+复制一份 ifcfg-lo 配置文件为：ifcfg-lo:1。</p>
+
+<pre><code class="language-text">cp ifcfg-lo ifcfg-lo:1
+</code></pre>
+
+<p>修改成如下配置：</p>
+
+<pre><code class="language-text"># BOOTPROTO=static
+# 与网卡名称要保持统一
+DEVICE=lo:1
+ONBOOT=yes
+IPADDR=192.168.1.150
+NETMASK=255.255.255.255
+NETWORK=127.0.0.1
+BROADCAST=127.255.255.255
+NAME=loopback
+</code></pre>
+
+<h3 id="toc_5">RS服务器配置ARP</h3>
+
+<h4 id="toc_6">arp-ignore: ARP 响应级别（处理请求）</h4>
+
+<ul>
+<li>0: 只要本机配置了ip，就能响应请求（在lvs是不适用的）</li>
+<li>1: 请求的目标地址到达对应的网络接口，才会响应请求（这个才是需要的）</li>
+</ul>
+
+<blockquote>
+<p>配置LVS时，RS服务器需要配置一个环回地址，这个地址不能处理请求，所以要将 arp-ihnore配置成 1，请求哪个ip，哪个IP才会处理请求。</p>
+</blockquote>
+
+<h4 id="toc_7">arp-announce：ARP通告行为（返回响应）</h4>
+
+<ul>
+<li>0: 本机上任何网络接口都向外通告，所有的网卡都能接受到通告（在lvs是不适用的）</li>
+<li>1: 尽可能避免本网卡与不匹配的目标进行通告（在lvs是不适用的，要一定，不能尽可能）</li>
+<li>2: 只在本网卡通告（这个才是需要的） </li>
+</ul>
+
+<blockquote>
+<p>RS 服务器的环回IP是用来响应客户端请求的，所以不能使用其他IP来返回，必须使用环回地址返回，因为客户端请求的是VIP，所以接收请求也必须使用RS服务器上和VIP相同的环回IP才能使客户端识别。</p>
+</blockquote>
+
+<h3 id="toc_8">配置RS服务器APR</h3>
+
+<pre><code class="language-text"># 打开配置文件
+vim /etc/sysctl.conf
+# 配置如下内容：
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.default.arp_ignore = 1
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 2
+net.ipv4.conf.default.arp_announce = 2
+net.ipv4.conf.lo.arp_announce = 2
+# 保存后，刷新一下网卡
+sysctl -p
+</code></pre>
+
+<blockquote>
+<p>all：表示所有网卡<br/>
+default：表示默认网卡<br/>
+lo：环回网卡</p>
+</blockquote>
+
+<h3 id="toc_9">RS 服务器配置路由</h3>
+
+<pre><code class="language-text"># 临时配置路由，开机回失效，需要添加到开机启动配置文件内
+route add -host 192.168.1.150 dev lo:1
+# 永久添加, 执行如下命令
+echo &quot;route add -host 192.168.1.150 dev lo:1&quot; &gt;&gt; /etc/rc.local
+</code></pre>
+
+<blockquote>
+<p>通过192.168.1.150这个地址去接收请求，然后交给lo:1这个网卡去处理<br/>
+使用 route -n 查看路由</p>
+</blockquote>
+
+<h3 id="toc_10">使用ipvsadm配置集群规则</h3>
+
+<h4 id="toc_11">配置LVS服务以及节点</h4>
+
+<pre><code class="language-text"># 添加服务
+ipvsadm -A -t 192.168.1.150:80 -s rr
+# 查看配置列表
+ipvsadm -Ln
+</code></pre>
+
+<blockquote>
+<p>添加一个服务，-A 添加一个服务，-t tcp,添加服务地址，-s 负载均衡算法，rr 轮询，轮询是负载均衡里用的比较多的算法。</p>
+</blockquote>
+
+<pre><code class="language-text"># 构建服务
+ipvsadm -a -t 192.168.1.150:80 -r 192.168.1.171:80 -g
+</code></pre>
+
+<blockquote>
+<p>配置服务，-a 添加一个服务节点，-t 服务地址，表示为哪个服务地址添加节点，-r real server 的意思，写RS服务器的IP地址, -g 表示是DR模式。</p>
+</blockquote>
+
+<h4 id="toc_12">验证DR模式</h4>
+
+<pre><code class="language-text"># 查看LVS运行状态
+ipvsadm -Ln
+</code></pre>
+
+<blockquote>
+<p>DR 模式是LVS只负责接收请求，返回请求交给RS，通过上面的命令，查看InPkts有数据，而OutPkts为0，说明DR模式生效了。 </p>
+</blockquote>
 
 		</div>
 	</article>
