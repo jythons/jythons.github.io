@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	nginx常用命令解析 - Jythons小站
+  	Redis的安装与配置 - Jythons小站
   	
 	</title>
 
@@ -127,20 +127,99 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">nginx常用命令解析</h1>
+		<h1 class="title" itemprop="name">Redis的安装与配置</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<ol>
-<li>启动: <code>nginx</code></li>
-<li>关闭
-<ol>
-<li>nginx -s stop 这种方式是比较暴力的方式，直接停止nginx，正在请求的进程会直接停止</li>
-<li>nginx -s quit 优雅的停止，当没有用户请求时，会关闭（只针对http请求）</li>
-</ol></li>
-<li>检查语法：nginx -t</li>
-<li>查看版本：nginx -v</li>
-<li>查看版本以及配置信息：nginx -V</li>
-<li>手动置顶nginx核心配置文件：nginx -c filename(nginx.conf的路径)</li>
-</ol>
+			<h2 id="toc_0">Redis安装</h2>
+
+<p><a href="https://redis.io">Redis官网</a><br/>
+在官网下载redis的安装压缩包，然后解压：</p>
+
+<pre><code class="language-text">tar -zxvf redis-6.0.9.tar.gz
+cd redis-6.0.9
+</code></pre>
+
+<p>这里需要注意的是，安装redis之前需要先安装他的一个依赖：</p>
+
+<pre><code class="language-text">yum install gcc-c++
+</code></pre>
+
+<p>然后使用 make &amp;&amp; make install 安装；</p>
+
+<pre><code class="language-text">make &amp;&amp; make install
+</code></pre>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">Redis配置</h2>
+
+<p>安装好了以后，接下来需要先配置，然后才可以使用。<br/>
+进入到安装目录下的 utils 文件夹：</p>
+
+<pre><code class="language-text">cd utils
+</code></pre>
+
+<p>进去之后找到：redis_init_script文件，这个文件是redis的一个自动脚本，先复制一份：</p>
+
+<pre><code class="language-text">cp redis_init_script /etc/init.d/
+cd /etc/init.d/
+</code></pre>
+
+<p>然后再在 /usr/local/ 创建一个redis文件夹：</p>
+
+<pre><code class="language-text">mkdir /usr/local/redis -p 
+# 拷贝核心配置文件到这个目录下
+cp redis.conf /usr/local/redis/
+</code></pre>
+
+<p>然后修改/usr/local/redis/这个目录下的配置文件：</p>
+
+<pre><code class="language-text"># 找到daemonize，这个参数的意思是，redis启动后是在前台运行还是在后台运行
+# yes表示在后台运行，no表示在前台运行（默认）
+daemonize yes
+
+# dir 这个参数是表示Redis的工作目录, 需要手动创建：working文件夹
+dir /usr/local/redis/working
+
+# bind 这个参数需要修改，如果不修改，只能在服务器本地使用，不能远程使用
+bind 0.0.0.0
+
+# requirepass 这个参数默认是注释掉的，表示不需要密码登录
+requirepass 111111
+
+# port 这个参数是redis启动的端口号，也可以在redis_init_script文件修改
+port 6379
+
+# pid 进程号
+pid redis_6379.pid
+</code></pre>
+
+<p>配置好核心配置文件以后，接下来就要配置/etc/init.d/redis_init_script文件：</p>
+
+<pre><code class="language-text"># 修改CONF的核心配置文件路径
+CONF=&quot;/usr/local/redis/redis.conf&quot;
+</code></pre>
+
+<p>接下来就可以启动redis了</p>
+
+<pre><code class="language-text">chmod 777 redis_init_script
+# 启动
+./redis_init_script start
+# 停止 
+./redis_init_script stop
+</code></pre>
+
+<h2 id="toc_2">配置redis开机自启动</h2>
+
+<p>在redis_init_script文件内加上下面两段配置</p>
+
+<pre><code class="language-text">#chkconfig：22345 10 90
+#description Start and Stop redis
+</code></pre>
+
+<p>然后执行如下命令：</p>
+
+<pre><code class="language-text">chkconfig redis_init_script on
+</code></pre>
 
 		</div>
 	</article>

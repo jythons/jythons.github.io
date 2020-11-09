@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	nginx常用命令解析 - Jythons小站
+  	Redis简介 - Jythons小站
   	
 	</title>
 
@@ -127,20 +127,50 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">nginx常用命令解析</h1>
+		<h1 class="title" itemprop="name">Redis简介</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<ol>
-<li>启动: <code>nginx</code></li>
-<li>关闭
-<ol>
-<li>nginx -s stop 这种方式是比较暴力的方式，直接停止nginx，正在请求的进程会直接停止</li>
-<li>nginx -s quit 优雅的停止，当没有用户请求时，会关闭（只针对http请求）</li>
-</ol></li>
-<li>检查语法：nginx -t</li>
-<li>查看版本：nginx -v</li>
-<li>查看版本以及配置信息：nginx -V</li>
-<li>手动置顶nginx核心配置文件：nginx -c filename(nginx.conf的路径)</li>
-</ol>
+			<h2 id="toc_0">Redis优点</h2>
+
+<ul>
+<li>丰富的数据结构</li>
+<li>持久化</li>
+<li>主从同步、故障转移</li>
+<li>内存数据库</li>
+</ul>
+
+<h2 id="toc_1">Redis缺点</h2>
+
+<ul>
+<li>单线程</li>
+<li>单核</li>
+</ul>
+
+<blockquote>
+<p>redis作者认为单核单线程比较简单安全。redis不仅可以做缓存，也可以做存储，因为它支持持久化，并且数据类型更加丰富。</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_2">与Memcache对比</h2>
+
+<h3 id="toc_3">Memcache优点</h3>
+
+<ul>
+<li>简单的 key-value 存储</li>
+<li>内存使用率比较高</li>
+<li>多核处理，多线程</li>
+</ul>
+
+<h3 id="toc_4">Memcache缺点</h3>
+
+<ul>
+<li>无法容灾</li>
+<li>不支持持久化</li>
+</ul>
+
+<blockquote>
+<p>小数据量速度会比Memcache要快，大数据量Memcache更有优势，因为Memcache支持多核多线程处理，Redis是单核单线程的。</p>
+</blockquote>
 
 		</div>
 	</article>
