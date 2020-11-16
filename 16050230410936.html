@@ -1,0 +1,427 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	Redis的数据类型 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">工作学习中的点点滴滴。</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+						
+						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+						
+						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Redis的数据类型</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<p>redis一共有五大数据类型，分别是：String、Hash、List、set、zset。下面分别介绍下每个数据类型的基本使用方法。<br/>
+<a href="http://redisdoc.com">redis-doc</a></p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">String数据类型</h2>
+
+<blockquote>
+<p>keys * 查看有多少个key，使用keys命令需要慎重，他是阻塞的，因此不要在正式环境使用。</p>
+</blockquote>
+
+<pre><code class="language-text"># 查看所有的key
+keys *
+
+# 查看所有 a 开头的key
+keys a*
+
+# 查看所有以e结尾的key
+keys *e
+
+# 查询key的类型，keyname是某个key的名字
+type keyname
+</code></pre>
+
+<p><strong>set：</strong> 设置一个变量，变量存在更新</p>
+
+<blockquote>
+<p>例子：set key value</p>
+</blockquote>
+
+<p><strong>setnx：</strong> 设置一个变量，变量存在，不更新，不存在则添加 </p>
+
+<blockquote>
+<p>例子：setnx key value</p>
+</blockquote>
+
+<p><strong>ttl：</strong> （time to leave）查看key剩下的时间，返回 -1，表示永久保存</p>
+
+<blockquote>
+<p>例子：ttl key</p>
+</blockquote>
+
+<p><strong>expire：</strong> 为某个key设置过期时间</p>
+
+<blockquote>
+<p>例子：expire key second</p>
+</blockquote>
+
+<p><strong>set ex：</strong> 设置带有过期时间的key</p>
+
+<blockquote>
+<p>例子：set key value ex second</p>
+</blockquote>
+
+<p><strong>append：</strong> 字符串的拼接，在现有的key字符串后拼接一个：123</p>
+
+<blockquote>
+<p>例子：append key 123</p>
+</blockquote>
+
+<p><strong>strlen：</strong> 查看字符串的长度，查看key这个字付串的长度</p>
+
+<blockquote>
+<p>例子：strlen key</p>
+</blockquote>
+
+<p><strong>incr：</strong> 累加，在当前的key对应的value数值上 +1</p>
+
+<blockquote>
+<p>例子：incr key</p>
+</blockquote>
+
+<p><strong>decr：</strong> 累减，在当前的key对应的value数值上 -1</p>
+
+<blockquote>
+<p>例子：decr key</p>
+</blockquote>
+
+<p><strong>incrby：</strong> 带有步长的累加</p>
+
+<blockquote>
+<p>例子：incrby key 步长数值，【incrby key 10】</p>
+</blockquote>
+
+<p><strong>decrby：</strong> 带有步长的累减</p>
+
+<blockquote>
+<p>例子：decrby key 步长数值，【decrby key 10】</p>
+</blockquote>
+
+<p><strong>getrange：</strong> 截取字符串的一段返回</p>
+
+<blockquote>
+<p>例子：getrange key 1 2，获取key这个字符串的第1个字符到第2个字符，从0开始算</p>
+</blockquote>
+
+<p><strong>setrange：</strong> 替换字符串的某一段</p>
+
+<blockquote>
+<p>例子：setrange key 2 aa，从第2个字符开始，替换两个字符为aa，abcde -&gt; abaae</p>
+</blockquote>
+
+<p><strong>mset：</strong> 批量设置key</p>
+
+<blockquote>
+<p>mset key value [key value ...]，mset key1 value1 key2 value2</p>
+</blockquote>
+
+<p><strong>mget：</strong> 批量获取key</p>
+
+<blockquote>
+<p>mget key [key ...]，mget key1 key2</p>
+</blockquote>
+
+<p><strong>msetnx：</strong> 设置多个key，不能设置重复的key</p>
+
+<blockquote>
+<p>msetnx key1 value1 key2 value2 , 如果当前有key1，则本命令会执行失败，key2也不会保存</p>
+
+<p>默认情况下，redis是有16个库，默认使用的是0，可以在配置文件内修改：databases参数来设置有多少个库。使用：select num（num表示库的下标），切换不同的库。</p>
+</blockquote>
+
+<p><strong>flushdb：</strong> 清除当前库里所有的数据<br/>
+<strong>flushdball：</strong> 清除所有库里的数据</p>
+
+<blockquote>
+<p>flushdb和flushdball谨慎使用</p>
+</blockquote>
+
+<h2 id="toc_1">Hash数据类型</h2>
+
+<p>hash数据类型，可以将结构化的数据存放到内存里面去。</p>
+
+<blockquote>
+<p>记忆：hash操作的命令都是以 h 开头，后面的基本和string命令相同。</p>
+</blockquote>
+
+<h3 id="toc_2">使用方法</h3>
+
+<p><strong>hset key field value</strong>: 添加hash类型的数据</p>
+
+<ul>
+<li>hset 表示添加一个hash数据类型的数据</li>
+<li>key 数据的key</li>
+<li>field 数据的字段</li>
+<li>value 字段对应的值</li>
+</ul>
+
+<blockquote>
+<p>例子：想要存放一个 user:{&quot;name&quot;:&quot;xiaoming&quot;, &quot;age&quot;:18, &quot;sex&quot;:&quot;man&quot;}<br/>
+hset user name xiaoming<br/>
+hset user age 18<br/>
+hset user sex man</p>
+</blockquote>
+
+<p><strong>hget key field</strong>：获取hash类型的数据</p>
+
+<ul>
+<li>hset 表示添加一个hash数据类型的数据</li>
+<li>key 数据的key</li>
+<li>field 数据的字段</li>
+</ul>
+
+<blockquote>
+<p>例子：获取 user:{&quot;name&quot;:&quot;xiaoming&quot;, &quot;age&quot;:18, &quot;sex&quot;:&quot;man&quot;}数据的名字<br/>
+hget user name</p>
+</blockquote>
+
+<p><strong>hmset key field value [field value ...]</strong>: 为某个key批量设置字段和值</p>
+
+<p><strong>hmget key field [field ...]</strong>: 同时获取某个key下多个字段的值</p>
+
+<p><strong>hgetall key</strong>：获取某个key下所有的字段和值</p>
+
+<blockquote>
+<p>hgetall 的返回值是field value field value 的形式。</p>
+</blockquote>
+
+<p><strong>hlen key</strong>：返回这个key下属性的数量<br/>
+<strong>hkeys key</strong>：返回key下所有的属性（field）<br/>
+<strong>hvals key</strong>：返回key下所有的值（value）<br/>
+<strong>hincrby key field number</strong>：key下field字段的值累加number<br/>
+<strong>hincrbyfloat key field number</strong>：key下field字段的值累加number，number可以是小数<br/>
+<strong>hexists key field</strong>：判断key下是否存在field属性，存在返回1<br/>
+<strong>hdel key field [field ...]</strong>: 删除key的field属性，支持同时删除多个属性</p>
+
+<h2 id="toc_3">List数据类型</h2>
+
+<p>List 是一个列表，可以理解为数组。<br/>
+List操作的命令都以 l 开头。</p>
+
+<h3 id="toc_4">使用方法</h3>
+
+<p><strong>lpush key value [value ...]</strong>: 从左边添加一个list数据类型的数据<br/>
+<strong>lrange key start end</strong>：获取key 的数据</p>
+
+<blockquote>
+<p>例子：lrange key 0 -1 获取列表key下的所有数据</p>
+</blockquote>
+
+<p><strong>rpush key value [value ...]</strong>: 从右边添加一个list数据类型的数据<br/>
+<strong>lpop key</strong>：从左边取出一个值<br/>
+<strong>rpop key</strong>：从右边取出一个值<br/>
+<strong>llen key</strong>：获取key的长度<br/>
+<strong>lindex key num</strong>：获取key列表的下标为num的value，该方法不会删除列表的数据<br/>
+<strong>lset key num value</strong>：将key列表下标为num的值修改为value<br/>
+<strong>linsert key before｜after pivot value</strong>：将value插入到key列表pivot数值的前面（before）或后面（after）<br/>
+<strong>lrem key count value</strong>：删除key列表内count个value<br/>
+<strong>ltrim key start stop</strong>：截取key列表从start开始到stop，包含start和stop</p>
+
+<blockquote>
+<p>del key 可以删除任何数据类型的key</p>
+</blockquote>
+
+<h2 id="toc_5">Set 数据类型（集合）</h2>
+
+<p>set数据类型，会自动删除掉重复的数据。<br/>
+set数据类型的操作命令都是以 s 开头。</p>
+
+<h3 id="toc_6">使用方法</h3>
+
+<p><strong>sadd key member [member ...]</strong>: 添加数据<br/>
+<strong>smembers key</strong>：查看key集合下所有数据<br/>
+<strong>scard key</strong>：查看key集合下数据的数量<br/>
+<strong>sismember key member</strong>：查看member是否在key集合下<br/>
+<strong>srem key member [member ...]</strong>: 删除key集合下member，支持同时删除多个<br/>
+<strong>spop key [num]</strong>: 随机获取并删除key集合下一个或多个member，num表示删除个数<br/>
+<strong>srandmembe key [num]</strong>：在key集合下随机抽取一个或多个数，num表示随机抽取个数<br/>
+<strong>smove source destination member</strong>：从source集合移除member并添加到destinaction集合<br/>
+<strong>sdiff key [key ...]</strong>: 获取key1集合内有的，在key2内没有的数据，key1相对于key2的差集<br/>
+<strong>sinter key [key ...]</strong>: 获取key1和key2集合的交集<br/>
+<strong>sunion key [key ...]</strong>: 获取key1和key2集合的并集</p>
+
+<h2 id="toc_7">Zset 数据类型（有序集合）</h2>
+
+<p>zset和set的区别是zset每一个member都有一个分数，这个分数是有序排列的。<br/>
+zset的操作命令都是以 z 开头。</p>
+
+<h3 id="toc_8">使用方法</h3>
+
+<p><strong>zadd key score member [score member]</strong>：有序集合添加一个key 分数为score，值为member的数据，可以添加多个。<br/>
+<strong>zrange key start stop [withscores]</strong>：查询key下的数据</p>
+
+<blockquote>
+<p>例1：zrange key 0 -1 # 查看所有<br/>
+例2：zrange key 0 1  # 查看下标0到1的数据<br/>
+例3：zrange key 0 -1 withscores # 查看数据和分数</p>
+</blockquote>
+
+<p><strong>zrank key member</strong>：查询key下的值为member的下标</p>
+
+<blockquote>
+<p>zrank key abc 查询key下值为abc的数据在key集合的位置，这里的位置不是分数。</p>
+</blockquote>
+
+<p><strong>zscore key member</strong>：查询key集合下值为member的分数</p>
+
+<p><strong>zcard key</strong>：查询key集合下有多少个值</p>
+
+<p><strong>zcount key min max</strong>：查询key集合下，分数大于等于min小于等于max的值有多少个</p>
+
+<p><strong>zrangebyscore key min max [withscores] [limit offset count]</strong>：查看分数大于等于min小于等于max的值， 加上withscores，可以展示分数</p>
+
+<blockquote>
+<p>如果查询时不想要等于边界的数据，可以使用如下方式获取：<br/>
+zrangebyscore key (min (max  这样就不会包含边界值了，上面的命令也可以使用。<br/>
+limit 相当于mysql的分页，limit 1 2，在结果集从第一个开始获取2个返回。</p>
+</blockquote>
+
+<p><strong>zrem key member [member]</strong>：删除key集合下值为member的数据，可删除多个</p>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2020
+Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>

@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Java - Jythons小站
+  	Redis发布与订阅 - Jythons小站
   	
 	</title>
 
@@ -125,56 +125,59 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-16T22:54:32+08:00" itemprop="datePublished">2020/11/16</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Java.html'>Java</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16055384723975.html" itemprop="url">
-		SpringBoot整合redis</a></h1>
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Redis发布与订阅</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">添加依赖</h2>
+			<p>发布订阅，首先有一个发布者，然后有多个订阅者，每个订阅者需要去发布者那里去订阅消息，有了订阅之后，就相当于发布和订阅者之间有了一层绑定关系。当发布者发布了消息之后，所有的订阅者都可以收到这个消息。<br/>
+<img src="media/16055402422958/redis%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85.png" alt="redis发布和订阅"/></p>
 
-<pre><code class="language-text">&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
-&lt;/dependency&gt;
+<blockquote>
+<p>例如：很多人关注了B站的up主，当up主发布了一条新的动态之后，所有的关注人员都会收到一条消息。这里的up主就相当于发布者，粉丝就相当于订阅者。</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">redis实现发布订阅</h2>
+
+<h3 id="toc_1">发布者</h3>
+
+<pre><code class="language-text">publish chan message
 </code></pre>
 
+<blockquote>
+<p>publish 发布消息，chan 通道，向chan通道发布消息，这里的chan和订阅者的ch是相同的，message 是发布的内容。</p>
+</blockquote>
 
+<h3 id="toc_2">订阅者</h3>
 
-			 
-			<a href="16055384723975.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
+<pre><code class="language-text"># 订阅频道
+subscribe ch [ch ...]
+</code></pre>
+
+<blockquote>
+<p>subscribe 订阅，ch相当于频道，也就是发布者, 可以同时订阅多个频道。</p>
+</blockquote>
+
+<pre><code class="language-text"># 批量订阅，订阅所有moto开头的频道
+psubscribe moto*
+</code></pre>
+
+<blockquote>
+<p>redis只是实现的发布订阅的功能，生产上不建议使用redis做消息队列，专人专事，发布订阅的功能还是要使用mq去实现。</p>
+</blockquote>
+
 		</div>
-
 	</article>
-  
-
-</div>
-<nav id="pagenavi">
+	<div class="share-comment">
 	 
-	
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
-</nav>
+	  
 
-</div>
+	  
 
-
-
-        </div>
+	</div>
+</div>        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2020
 Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>

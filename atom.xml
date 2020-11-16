@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-09T22:44:56+08:00</updated>
+  <updated>2020-11-12T23:43:36+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,420 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Redis发布与订阅]]></title>
+    <link href="jythons.github.io/16055402422958.html"/>
+    <updated>2020-11-16T23:24:02+08:00</updated>
+    <id>jythons.github.io/16055402422958.html</id>
+    <content type="html"><![CDATA[
+<p>发布订阅，首先有一个发布者，然后有多个订阅者，每个订阅者需要去发布者那里去订阅消息，有了订阅之后，就相当于发布和订阅者之间有了一层绑定关系。当发布者发布了消息之后，所有的订阅者都可以收到这个消息。<br/>
+<img src="media/16055402422958/redis%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85.png" alt="redis发布和订阅"/></p>
+
+<blockquote>
+<p>例如：很多人关注了B站的up主，当up主发布了一条新的动态之后，所有的关注人员都会收到一条消息。这里的up主就相当于发布者，粉丝就相当于订阅者。</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">redis实现发布订阅</h2>
+
+<h3 id="toc_1">发布者</h3>
+
+<pre><code class="language-text">publish chan message
+</code></pre>
+
+<blockquote>
+<p>publish 发布消息，chan 通道，向chan通道发布消息，这里的chan和订阅者的ch是相同的，message 是发布的内容。</p>
+</blockquote>
+
+<h3 id="toc_2">订阅者</h3>
+
+<pre><code class="language-text"># 订阅频道
+subscribe ch [ch ...]
+</code></pre>
+
+<blockquote>
+<p>subscribe 订阅，ch相当于频道，也就是发布者, 可以同时订阅多个频道。</p>
+</blockquote>
+
+<pre><code class="language-text"># 批量订阅，订阅所有moto开头的频道
+psubscribe moto*
+</code></pre>
+
+<blockquote>
+<p>redis只是实现的发布订阅的功能，生产上不建议使用redis做消息队列，专人专事，发布订阅的功能还是要使用mq去实现。</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SpringBoot整合redis]]></title>
+    <link href="jythons.github.io/16055384723975.html"/>
+    <updated>2020-11-16T22:54:32+08:00</updated>
+    <id>jythons.github.io/16055384723975.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">添加依赖</h2>
+
+<pre><code class="language-text">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">配置yml</h2>
+
+<pre><code class="language-text">spring:
+    redis:
+        database: 0
+        host: 192.168.1.111
+        port: 6379
+        password: psword
+</code></pre>
+
+<h2 id="toc_2">使用方法</h2>
+
+<pre><code class="language-text">@ApiIgnore
+@RestController
+@RequestMapping(&quot;redis&quot;)
+public class RedisController {
+
+    @Autowired
+    private RedisTemplate redisTemplate
+
+    @GetMapping(&quot;/set&quot;)
+    public Object set(String key, String value) {
+        redisTemplate.opsForValue().set(key, value);
+        return &quot;OK&quot;;
+    }
+    
+    @GetMapping(&quot;/get&quot;)
+    public String get(String key) {
+        return (String)redisTemplate.opsForValue().get (key);
+    }
+    
+    @GetMapping(&quot;/delete&quot;)
+    public Object delete(String key) {
+        redisTemplate.delete(key);
+        return &quot;OK&quot;;
+    }
+}
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Redis的数据类型]]></title>
+    <link href="jythons.github.io/16050230410936.html"/>
+    <updated>2020-11-10T23:44:01+08:00</updated>
+    <id>jythons.github.io/16050230410936.html</id>
+    <content type="html"><![CDATA[
+<p>redis一共有五大数据类型，分别是：String、Hash、List、set、zset。下面分别介绍下每个数据类型的基本使用方法。<br/>
+<a href="http://redisdoc.com">redis-doc</a></p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">String数据类型</h2>
+
+<blockquote>
+<p>keys * 查看有多少个key，使用keys命令需要慎重，他是阻塞的，因此不要在正式环境使用。</p>
+</blockquote>
+
+<pre><code class="language-text"># 查看所有的key
+keys *
+
+# 查看所有 a 开头的key
+keys a*
+
+# 查看所有以e结尾的key
+keys *e
+
+# 查询key的类型，keyname是某个key的名字
+type keyname
+</code></pre>
+
+<p><strong>set：</strong> 设置一个变量，变量存在更新</p>
+
+<blockquote>
+<p>例子：set key value</p>
+</blockquote>
+
+<p><strong>setnx：</strong> 设置一个变量，变量存在，不更新，不存在则添加 </p>
+
+<blockquote>
+<p>例子：setnx key value</p>
+</blockquote>
+
+<p><strong>ttl：</strong> （time to leave）查看key剩下的时间，返回 -1，表示永久保存</p>
+
+<blockquote>
+<p>例子：ttl key</p>
+</blockquote>
+
+<p><strong>expire：</strong> 为某个key设置过期时间</p>
+
+<blockquote>
+<p>例子：expire key second</p>
+</blockquote>
+
+<p><strong>set ex：</strong> 设置带有过期时间的key</p>
+
+<blockquote>
+<p>例子：set key value ex second</p>
+</blockquote>
+
+<p><strong>append：</strong> 字符串的拼接，在现有的key字符串后拼接一个：123</p>
+
+<blockquote>
+<p>例子：append key 123</p>
+</blockquote>
+
+<p><strong>strlen：</strong> 查看字符串的长度，查看key这个字付串的长度</p>
+
+<blockquote>
+<p>例子：strlen key</p>
+</blockquote>
+
+<p><strong>incr：</strong> 累加，在当前的key对应的value数值上 +1</p>
+
+<blockquote>
+<p>例子：incr key</p>
+</blockquote>
+
+<p><strong>decr：</strong> 累减，在当前的key对应的value数值上 -1</p>
+
+<blockquote>
+<p>例子：decr key</p>
+</blockquote>
+
+<p><strong>incrby：</strong> 带有步长的累加</p>
+
+<blockquote>
+<p>例子：incrby key 步长数值，【incrby key 10】</p>
+</blockquote>
+
+<p><strong>decrby：</strong> 带有步长的累减</p>
+
+<blockquote>
+<p>例子：decrby key 步长数值，【decrby key 10】</p>
+</blockquote>
+
+<p><strong>getrange：</strong> 截取字符串的一段返回</p>
+
+<blockquote>
+<p>例子：getrange key 1 2，获取key这个字符串的第1个字符到第2个字符，从0开始算</p>
+</blockquote>
+
+<p><strong>setrange：</strong> 替换字符串的某一段</p>
+
+<blockquote>
+<p>例子：setrange key 2 aa，从第2个字符开始，替换两个字符为aa，abcde -&gt; abaae</p>
+</blockquote>
+
+<p><strong>mset：</strong> 批量设置key</p>
+
+<blockquote>
+<p>mset key value [key value ...]，mset key1 value1 key2 value2</p>
+</blockquote>
+
+<p><strong>mget：</strong> 批量获取key</p>
+
+<blockquote>
+<p>mget key [key ...]，mget key1 key2</p>
+</blockquote>
+
+<p><strong>msetnx：</strong> 设置多个key，不能设置重复的key</p>
+
+<blockquote>
+<p>msetnx key1 value1 key2 value2 , 如果当前有key1，则本命令会执行失败，key2也不会保存</p>
+
+<p>默认情况下，redis是有16个库，默认使用的是0，可以在配置文件内修改：databases参数来设置有多少个库。使用：select num（num表示库的下标），切换不同的库。</p>
+</blockquote>
+
+<p><strong>flushdb：</strong> 清除当前库里所有的数据<br/>
+<strong>flushdball：</strong> 清除所有库里的数据</p>
+
+<blockquote>
+<p>flushdb和flushdball谨慎使用</p>
+</blockquote>
+
+<h2 id="toc_1">Hash数据类型</h2>
+
+<p>hash数据类型，可以将结构化的数据存放到内存里面去。</p>
+
+<blockquote>
+<p>记忆：hash操作的命令都是以 h 开头，后面的基本和string命令相同。</p>
+</blockquote>
+
+<h3 id="toc_2">使用方法</h3>
+
+<p><strong>hset key field value</strong>: 添加hash类型的数据</p>
+
+<ul>
+<li>hset 表示添加一个hash数据类型的数据</li>
+<li>key 数据的key</li>
+<li>field 数据的字段</li>
+<li>value 字段对应的值</li>
+</ul>
+
+<blockquote>
+<p>例子：想要存放一个 user:{&quot;name&quot;:&quot;xiaoming&quot;, &quot;age&quot;:18, &quot;sex&quot;:&quot;man&quot;}<br/>
+hset user name xiaoming<br/>
+hset user age 18<br/>
+hset user sex man</p>
+</blockquote>
+
+<p><strong>hget key field</strong>：获取hash类型的数据</p>
+
+<ul>
+<li>hset 表示添加一个hash数据类型的数据</li>
+<li>key 数据的key</li>
+<li>field 数据的字段</li>
+</ul>
+
+<blockquote>
+<p>例子：获取 user:{&quot;name&quot;:&quot;xiaoming&quot;, &quot;age&quot;:18, &quot;sex&quot;:&quot;man&quot;}数据的名字<br/>
+hget user name</p>
+</blockquote>
+
+<p><strong>hmset key field value [field value ...]</strong>: 为某个key批量设置字段和值</p>
+
+<p><strong>hmget key field [field ...]</strong>: 同时获取某个key下多个字段的值</p>
+
+<p><strong>hgetall key</strong>：获取某个key下所有的字段和值</p>
+
+<blockquote>
+<p>hgetall 的返回值是field value field value 的形式。</p>
+</blockquote>
+
+<p><strong>hlen key</strong>：返回这个key下属性的数量<br/>
+<strong>hkeys key</strong>：返回key下所有的属性（field）<br/>
+<strong>hvals key</strong>：返回key下所有的值（value）<br/>
+<strong>hincrby key field number</strong>：key下field字段的值累加number<br/>
+<strong>hincrbyfloat key field number</strong>：key下field字段的值累加number，number可以是小数<br/>
+<strong>hexists key field</strong>：判断key下是否存在field属性，存在返回1<br/>
+<strong>hdel key field [field ...]</strong>: 删除key的field属性，支持同时删除多个属性</p>
+
+<h2 id="toc_3">List数据类型</h2>
+
+<p>List 是一个列表，可以理解为数组。<br/>
+List操作的命令都以 l 开头。</p>
+
+<h3 id="toc_4">使用方法</h3>
+
+<p><strong>lpush key value [value ...]</strong>: 从左边添加一个list数据类型的数据<br/>
+<strong>lrange key start end</strong>：获取key 的数据</p>
+
+<blockquote>
+<p>例子：lrange key 0 -1 获取列表key下的所有数据</p>
+</blockquote>
+
+<p><strong>rpush key value [value ...]</strong>: 从右边添加一个list数据类型的数据<br/>
+<strong>lpop key</strong>：从左边取出一个值<br/>
+<strong>rpop key</strong>：从右边取出一个值<br/>
+<strong>llen key</strong>：获取key的长度<br/>
+<strong>lindex key num</strong>：获取key列表的下标为num的value，该方法不会删除列表的数据<br/>
+<strong>lset key num value</strong>：将key列表下标为num的值修改为value<br/>
+<strong>linsert key before｜after pivot value</strong>：将value插入到key列表pivot数值的前面（before）或后面（after）<br/>
+<strong>lrem key count value</strong>：删除key列表内count个value<br/>
+<strong>ltrim key start stop</strong>：截取key列表从start开始到stop，包含start和stop</p>
+
+<blockquote>
+<p>del key 可以删除任何数据类型的key</p>
+</blockquote>
+
+<h2 id="toc_5">Set 数据类型（集合）</h2>
+
+<p>set数据类型，会自动删除掉重复的数据。<br/>
+set数据类型的操作命令都是以 s 开头。</p>
+
+<h3 id="toc_6">使用方法</h3>
+
+<p><strong>sadd key member [member ...]</strong>: 添加数据<br/>
+<strong>smembers key</strong>：查看key集合下所有数据<br/>
+<strong>scard key</strong>：查看key集合下数据的数量<br/>
+<strong>sismember key member</strong>：查看member是否在key集合下<br/>
+<strong>srem key member [member ...]</strong>: 删除key集合下member，支持同时删除多个<br/>
+<strong>spop key [num]</strong>: 随机获取并删除key集合下一个或多个member，num表示删除个数<br/>
+<strong>srandmembe key [num]</strong>：在key集合下随机抽取一个或多个数，num表示随机抽取个数<br/>
+<strong>smove source destination member</strong>：从source集合移除member并添加到destinaction集合<br/>
+<strong>sdiff key [key ...]</strong>: 获取key1集合内有的，在key2内没有的数据，key1相对于key2的差集<br/>
+<strong>sinter key [key ...]</strong>: 获取key1和key2集合的交集<br/>
+<strong>sunion key [key ...]</strong>: 获取key1和key2集合的并集</p>
+
+<h2 id="toc_7">Zset 数据类型（有序集合）</h2>
+
+<p>zset和set的区别是zset每一个member都有一个分数，这个分数是有序排列的。<br/>
+zset的操作命令都是以 z 开头。</p>
+
+<h3 id="toc_8">使用方法</h3>
+
+<p><strong>zadd key score member [score member]</strong>：有序集合添加一个key 分数为score，值为member的数据，可以添加多个。<br/>
+<strong>zrange key start stop [withscores]</strong>：查询key下的数据</p>
+
+<blockquote>
+<p>例1：zrange key 0 -1 # 查看所有<br/>
+例2：zrange key 0 1  # 查看下标0到1的数据<br/>
+例3：zrange key 0 -1 withscores # 查看数据和分数</p>
+</blockquote>
+
+<p><strong>zrank key member</strong>：查询key下的值为member的下标</p>
+
+<blockquote>
+<p>zrank key abc 查询key下值为abc的数据在key集合的位置，这里的位置不是分数。</p>
+</blockquote>
+
+<p><strong>zscore key member</strong>：查询key集合下值为member的分数</p>
+
+<p><strong>zcard key</strong>：查询key集合下有多少个值</p>
+
+<p><strong>zcount key min max</strong>：查询key集合下，分数大于等于min小于等于max的值有多少个</p>
+
+<p><strong>zrangebyscore key min max [withscores] [limit offset count]</strong>：查看分数大于等于min小于等于max的值， 加上withscores，可以展示分数</p>
+
+<blockquote>
+<p>如果查询时不想要等于边界的数据，可以使用如下方式获取：<br/>
+zrangebyscore key (min (max  这样就不会包含边界值了，上面的命令也可以使用。<br/>
+limit 相当于mysql的分页，limit 1 2，在结果集从第一个开始获取2个返回。</p>
+</blockquote>
+
+<p><strong>zrem key member [member]</strong>：删除key集合下值为member的数据，可删除多个</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Redis命令行客户端]]></title>
+    <link href="jythons.github.io/16050224663931.html"/>
+    <updated>2020-11-10T23:34:26+08:00</updated>
+    <id>jythons.github.io/16050224663931.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">基本使用</h2>
+
+<p>启动redis命令行客户端：</p>
+
+<pre><code class="language-text">redis-cli
+</code></pre>
+
+<span id="more"></span><!-- more -->
+
+<blockquote>
+<p>执行set name hello，如果提示：（error）NOAUTH Authentication required，表示没有权限，需要先输入密码，执行：auth password即可（passpword是配置文件设置的密码）。</p>
+</blockquote>
+
+<p>检查redis进程是否存活：</p>
+
+<pre><code class="language-text">redis -a password ping
+</code></pre>
+
+<p>成功会返回：PONG</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Redis的安装与配置]]></title>
@@ -1404,504 +1818,6 @@ server {
         server 192.168.3.28:8080;
 }
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[shell编程]]></title>
-    <link href="jythons.github.io/16038138353128.html"/>
-    <updated>2020-10-27T23:50:35+08:00</updated>
-    <id>jythons.github.io/16038138353128.html</id>
-    <content type="html"><![CDATA[
-<p>总结一下shell编程的语法规则以及注意事项。<br/>
-<span id="more"></span><!-- more --></p>
-
-<ul>
-<li>定义<strong>变量</strong>时，不使用<code>$</code>，等号两边不能有空格,使用变量时使用<code>$</code>。<br/></li>
-</ul>
-
-<pre><code class="language-shell">例如：
-val=&#39;abc&#39;   (正确)
-val = &#39;abc&#39; (错误) 
-echo ${val} (使用变量)
-</code></pre>
-
-<ul>
-<li><strong>字符串：</strong></li>
-</ul>
-
-<pre><code class="language-shell">获取字符串长度:${#abc},结果返回3;截取字符串:${abc:1:2}。
-例如：
-str=&#39;abcdefg&#39;
-echo ${str:1:2}
-</code></pre>
-
-<blockquote>
-<p>结果返回：bc；意思是重二个字符开始，截取两个字符；这里是重0开始计算的。</p>
-</blockquote>
-
-<ul>
-<li><p><strong>数组：</strong>  </p>
-<pre><code class="language-bash">定义数组：arr=(val1 val2 val3 ... valn) 或 arr[0]=val0
-使用数组元素：${arr[0]}  <br/>
-输出数组元素：${arr[*]} 或 ${arr[@]}  <br/>
-获取数组长度：${#arr[*]} 或 ${#arr[@]}
-</code></pre></li>
-<li><p><strong>运算符</strong>  </p>
-<blockquote>
-<p>计算数值时使用：<code>expr 表达式</code> 或 <code>$((表达式))</code>，如果使用 <code>expr</code> 时，乘法使用 <code>\*</code>，使用运算符时，使用<code>[]</code>,并且运算符两边都要有空格，例如：<code>if [ $a -eq $b ] then fi</code></p>
-</blockquote></li>
-</ul>
-
-<h6 id="toc_0">关系运算符</h6>
-
-<pre><code class="language-text">-eq 检测两个数是都相等，相等返回 true  
--ne 检测两个数是都相等，不相等返回true  
--gt 大于号  
--lt 小于号  
--ge 大于等于
--le 小于等于
-</code></pre>
-
-<h6 id="toc_1">布尔运算符</h6>
-
-<pre><code class="language-text">!  非  
--o 或  
--a 与
-</code></pre>
-
-<h6 id="toc_2">逻辑运算符</h6>
-
-<pre><code class="language-text">&amp;&amp; 逻辑的AND
-|| 逻辑的OR
-</code></pre>
-
-<blockquote>
-<p>注意：使用逻辑运算符时，if语句需要使用<code>[[ 表达式 ]]</code>；  </p>
-</blockquote>
-
-<pre><code class="language-shell">例如：
-a=10
-b=10
-if [[ $a -lt 100 &amp;&amp; $b -gt 100 ]]
-then
-    echo &quot;返回 true&quot;
-else
-    echo &quot;返回 false&quot;
-fi
-</code></pre>
-
-<h6 id="toc_3">字符串运算符</h6>
-
-<pre><code class="language-text">=   检测两个字符串是否相等，相等返回true    例：[ $a = $b ]  
-!=  检测两个字符串是否相等，不相等返回true  例：[ $a != $b ]  
--z  检测字符串长度是否为0，为0返回true　　　例：[ -z $a ]  
--n  检测字符串长度是否为0，不为0返回true    例：[ -n $a ]  
-str 检测字符串是否为空，不为空返回true      例：[ $a ]  
-</code></pre>
-
-<h6 id="toc_4">文件测试运算符</h6>
-
-<blockquote>
-<p>$file 为文件路径</p>
-</blockquote>
-
-<pre><code class="language-shell">[ -b $file ] 检测文件是否是块设备文件，是返回true  
-[ -c $file ] 检测文件是否是字符设备文件，如果是，则返回 true  
-[ -d $file ] 检测文件是否是目录，如果是，则返回 true  
-[ -f $file ] 检测文件是否是普通文件（既不是目录，也不是设备文件），如果是，则返回 true  
-[ -g $file ] 检测文件是否设置了 SGID 位，如果是，则返回 true  
-[ -k $file ] 检测文件是否设置了粘着位(Sticky Bit)，如果是，则返回 true  
-[ -p $file ] 检测文件是否是有名管道，如果是，则返回 true  
-[ -u $file ] 检测文件是否设置了 SUID 位，如果是，则返回 true  
-[ -r $file ] 检测文件是否可读，如果是，则返回 true  
-[ -w $file ] 检测文件是否可写，如果是，则返回 true  
-[ -x $file ] 检测文件是否可执行，如果是，则返回 true  
-[ -s $file ] 检测文件是否为空（文件大小是否大于0），不为空返回 true
-[ -e $file ] 检测文件（包括目录）是否存在，如果是，则返回 true
-</code></pre>
-
-<ul>
-<li><p><strong>test命令</strong><br/><br/>
-<code>[]</code>作为基本运算符使用时，内部不能有空格  </p>
-<pre><code class="language-shell">例如：  
-a=5<br/>
-b=5<br/>
-res=$[a+b]<br/>
-echo $res # 结果为10
-</code></pre></li>
-<li><p><strong>read</strong><br/><br/>
-<code>read</code> 等待用户输入。  </p></li>
-</ul>
-
-<pre><code class="language-shell">例：
-#!/bin/sh
-read name
-echo &quot;输入的值name等于 ${name}&quot;
-</code></pre>
-
-<ul>
-<li><strong>流程控制</strong><br/>
-###### if语句：<br/></li>
-</ul>
-
-<pre><code class="language-shell">if condition
-then
-    command
-fi
-写成一行：if [ $(ps -ef | grep -c &quot;ssh&quot;) -gt 1 ]; then echo &quot;true&quot;; fi
-
-if else:
-if condition
-then
-    command1
-else
-    command2
-fi
-
-if else-if else:
-if condition1
-then
-    command1
-elif condition2
-then
-    command2
-else
-    command3
-fi
-</code></pre>
-
-<h6 id="toc_5">for循环</h6>
-
-<pre><code class="language-shell">for var in item1 item2 ... itemN
-do
-    command1
-    ...
-    commandN
-done
-
-写成一行：for var in item1 ... itemN; do cmooand1;command2... done;
-</code></pre>
-
-<h6 id="toc_6">while循环，与until循环用法相同（结果为真时退出循环）</h6>
-
-<pre><code class="language-shell">例：
-#!/bin/sh
-int=1
-while(( $int&lt;=5 ))
-do
-    echo $int
-    let &quot;int++&quot;
-done
-</code></pre>
-
-<blockquote>
-<p>使用了 <code>let</code> 命令，用于执行一个或多个表达式，变量计算中不需要加上 <code>$</code> 来表示变量。</p>
-</blockquote>
-
-<h6 id="toc_7">case</h6>
-
-<pre><code class="language-shell">例：
-read aNum
-case $aNum in
-    1) echo &#39;1&#39;
-    ;;  # 两个；表示break，跳出
-    2|3) echo &#39;2&#39;
-    ;;
-    *) echo &#39;none&#39;
-        break # 跳出所有循环，continue跳出当前循环
-    ;;
-esac
-</code></pre>
-
-<ul>
-<li><strong>函数</strong><br/>
-###### 定义函数</li>
-</ul>
-
-<pre><code class="language-shell">[function] funcName[()]{
-    command
-    [return n] # n为0-255之间的数字
-}
-
-funcName  # 调用函数funcName
-</code></pre>
-
-<blockquote>
-<p>1.可以带function fun()定义，也可以直接fun()定义，不到任何参数<br/><br/>
-2.参数返回，可以显示的加：return返回，如果不加，将以最后一条命令运行结果，作为返回值。</p>
-</blockquote>
-
-<pre><code class="language-shell">例：
-#!/bin/sh
-function funcName(){
-    echo &#39;this is a function!&#39;
-}
-# 开始执行函数
-funcName
-# 函数执行结束
-</code></pre>
-
-<h6 id="toc_8">函数参数</h6>
-
-<pre><code class="language-shell">例：
-funWithParam(){
-    echo &quot;第一个参数：$1&quot;
-    echo &quot;第二个参数：$2&quot;
-    echo &quot;第五个参数：${5}&quot;
-    echo &quot;参数总个数：$#&quot;
-    echo &quot;作为字符串输出所有参数：$* !&quot;
-}
-funWidthParam 1 2 3 4 5 6 7  #调用函数传参
-</code></pre>
-
-<blockquote>
-<p>备注：<code>$#</code> 传递到脚本的参数个数<br/><br/>
-<code>$*</code> 以一个单字符串显示所有向脚本传递的参数；<br/><br/>
-<code>$$</code> 脚本运行的当前进程ID号；<br/><br/>
-<code>$!</code> 后台运行的最优一个进程的ID号<br/><br/>
-<code>$@</code> 与<code>$*</code>相同，但是使用时加引号，并在引号中返回每个参数；<br/><br/>
-<code>$-</code> 显示<code>Shell</code>使用的当前选项，与<code>set</code>命令功能相同<br/><br/>
-<code>$?</code> 显示最后命令的退出状态。<code>0</code>表示没有错误，其他任何值表明有错误。</p>
-</blockquote>
-
-<ul>
-<li><strong>Shell文件包含</strong><br/>
-Shell包含外部脚本语法合适如下：</li>
-</ul>
-
-<pre><code class="language-shell">. filename    # 注意点号（.）和文件名中间有一个空格
-或
-source filename
-</code></pre>
-
-<blockquote>
-<p><strong>注：</strong>被包含的文件不需要可执行权限</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[一致性哈希算法]]></title>
-    <link href="jythons.github.io/16038127730075.html"/>
-    <updated>2020-10-27T23:32:53+08:00</updated>
-    <id>jythons.github.io/16038127730075.html</id>
-    <content type="html"><![CDATA[
-<blockquote>
-<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<p><img src="media/16038127730075/%E4%B8%80%E8%87%B4%E6%80%A7hash.png" alt="一致性hash"/></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Nginx Tomcat集群搭建]]></title>
-    <link href="jythons.github.io/16032063964658.html"/>
-    <updated>2020-10-20T23:06:36+08:00</updated>
-    <id>jythons.github.io/16032063964658.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">Nginx配置</h2>
-
-<pre><code class="language-text">#配置上游服务器
-upstream tomcats {
-        server 192.168.3.26:8080;
-        server 192.168.3.27:8080;
-        server 192.168.3.28:8080;
-}
-
-server {
-        listen 80;
-        server_name www.tomcats.com;
-
-        location / {
-                proxy_pass http://tomcats;
-        }
-}
-</code></pre>
-
-<h2 id="toc_1">使用JMeter测试但节点与集群并发异常率</h2>
-
-<p>JMeter是apache的一个基于java的测试工具<br/>
-下载地址：<a href="https://jmeter.apache.org/download_jmeter.cgi">https://jmeter.apache.org/download_jmeter.cgi</a></p>
-
-<h2 id="toc_2">负载均衡之轮询</h2>
-
-<p>nginx负载均衡默认的策略是轮询</p>
-
-<h2 id="toc_3">负载均衡之加权轮询</h2>
-
-<p>通过配置权重，来实现轮训，权重越大，被分配流量越多。</p>
-
-<pre><code class="language-text">upstream tomcats {
-        server 192.168.3.26:8080 weight=1;
-        server 192.168.3.27:8080 weight=2;
-        server 192.168.3.28:8080 weight=5;
-}
-</code></pre>
-
-<h2 id="toc_4">upstream指令参数</h2>
-
-<h3 id="toc_5">max_conns</h3>
-
-<blockquote>
-<p>指配置到上游的每个服务器的最大链接数，根据每个服务器能够承受的最大流量，起到保险丝的作用。默认值是0，代表不做任何限制。1.11.5版本之前只有商业版才能使用。如果是在共享内存使用的话，nginx每个work工作进程都可以使用。</p>
-</blockquote>
-
-<pre><code class="language-text">upstream tomcats {
-        server 192.168.3.26:8080 max_conns=1;
-        server 192.168.3.27:8080 max_conns=2;
-        server 192.168.3.28:8080 max_conns=5;
-}
-</code></pre>
-
-<h3 id="toc_6">slow_start</h3>
-
-<blockquote>
-<p>慢启动，主要用于，当某个服务器加入到集群后，不希望直接加入，需要启动一些软件之后在加入到集群，例如：启动监控服务等。如果该服务器配置的权重是10，设置了该值之后，他会慢慢的将权重加到10，对于hash和random方式的负载均衡是不支持的。对于单个服务器，这个参数是不适用的，需要至少有两个才行。 (商业版才能使用这个参数)</p>
-</blockquote>
-
-<pre><code class="language-text">upstream tomcats {
-        server 192.168.3.26:8080 weight=6 slow_start=60s;
-        server 192.168.3.27:8080 weight=2;
-        server 192.168.3.28:8080 weight=2;
-}
-</code></pre>
-
-<h3 id="toc_7">down</h3>
-
-<blockquote>
-<p>标识服务器为不可用状态。</p>
-</blockquote>
-
-<pre><code class="language-text">upstream tomcats {
-        server 192.168.3.26:8080 down;
-        server 192.168.3.27:8080 weight=2;
-        server 192.168.3.28:8080 weight=2;
-}
-</code></pre>
-
-<h3 id="toc_8">backup</h3>
-
-<blockquote>
-<p>标识服务器只有在其他服务器挂掉之后才会启用，相当于备用机。</p>
-</blockquote>
-
-<pre><code class="language-text">upstream tomcats {
-        server 192.168.3.26:8080 backup;
-        server 192.168.3.27:8080 weight=2;
-        server 192.168.3.28:8080 weight=2;
-}
-</code></pre>
-
-<h3 id="toc_9">max_fails</h3>
-
-<blockquote>
-<p>最大失败次数，如果服务器请求失败次数，达到最大的失败次数，那么nginx就会把对应的服务器剔除，请求就不会到达该服务器。</p>
-
-<h3 id="toc_10">fail_timeout</h3>
-
-<p>配合<code>max_fails</code>参数使用，当请求失败次数达到最大时，在接下来的错误时间段内，请求不会到达这台服务器，等到<code>fail_timeout</code>时间之后，nginx会再次尝试请求这台服务器。</p>
-</blockquote>
-
-<pre><code class="language-text">upstream tomcats {
-        server 192.168.3.26:8080 max_fails=2 fail_timeout=15s;
-        server 192.168.3.27:8080 max_fails=2 fail_timeout=15s;
-        server 192.168.3.28:8080 max_fails=2 fail_timeout=15s;
-}
-</code></pre>
-
-<h2 id="toc_11">使用Keepalived提高吞吐量</h2>
-
-<blockquote>
-<p>Keepalive的作用是将链接作为长链接，大大的减少了链接创建和断开时间上的消耗。</p>
-</blockquote>
-
-<pre><code class="language-text">upstream tomcats {
-        server 192.168.3.26:8080;
-        server 192.168.3.27:8080;
-        server 192.168.3.28:8080;
-        keepalive 32;
-}
-
-server {
-        listen 80;
-        server_name www.tomcats.com;
-
-        location / {
-                proxy_pass http://tomcats;
-                proxy_http_version 1.1; #http 版本
-                proxy_set_header Connection &quot;&quot;; #清空header Connection参数内容
-        }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Nginx的集群负载均衡解析]]></title>
-    <link href="jythons.github.io/16031997211070.html"/>
-    <updated>2020-10-20T21:15:21+08:00</updated>
-    <id>jythons.github.io/16031997211070.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">单节点</h2>
-
-<p>服务器挂了，服务停止</p>
-
-<h2 id="toc_1">集群</h2>
-
-<p>一台服务器挂了，服务还可以继续执行</p>
-
-<h2 id="toc_2">Nginx集群负载均衡</h2>
-
-<p>客户端不会直接访问到服务，会先经过nginx反向代理，由nginx分配请求到后端的服务器。</p>
-
-<h2 id="toc_3">四层负载均衡</h2>
-
-<p>基于IP+端口的负载均衡，通过转发请求到后台服务器，并记录请求是那个服务器处理的，后续的请求会使用同一台服务器去处理，四层负载均衡是在传输层的，主要基于TCP和UDP</p>
-
-<h3 id="toc_4">F5硬负载均衡</h3>
-
-<p>优点：基于硬件的，功能强大，性能和稳定性比较高。<br/>
-缺点：价格昂贵，商业级别的</p>
-
-<h3 id="toc_5">LVS四层负载均衡</h3>
-
-<p>Linux内核的，和协议没有什么关系</p>
-
-<h3 id="toc_6">Haproxy 四层负载均衡</h3>
-
-<p>支持转发功能，灵活性高，除了四层以外还可以做7层的负载均衡</p>
-
-<h3 id="toc_7">Nginx四层负载均衡</h3>
-
-<p>通常使用Nginx做7层负载均衡，以7层为主，基于HTTP做的负载均衡，老版本是在1.9版本后加了一个stream模块，可以实现4层协议的转发代理。</p>
-
-<h2 id="toc_8">七层负载均衡</h2>
-
-<h3 id="toc_9">Nginx七层负载均衡</h3>
-
-<p>对http和mail协议做负载均衡</p>
-
-<h3 id="toc_10">Haproxy七层负载均衡</h3>
-
-<h3 id="toc_11">apache七层负载均衡</h3>
-
-<p>性能远不如nginx的高，当并发达到百万级别以后，性能会越来越差</p>
-
-<h2 id="toc_12">DNS地域负载均衡</h2>
-
-<p>举例：在浏览器打开一个网址，先请求DNS服务器，DNS会根据我当前所在的地域，根据就近原则，返回一个最近的IP地址</p>
 
 ]]></content>
   </entry>

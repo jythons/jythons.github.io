@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Java - Jythons小站
+  	SpringBoot整合redis - Jythons小站
   	
 	</title>
 
@@ -125,24 +125,10 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-16T22:54:32+08:00" itemprop="datePublished">2020/11/16</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Java.html'>Java</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16055384723975.html" itemprop="url">
-		SpringBoot整合redis</a></h1>
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">SpringBoot整合redis</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
 			<h2 id="toc_0">添加依赖</h2>
 
 <pre><code class="language-text">&lt;dependency&gt;
@@ -151,30 +137,58 @@
 &lt;/dependency&gt;
 </code></pre>
 
+<span id="more"></span><!-- more -->
 
+<h2 id="toc_1">配置yml</h2>
 
-			 
-			<a href="16055384723975.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
+<pre><code class="language-text">spring:
+    redis:
+        database: 0
+        host: 192.168.1.111
+        port: 6379
+        password: psword
+</code></pre>
+
+<h2 id="toc_2">使用方法</h2>
+
+<pre><code class="language-text">@ApiIgnore
+@RestController
+@RequestMapping(&quot;redis&quot;)
+public class RedisController {
+
+    @Autowired
+    private RedisTemplate redisTemplate
+
+    @GetMapping(&quot;/set&quot;)
+    public Object set(String key, String value) {
+        redisTemplate.opsForValue().set(key, value);
+        return &quot;OK&quot;;
+    }
+    
+    @GetMapping(&quot;/get&quot;)
+    public String get(String key) {
+        return (String)redisTemplate.opsForValue().get (key);
+    }
+    
+    @GetMapping(&quot;/delete&quot;)
+    public Object delete(String key) {
+        redisTemplate.delete(key);
+        return &quot;OK&quot;;
+    }
+}
+</code></pre>
+
 		</div>
-
 	</article>
-  
-
-</div>
-<nav id="pagenavi">
+	<div class="share-comment">
 	 
-	
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
-</nav>
+	  
 
-</div>
+	  
 
-
-
-        </div>
+	</div>
+</div>        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2020
 Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
