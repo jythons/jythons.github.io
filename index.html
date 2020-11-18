@@ -131,6 +131,89 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2020-11-18T23:32:18+08:00" itemprop="datePublished">2020/11/18</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16057135385527.html" itemprop="url">
+		Redis 主从复制原理</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">主从架构</h2>
+
+<p>单机单个节点，redis并发支持上万，但是随着业务的复杂度，redis的并发度还是会有上限的。因此还是需要在架构上进行优化。 <br/>
+主从架构是一种水平横向拓展的架构，读写分离。 主节点负责数据的写入，从节点负责读操作。<br/>
+<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.png" alt="redis主从架构"/></p>
+
+
+
+			 
+			<a href="16057135385527.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-17T22:58:00+08:00" itemprop="datePublished">2020/11/17</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16056250808598.html" itemprop="url">
+		Redis的持久化机制</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>Redis的数据是存放在缓存里面的，当计算机重启后，缓存内的数据会被清除，这时数据就会消失，因此，redis是可以支持持久化的，他可以根据策略将缓存中的数据存放到硬盘当中，保证数据的持久性。<br/>
+Reids的持久化有两种方式，一种是RDB，另一种是AOF。下面分别介绍一下两种持久化机制的使用。</p>
+
+
+
+			 
+			<a href="16056250808598.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-17T22:51:47+08:00" itemprop="datePublished">2020/11/17</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16056247075354.html" itemprop="url">
+		openssh-java</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><a href="https://github.com/apivovarov/openssh-java">https://github.com/apivovarov/openssh-java</a></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2020-11-16T23:24:02+08:00" itemprop="datePublished">2020/11/16</time>
 			</div>
 			<div class="tags">posted in 
@@ -367,105 +450,6 @@ cd redis-6.0.9
 
 			 
 			<a href="16048487950121.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-08T23:04:53+08:00" itemprop="datePublished">2020/11/08</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16048478935893.html" itemprop="url">
-		LVS的持久化机制</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>如果一个用户短时间内多次提交请求，那么他的请求都会转发到第一次请求的RS服务器，这个时间段默认是300秒。<br/>
-配置方式：</p>
-
-<pre><code class="language-text"># 详细信息使用：man ipvsadm
-ipvsadm -E -t 192.168.1.150:80 -s rr -p [time] 
-</code></pre>
-
-<blockquote>
-<p>-E 编辑服务，-t 服务地址</p>
-</blockquote>
-
-
-
-			 
-			<a href="16048478935893.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-02T23:50:52+08:00" itemprop="datePublished">2020/11/02</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16043322529866.html" itemprop="url">
-		搭建 LVS-DR 模式</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">服务器与 IP 约定</h2>
-
-<p><img src="media/16043322529866/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8EIP%E7%BA%A6%E5%AE%9A.png" alt="服务器与IP约定"/></p>
-
-<p>首先需要有一个LVS，LVS需要有两个IP，分别是：DIP（Direct IP）和VIP (Virtual IP)；DIP就是内网IP，用于与内网上游服务器通信使用；VIP是虚拟IP，用于客户端交互使用。<br/>
-然后上游服务器Nginx，Nginx服务器需要配置两个IP，分别是：RIP（Real Server IP）和VIP (Virtual IP); RIP也是内网IP，VIP也是虚拟IP，用户的请求处理完毕，通过VIP返回给客户端；Nginx服务器的VIP要和LVS的虚拟IP保持一致。</p>
-
-
-
-			 
-			<a href="16043322529866.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-02T23:24:05+08:00" itemprop="datePublished">2020/11/02</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16043306453976.html" itemprop="url">
-		LVS的三种模式</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p>NAT，基于网络地址转换；<br/>
-TUN，基于IP隧道的模式；<br/>
-DR，直接路由模式。</p>
-</blockquote>
-
-
-
-			 
-			<a href="16043306453976.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>

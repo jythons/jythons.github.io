@@ -131,6 +131,98 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2020-08-26T22:33:28+08:00" itemprop="datePublished">2020/08/26</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15984524087390.html" itemprop="url">
+		虚拟主机 - 使用Nginx为静态资源</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">root与alias</h2>
+
+<p>假如服务器路径为：<code>/home/user/files/img/face.png</code></p>
+
+
+
+			 
+			<a href="15984524087390.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-08-26T22:11:12+08:00" itemprop="datePublished">2020/08/26</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15984510722035.html" itemprop="url">
+		Nginx日志切割</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">手动切割</h2>
+
+<p>现有的日志都会存在于<code>access.log</code>文件中，但是随着时间的推移，这个文件的内容会越来越多，体积会越来越大，不便于运维人员查看，所以我们可以通过把这个大的日志文件切割为多份不同的小文件作为日志，切割规则可以以天为单位，如果每天有几百G或者几个T的日志的话，则可以按需以每半天或者每小时对日志切割以下。<br/>
+
+
+			 
+			<a href="15984510722035.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-08-26T00:12:54+08:00" itemprop="datePublished">2020/08/26</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15983719742857.html" itemprop="url">
+		nginx常用命令解析</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ol>
+<li>启动: <code>nginx</code></li>
+<li>关闭
+<ol>
+<li>nginx -s stop 这种方式是比较暴力的方式，直接停止nginx，正在请求的进程会直接停止</li>
+<li>nginx -s quit 优雅的停止，当没有用户请求时，会关闭（只针对http请求）</li>
+</ol></li>
+<li>检查语法：nginx -t</li>
+<li>查看版本：nginx -v</li>
+<li>查看版本以及配置信息：nginx -V</li>
+<li>手动置顶nginx核心配置文件：nginx -c filename(nginx.conf的路径)</li>
+</ol>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2020-08-25T23:58:04+08:00" itemprop="datePublished">2020/08/25</time>
 			</div>
 			<div class="tags">posted in 

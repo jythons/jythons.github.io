@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Java - Jythons小站
+  	Redis 主从复制原理 - Jythons小站
   	
 	</title>
 
@@ -125,80 +125,43 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-17T22:51:47+08:00" itemprop="datePublished">2020/11/17</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Java.html'>Java</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16056247075354.html" itemprop="url">
-		openssh-java</a></h1>
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Redis 主从复制原理</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
-			<p><a href="https://github.com/apivovarov/openssh-java">https://github.com/apivovarov/openssh-java</a></p>
+			<h2 id="toc_0">主从架构</h2>
 
+<p>单机单个节点，redis并发支持上万，但是随着业务的复杂度，redis的并发度还是会有上限的。因此还是需要在架构上进行优化。 <br/>
+主从架构是一种水平横向拓展的架构，读写分离。 主节点负责数据的写入，从节点负责读操作。<br/>
+<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.png" alt="redis主从架构"/></p>
 
-			
-			
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">主从原理</h2>
+
+<p>当主节点和从节点启动后，在从节点会有一些相关的配置，启动后，从节点会对主节点发出ping请求，这时主节点会将全量数据复制给从节点，也就是复制RDB。<br/>
+主节点会将内存里面的数据备份一个RDB文件，然后将RDB文件复制给从节点，从节点拿到主节点传过来的RDB文件后，将RDB文件的内容加载到从节点的内存当中。这是一个初始化的过程，当以后主节点有数据写入时，主节点会把命令发送给从节点，从节点将数据写入到内存。<br/>
+<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E5%8E%9F%E7%90%86.png" alt="redis主从原理"/><br/>
+当从节点下线一段时间后，再次恢复时，主节点会把下线这段时间的增量数据，一起同步给从节点。<br/>
+如果要使用主从的话，主节点必须开启持久化，<strong>如果主节点没有开启持久化，当主节点宕机后，再次上线之后，主节点会将从节点的数据清空</strong>。</p>
+
+<h2 id="toc_2">主从模式</h2>
+
+<p>redis主从模式，一般都是一主2从，从节点不会太多，因为主从复制其实就是文件的上传和下载，如果从节点太多，主从复制的时候会占用很大一部分内网的带宽。<br/>
+如果需要多个从节点，可以在从节点上继续配置主从模式，也就是从节点下还有从节点。<br/>
+<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F.png" alt="redis主从模式"/></p>
+
 		</div>
-
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-16T22:54:32+08:00" itemprop="datePublished">2020/11/16</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Java.html'>Java</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16055384723975.html" itemprop="url">
-		SpringBoot整合redis</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">添加依赖</h2>
-
-<pre><code class="language-text">&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-
-
-			 
-			<a href="16055384723975.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
-  
-
-</div>
-<nav id="pagenavi">
+	<div class="share-comment">
 	 
-	
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
-</nav>
+	  
 
-</div>
+	  
 
-
-
-        </div>
+	</div>
+</div>        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2020
 Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>

@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	Redis的持久化机制 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">工作学习中的点点滴滴。</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+						
+						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+						
+						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Redis的持久化机制</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<p>Redis的数据是存放在缓存里面的，当计算机重启后，缓存内的数据会被清除，这时数据就会消失，因此，redis是可以支持持久化的，他可以根据策略将缓存中的数据存放到硬盘当中，保证数据的持久性。<br/>
+Reids的持久化有两种方式，一种是RDB，另一种是AOF。下面分别介绍一下两种持久化机制的使用。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">RDB（Redis Database）</h2>
+
+<p>RDB模式，是每隔一段时间以快照的方式去备份内存中的数据备份到磁盘上。备份的数据是开始备份那个时间点前的数据。</p>
+
+<h3 id="toc_1">RDB优势</h3>
+
+<ul>
+<li>以单独的文件的形式去备份，他可以设置每个小时或者每天去备份一次，恢复的时候，可以根据不同的版本去恢复数据到内存当中。</li>
+<li>方便灾后恢复数据，因为它只有一个文件，这个问价中的内容是完整的。</li>
+<li>备份时，他是以子进程的方式进行备份的，没有占用主进程，保证服务可以正常运行。当子进程进行备份时，主进程不会进行磁盘的IO，这样可以保证数据的完整性。（？这时如果有数据进来怎么做）</li>
+<li>当进行数据恢复的时候，可以快速的恢复比较大的数据集，相对于AOF，恢复的速度更快。</li>
+</ul>
+
+<h3 id="toc_2">RDB劣势</h3>
+
+<ul>
+<li>RDB是每隔一段时间去备份一次，当在备份的间隔时间内出现宕机，这时，在上次备份的时间点到宕机这个时间点之间的数据会丢失。如果不在乎数据的完整性，可以使用。</li>
+<li>RDB在备份的时候，是fork一个子进程进行执行备份操作，这个子进程和主进程是相同的，如果数据集比较大，复制数据时，对于计算机的CPU消耗会比较大。</li>
+<li>不能做到实时的备份。</li>
+</ul>
+
+<h3 id="toc_3">RDB配置</h3>
+
+<p>打开Redis的配置文件 redis.conf，搜索SNAPSHOTTING，找到dir，这个就是备份时保存的文件路径。</p>
+
+<pre><code class="language-text"># 如果至少有一个key发生变化，在900秒后就会保存一次快照
+save 900 1
+# 如果至少有10个key发生变化，那么在300秒后就回保存一次快照
+save 300 10
+# 如果至少有10000个key发生了变化，在60秒后就回保存一次快照
+save 60 10000
+
+# 如果保存的时候发生错误，就停止写入操作, 如果发生错误不停止写操作，就回出现数据
+# 不一致的情况。
+stop-writes-on-bgsave-error yes
+
+# 这个是指是否使用压缩，如果使用压缩会占用CPU的性能，如果不使用压缩可以设置为no
+# 使用 LZF 方式去压缩
+rdbcompression yes
+
+# 数据校验，使用CRC64去校验，使用校验，会有10%的性能消耗
+rdbchecksum yes
+
+# 备份文件名称
+dbfilename dump.rdb
+# 备份文件路径
+dir /usr/local/redis/working
+</code></pre>
+
+<blockquote>
+<p>总结：使用RDB的备份方式，比较适合大数据量的恢复操作，但是如果在最后一次保存之前出现异常，这时就回丢失数据，对数据的完整性没有保障，如果不在乎数据的完整性，可以使用RDB的持久化方式。</p>
+</blockquote>
+
+<h2 id="toc_4">AOF（append only fashion）</h2>
+
+<p>aof是以日志的形式存在，只要数据发生变更，就会以追加的方式写入日志，由于aof的日志会越写越大，所以可以通过配置的方式去将日志进行切割。</p>
+
+<h3 id="toc_5">AOF 优势</h3>
+
+<ul>
+<li>使用AOF可以使redis持久化更加健壮，他有三种方式去触发持久化
+<ul>
+<li>在关闭时触发</li>
+<li>每秒触发（默认的方式）</li>
+<li>发生写操作时触发</li>
+</ul></li>
+<li> 以日志的形式进行追加持久化</li>
+<li> 日志内包含了所有的操作，便于redis的解析和恢复操作 </li>
+</ul>
+
+<h3 id="toc_6">AOF 劣势</h3>
+
+<ul>
+<li>因为是使用日志的方式，所以和RDB的快照文件相比，要大得多。</li>
+<li>AOF持久化，每次写入都会有IO操作，因此频繁的IO操作，对计算机性能会有一定的消耗。</li>
+<li>历史遗留的bug，AOF恢复的数据可能会有数据丢失。</li>
+</ul>
+
+<h3 id="toc_7">AOF 配置</h3>
+
+<p>打开Redis的配置文件 redis.conf，搜索APPEND，下方的配置都是AOF配置相关的。<br/>
+redis安装完毕后，默认的持久化方式是RDB模式</p>
+
+<pre><code class="language-text"># 默认是关闭的， 启动AOF
+appendonly yes
+
+# AOF备份的文件名称
+appendfilename &quot;appendonly.aof&quot;
+
+# 同步策略
+# 有写操作就同步
+appendfsync always
+# 每一秒
+appendfsync everysec
+# 关闭
+appendfsync no
+
+# 从写的时候不做写操作，否则会出现数据不一致的情况
+no-appendfsync-on-rewrite no
+
+# 重写机制，避免日志越来越大，AOF重写时，会执行flushALL命令，这个命令也会被记录到日志内，因此，在恢复的时候，需要将文件最后的flushALL命令删除，否则恢复之后是空的。
+auto-aof-rewrite-percentage 100
+auto-aof-rewrite-min-size 64mb
+</code></pre>
+
+<h2 id="toc_8">RDB 和 AOF 选择</h2>
+
+<p>如果在可以接受在一段时间内他的缓存可以丢失的话，可以选择使用RDB模式。<br/>
+如果对数据的实时性要求比较高，可以使用AOF的方式。<br/>
+通常两个方法是一起使用，RDB作为冷备份，AOF用来做热备份，这样数据即使丢失最大就是在1s-2s。<br/>
+redis在恢复的时候，是先去加载AOF日志进行恢复，如果AOF日志不存在，就回去使用RDB快照就恢复。这里有一个效率的问题，因为RDB是快照的方式，快照文件内记录的上一次备份时间点之前的所有数据，恢复的速度比较快，而AOF日志是记录了所有的操作命令，恢复的时候相对会比较慢，因此两个持久化的方法联合使用，不仅可以提高数据的安全性，也能提高数据恢复的速度。</p>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2020
+Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>

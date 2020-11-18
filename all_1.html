@@ -131,6 +131,105 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2020-11-08T23:04:53+08:00" itemprop="datePublished">2020/11/08</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16048478935893.html" itemprop="url">
+		LVS的持久化机制</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>如果一个用户短时间内多次提交请求，那么他的请求都会转发到第一次请求的RS服务器，这个时间段默认是300秒。<br/>
+配置方式：</p>
+
+<pre><code class="language-text"># 详细信息使用：man ipvsadm
+ipvsadm -E -t 192.168.1.150:80 -s rr -p [time] 
+</code></pre>
+
+<blockquote>
+<p>-E 编辑服务，-t 服务地址</p>
+</blockquote>
+
+
+
+			 
+			<a href="16048478935893.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-02T23:50:52+08:00" itemprop="datePublished">2020/11/02</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16043322529866.html" itemprop="url">
+		搭建 LVS-DR 模式</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">服务器与 IP 约定</h2>
+
+<p><img src="media/16043322529866/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8EIP%E7%BA%A6%E5%AE%9A.png" alt="服务器与IP约定"/></p>
+
+<p>首先需要有一个LVS，LVS需要有两个IP，分别是：DIP（Direct IP）和VIP (Virtual IP)；DIP就是内网IP，用于与内网上游服务器通信使用；VIP是虚拟IP，用于客户端交互使用。<br/>
+然后上游服务器Nginx，Nginx服务器需要配置两个IP，分别是：RIP（Real Server IP）和VIP (Virtual IP); RIP也是内网IP，VIP也是虚拟IP，用户的请求处理完毕，通过VIP返回给客户端；Nginx服务器的VIP要和LVS的虚拟IP保持一致。</p>
+
+
+
+			 
+			<a href="16043322529866.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-02T23:24:05+08:00" itemprop="datePublished">2020/11/02</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16043306453976.html" itemprop="url">
+		LVS的三种模式</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<blockquote>
+<p>NAT，基于网络地址转换；<br/>
+TUN，基于IP隧道的模式；<br/>
+DR，直接路由模式。</p>
+</blockquote>
+
+
+
+			 
+			<a href="16043306453976.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2020-11-02T00:40:05+08:00" itemprop="datePublished">2020/11/02</time>
 			</div>
 			<div class="tags">posted in 
@@ -327,98 +426,6 @@ LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是
 
 			 
 			<a href="16041606361898.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-28T23:11:39+08:00" itemprop="datePublished">2020/10/28</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038978992618.html" itemprop="url">
-		Nginx控制浏览器缓存</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">原理图</h2>
-
-<p><img src="media/16038978992618/Nginx%E6%8E%A7%E5%88%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98.png" alt="Nginx控制浏览器缓存"/></p>
-
-
-
-			 
-			<a href="16038978992618.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-28T22:50:09+08:00" itemprop="datePublished">2020/10/28</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038966099434.html" itemprop="url">
-		负载均衡之url_hash</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>从字面上可以看出，他是基于URL的hash算法，根据URL获得的hash值将请求分配到不同的节点上<br/>
-<img src="media/16038966099434/URL-hash.png" alt="URL-hash"/></p>
-
-
-
-			 
-			<a href="16038966099434.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-27T23:53:01+08:00" itemprop="datePublished">2020/10/27</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038139816578.html" itemprop="url">
-		负载均衡之ip_hash</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">hash算法</h2>
-
-<blockquote>
-<p>hash(ip) % node_counts = index<br/>
-通过对客户端IP进行哈希然后根据上方公式分配到对应的服务器处理，之后的每次请求，只要客户端的IP没有变化，所有的请求都会请求到这台服务器上。<br/>
-由于nginx的ip_hash算法是根据IP的前三个数值进行的hash，所以内网使用时，只会访问同一台服务器上。如果有人进行不正当的大量请求，这时所有的请求都会转发到同一台服务器上，这时会造成这台服务器的负载升高。<br/>
-当使用ip_hash的方式进行负载均衡时，如果要临时移除一台服务器时，不能直接将这个server删除，要将这要服务器标记为down。<br/>
-该算法，在增加或减少节点时，都需要重新计算。</p>
-</blockquote>
-
-
-
-			 
-			<a href="16038139816578.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>

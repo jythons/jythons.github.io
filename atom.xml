@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-12T23:43:36+08:00</updated>
+  <updated>2020-11-16T23:43:00+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,174 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Redis 主从复制原理]]></title>
+    <link href="jythons.github.io/16057135385527.html"/>
+    <updated>2020-11-18T23:32:18+08:00</updated>
+    <id>jythons.github.io/16057135385527.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">主从架构</h2>
+
+<p>单机单个节点，redis并发支持上万，但是随着业务的复杂度，redis的并发度还是会有上限的。因此还是需要在架构上进行优化。 <br/>
+主从架构是一种水平横向拓展的架构，读写分离。 主节点负责数据的写入，从节点负责读操作。<br/>
+<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.png" alt="redis主从架构"/></p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">主从原理</h2>
+
+<p>当主节点和从节点启动后，在从节点会有一些相关的配置，启动后，从节点会对主节点发出ping请求，这时主节点会将全量数据复制给从节点，也就是复制RDB。<br/>
+主节点会将内存里面的数据备份一个RDB文件，然后将RDB文件复制给从节点，从节点拿到主节点传过来的RDB文件后，将RDB文件的内容加载到从节点的内存当中。这是一个初始化的过程，当以后主节点有数据写入时，主节点会把命令发送给从节点，从节点将数据写入到内存。<br/>
+<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E5%8E%9F%E7%90%86.png" alt="redis主从原理"/><br/>
+当从节点下线一段时间后，再次恢复时，主节点会把下线这段时间的增量数据，一起同步给从节点。<br/>
+如果要使用主从的话，主节点必须开启持久化，<strong>如果主节点没有开启持久化，当主节点宕机后，再次上线之后，主节点会将从节点的数据清空</strong>。</p>
+
+<h2 id="toc_2">主从模式</h2>
+
+<p>redis主从模式，一般都是一主2从，从节点不会太多，因为主从复制其实就是文件的上传和下载，如果从节点太多，主从复制的时候会占用很大一部分内网的带宽。<br/>
+如果需要多个从节点，可以在从节点上继续配置主从模式，也就是从节点下还有从节点。<br/>
+<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F.png" alt="redis主从模式"/></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Redis的持久化机制]]></title>
+    <link href="jythons.github.io/16056250808598.html"/>
+    <updated>2020-11-17T22:58:00+08:00</updated>
+    <id>jythons.github.io/16056250808598.html</id>
+    <content type="html"><![CDATA[
+<p>Redis的数据是存放在缓存里面的，当计算机重启后，缓存内的数据会被清除，这时数据就会消失，因此，redis是可以支持持久化的，他可以根据策略将缓存中的数据存放到硬盘当中，保证数据的持久性。<br/>
+Reids的持久化有两种方式，一种是RDB，另一种是AOF。下面分别介绍一下两种持久化机制的使用。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">RDB（Redis Database）</h2>
+
+<p>RDB模式，是每隔一段时间以快照的方式去备份内存中的数据备份到磁盘上。备份的数据是开始备份那个时间点前的数据。</p>
+
+<h3 id="toc_1">RDB优势</h3>
+
+<ul>
+<li>以单独的文件的形式去备份，他可以设置每个小时或者每天去备份一次，恢复的时候，可以根据不同的版本去恢复数据到内存当中。</li>
+<li>方便灾后恢复数据，因为它只有一个文件，这个问价中的内容是完整的。</li>
+<li>备份时，他是以子进程的方式进行备份的，没有占用主进程，保证服务可以正常运行。当子进程进行备份时，主进程不会进行磁盘的IO，这样可以保证数据的完整性。（？这时如果有数据进来怎么做）</li>
+<li>当进行数据恢复的时候，可以快速的恢复比较大的数据集，相对于AOF，恢复的速度更快。</li>
+</ul>
+
+<h3 id="toc_2">RDB劣势</h3>
+
+<ul>
+<li>RDB是每隔一段时间去备份一次，当在备份的间隔时间内出现宕机，这时，在上次备份的时间点到宕机这个时间点之间的数据会丢失。如果不在乎数据的完整性，可以使用。</li>
+<li>RDB在备份的时候，是fork一个子进程进行执行备份操作，这个子进程和主进程是相同的，如果数据集比较大，复制数据时，对于计算机的CPU消耗会比较大。</li>
+<li>不能做到实时的备份。</li>
+</ul>
+
+<h3 id="toc_3">RDB配置</h3>
+
+<p>打开Redis的配置文件 redis.conf，搜索SNAPSHOTTING，找到dir，这个就是备份时保存的文件路径。</p>
+
+<pre><code class="language-text"># 如果至少有一个key发生变化，在900秒后就会保存一次快照
+save 900 1
+# 如果至少有10个key发生变化，那么在300秒后就回保存一次快照
+save 300 10
+# 如果至少有10000个key发生了变化，在60秒后就回保存一次快照
+save 60 10000
+
+# 如果保存的时候发生错误，就停止写入操作, 如果发生错误不停止写操作，就回出现数据
+# 不一致的情况。
+stop-writes-on-bgsave-error yes
+
+# 这个是指是否使用压缩，如果使用压缩会占用CPU的性能，如果不使用压缩可以设置为no
+# 使用 LZF 方式去压缩
+rdbcompression yes
+
+# 数据校验，使用CRC64去校验，使用校验，会有10%的性能消耗
+rdbchecksum yes
+
+# 备份文件名称
+dbfilename dump.rdb
+# 备份文件路径
+dir /usr/local/redis/working
+</code></pre>
+
+<blockquote>
+<p>总结：使用RDB的备份方式，比较适合大数据量的恢复操作，但是如果在最后一次保存之前出现异常，这时就回丢失数据，对数据的完整性没有保障，如果不在乎数据的完整性，可以使用RDB的持久化方式。</p>
+</blockquote>
+
+<h2 id="toc_4">AOF（append only fashion）</h2>
+
+<p>aof是以日志的形式存在，只要数据发生变更，就会以追加的方式写入日志，由于aof的日志会越写越大，所以可以通过配置的方式去将日志进行切割。</p>
+
+<h3 id="toc_5">AOF 优势</h3>
+
+<ul>
+<li>使用AOF可以使redis持久化更加健壮，他有三种方式去触发持久化
+<ul>
+<li>在关闭时触发</li>
+<li>每秒触发（默认的方式）</li>
+<li>发生写操作时触发</li>
+</ul></li>
+<li> 以日志的形式进行追加持久化</li>
+<li> 日志内包含了所有的操作，便于redis的解析和恢复操作 </li>
+</ul>
+
+<h3 id="toc_6">AOF 劣势</h3>
+
+<ul>
+<li>因为是使用日志的方式，所以和RDB的快照文件相比，要大得多。</li>
+<li>AOF持久化，每次写入都会有IO操作，因此频繁的IO操作，对计算机性能会有一定的消耗。</li>
+<li>历史遗留的bug，AOF恢复的数据可能会有数据丢失。</li>
+</ul>
+
+<h3 id="toc_7">AOF 配置</h3>
+
+<p>打开Redis的配置文件 redis.conf，搜索APPEND，下方的配置都是AOF配置相关的。<br/>
+redis安装完毕后，默认的持久化方式是RDB模式</p>
+
+<pre><code class="language-text"># 默认是关闭的， 启动AOF
+appendonly yes
+
+# AOF备份的文件名称
+appendfilename &quot;appendonly.aof&quot;
+
+# 同步策略
+# 有写操作就同步
+appendfsync always
+# 每一秒
+appendfsync everysec
+# 关闭
+appendfsync no
+
+# 从写的时候不做写操作，否则会出现数据不一致的情况
+no-appendfsync-on-rewrite no
+
+# 重写机制，避免日志越来越大，AOF重写时，会执行flushALL命令，这个命令也会被记录到日志内，因此，在恢复的时候，需要将文件最后的flushALL命令删除，否则恢复之后是空的。
+auto-aof-rewrite-percentage 100
+auto-aof-rewrite-min-size 64mb
+</code></pre>
+
+<h2 id="toc_8">RDB 和 AOF 选择</h2>
+
+<p>如果在可以接受在一段时间内他的缓存可以丢失的话，可以选择使用RDB模式。<br/>
+如果对数据的实时性要求比较高，可以使用AOF的方式。<br/>
+通常两个方法是一起使用，RDB作为冷备份，AOF用来做热备份，这样数据即使丢失最大就是在1s-2s。<br/>
+redis在恢复的时候，是先去加载AOF日志进行恢复，如果AOF日志不存在，就回去使用RDB快照就恢复。这里有一个效率的问题，因为RDB是快照的方式，快照文件内记录的上一次备份时间点之前的所有数据，恢复的速度比较快，而AOF日志是记录了所有的操作命令，恢复的时候相对会比较慢，因此两个持久化的方法联合使用，不仅可以提高数据的安全性，也能提高数据恢复的速度。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[openssh-java]]></title>
+    <link href="jythons.github.io/16056247075354.html"/>
+    <updated>2020-11-17T22:51:47+08:00</updated>
+    <id>jythons.github.io/16056247075354.html</id>
+    <content type="html"><![CDATA[
+<p><a href="https://github.com/apivovarov/openssh-java">https://github.com/apivovarov/openssh-java</a></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Redis发布与订阅]]></title>
@@ -1689,133 +1857,6 @@ server {
         proxy_pass http://tomcats/;
         index index.html index.htm;
     }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Nginx控制浏览器缓存]]></title>
-    <link href="jythons.github.io/16038978992618.html"/>
-    <updated>2020-10-28T23:11:39+08:00</updated>
-    <id>jythons.github.io/16038978992618.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">原理图</h2>
-
-<p><img src="media/16038978992618/Nginx%E6%8E%A7%E5%88%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98.png" alt="Nginx控制浏览器缓存"/></p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_1">设置缓存的指令：expires指令</h2>
-
-<p>expires [time] 设置多少秒后缓存过期；例：expires 10s<br/>
-expires @[time] 设置到那个时间点缓存过期；例：expires @22h30m<br/>
-expires -[time] 表示在现在缓存的多长时间以前就过期；例：expires -1h<br/>
-expires epoch 表示不去缓存<br/>
-expires off 表示Nginx端关闭缓存，在浏览器上不会体现出来；<br/>
-expires max 表示缓存的一个最大的时间，表示永不过期。</p>
-
-<h2 id="toc_2">在Nginx中的使用方法</h2>
-
-<pre><code class="language-text">location /static {
-    alias /home/static;
-    expires 10s;
-}
-</code></pre>
-
-<p><img src="media/16038978992618/header%E6%98%BE%E7%A4%BA%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4.png" alt="header显示过期时间"/></p>
-
-<h2 id="toc_3">Nginx反向代理缓存</h2>
-
-<pre><code class="language-text">#配置上游服务器
-upstream tomcats {
-        server 192.168.3.26:8080;
-        server 192.168.3.27:8080;
-        server 192.168.3.28:8080;
-}
-
-# 设置缓存保存的目录, 
-# keys_zone 设置共享内存空间，和大小
-# max_size 设置缓存大小
-# inactive 超过此时间，则缓存自动清理, 8h:8小时，8m:8分钟，8s:8秒
-# use_temp_path 关闭临时目录，临时目录会对nginx造成性能影响
-proxy_cache_path /usr/local/nginx/upsteam_cache keys_zone=mycache:5m max_size=1g inactive=8h use_temp_path=off;
-
-server {
-        listen 80;
-        server_name www.tomcats.com;
-        
-        # 开启并且使用缓存，mycache对应上方proxy_cache_path配置
-        proxy_cache mycache;
-        # 针对200和304状态码，设置缓存过期时间
-        proxy_cache_valid 200 304 8h
-        
-        location / {
-                proxy_pass http://tomcats;
-        }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[负载均衡之url_hash]]></title>
-    <link href="jythons.github.io/16038966099434.html"/>
-    <updated>2020-10-28T22:50:09+08:00</updated>
-    <id>jythons.github.io/16038966099434.html</id>
-    <content type="html"><![CDATA[
-<p>从字面上可以看出，他是基于URL的hash算法，根据URL获得的hash值将请求分配到不同的节点上<br/>
-<img src="media/16038966099434/URL-hash.png" alt="URL-hash"/></p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">Nginx配置</h2>
-
-<pre><code class="language-text">upstream tomcats {
-        hash $request_uri; 
-        server 192.168.3.26:8080;
-        server 192.168.3.27:8080;
-        server 192.168.3.28:8080;
-}
-
-server {
-        listen 80;
-        server_name www.tomcats.com;
-
-        location / {
-                proxy_pass http://tomcats;
-        }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[负载均衡之ip_hash]]></title>
-    <link href="jythons.github.io/16038139816578.html"/>
-    <updated>2020-10-27T23:53:01+08:00</updated>
-    <id>jythons.github.io/16038139816578.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">hash算法</h2>
-
-<blockquote>
-<p>hash(ip) % node_counts = index<br/>
-通过对客户端IP进行哈希然后根据上方公式分配到对应的服务器处理，之后的每次请求，只要客户端的IP没有变化，所有的请求都会请求到这台服务器上。<br/>
-由于nginx的ip_hash算法是根据IP的前三个数值进行的hash，所以内网使用时，只会访问同一台服务器上。如果有人进行不正当的大量请求，这时所有的请求都会转发到同一台服务器上，这时会造成这台服务器的负载升高。<br/>
-当使用ip_hash的方式进行负载均衡时，如果要临时移除一台服务器时，不能直接将这个server删除，要将这要服务器标记为down。<br/>
-该算法，在增加或减少节点时，都需要重新计算。</p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<pre><code class="language-text">upstream tomcats {
-        ip_hash; # 使用ip_hash的方式实现负载均衡
-        server 192.168.3.26:8080;
-        server 192.168.3.27:8080;
-        server 192.168.3.28:8080;
 }
 </code></pre>
 
