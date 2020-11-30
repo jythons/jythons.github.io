@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-16T23:43:00+08:00</updated>
+  <updated>2020-11-19T00:01:08+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,260 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[SpringBoot集成Redis集群]]></title>
+    <link href="jythons.github.io/16067500364861.html"/>
+    <updated>2020-11-30T23:27:16+08:00</updated>
+    <id>jythons.github.io/16067500364861.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">使用集群的配置</h2>
+
+<pre><code class="language-text">spring:
+    redis:
+        password: mima
+        cluster:
+            nodes: 192.168.1.201:6379,192.168.1.202:6379,192.168.1.203:6379,192.168.1.204:6379,192.168.1.205:6379,192.168.1.206:6379,
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Redis-Cluster集群]]></title>
+    <link href="jythons.github.io/16067481675978.html"/>
+    <updated>2020-11-30T22:56:07+08:00</updated>
+    <id>jythons.github.io/16067481675978.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">集群配置</h2>
+
+<p>打开redis配置文件，找到 REDIS CLUSTER 配置块。修改以下配置：</p>
+
+<pre><code class="language-text"># 开启redis-cluster集群配置
+cluster-enabled yes
+# 每一个节点在集群中的配置文件, 该文件有redis自己去维护 
+cluster-config-file nodes-6379.conf
+# 超时时间，超时自动切换
+cluster-node-timeout 5000
+# aof模式
+appendonly yes
+# aof日志文件名
+appendfilename &quot;appendonly.aof&quot;
+</code></pre>
+
+<blockquote>
+<p>构建集群时，需要将.rdb文件和.aof文件删除或者清空，否则会报错。</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">构建集群</h2>
+
+<blockquote>
+<p>早期，构建redis集群使用的是ruby去构建的，在redis源码目录下，进入到src目录，下面有一个.rb的ruby脚本，通过这个脚本来构建集群，新版本不在使用这个方式。</p>
+</blockquote>
+
+<p>新版本构建方法</p>
+
+<pre><code class="language-text">redis-cli --cluster help 回车，可以查看命令使用方法
+
+# create 后面的地址是集群所有节点的地址，--cluster-replicas表示slave节点和master节点的比值，1就是1个master对应1个slave
+redis-cli --cluster create 192.168.1.201:6379 192.168.1.202:6379 192.168.1.203:6379 192.168.1.204:6379 192.168.1.205:6379 192.168.1.206:6379 --cluster-replicas 1
+</code></pre>
+
+<blockquote>
+<p>创建集群时，如果报错没有权限，在命令开头加上：-a 密码，即可</p>
+</blockquote>
+
+<p>检查集群是否创建成功</p>
+
+<pre><code class="language-text">redis-cli --cluster 192.168.1.201:6379 
+# 会输出集群各个节点信息
+</code></pre>
+
+<h2 id="toc_2">slot槽节点</h2>
+
+<p>槽节点是在master节点上平均分配的，slave节点是没有槽节点的，数据就是保存在这个槽位里面的。<br/>
+<img src="media/16067481675978/slot%E8%8A%82%E7%82%B9.png" alt="slot节点"/></p>
+
+<h3 id="toc_3">槽slot怎么存储</h3>
+
+<p>当我们存储一个key的时候，redis会根据这个key去hash一个值，然后取余槽节点总数，计算出来的值就是这个槽位的位置。<br/>
+<img src="media/16067481675978/slot%E5%AD%98%E5%82%A8.png" alt="slot存储"/></p>
+
+<blockquote>
+<p>查看集群信息，cluster info<br/>
+查看节点信息，cluster nodes</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SpringBoot集成Redis哨兵]]></title>
+    <link href="jythons.github.io/16067477234035.html"/>
+    <updated>2020-11-30T22:48:43+08:00</updated>
+    <id>jythons.github.io/16067477234035.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">哨兵模式配置</h2>
+
+<pre><code class="language-text">spring:
+    redis:
+        database: 1
+        password: imooc
+        sentinel:
+            master: master-redis # master节点名称
+            nodes： 192.168.1.191:26379,192.168.1.191:26379,192.168.1.191:26379 # 哨兵节点地址
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Redis哨兵机制与实现]]></title>
+    <link href="jythons.github.io/16062286652893.html"/>
+    <updated>2020-11-24T22:37:45+08:00</updated>
+    <id>jythons.github.io/16062286652893.html</id>
+    <content type="html"><![CDATA[
+<p>Redis使用源码安装的，在源码包内有一个 sentinel.conf 文件，这个文件就是哨兵机制的配置文件，将该配置文件拷贝到 /usr/local/redis 目录下。然后编辑配置即可。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">sentinel.conf配置</h2>
+
+<pre><code class="language-text"># 绑定一个IP，如果redis需要暴漏在公网下，就需要绑定一个IP地址，
+bind 127.0.0.1 192.168.1.1
+
+# 是否开启保护模式, 默认：no 不开启，保证所有节点都可以访问
+protected-mode no
+
+# 端口号
+port 26379
+
+# 是否在后台启用
+daemonize yes
+
+# 哨兵的进程
+pidfile /var/run/redis-sentinel.pid
+
+# 日志文件
+logfile /usr/local/redis/sentinel/redis-sentinel.log
+
+# 工作目录
+dir /usr/local/redis/sentinel
+
+# 哨兵机制的核心配置：mymaster 相当于redis master节点的名称
+# 后面的IP 端口是master节点的地址和端口，
+# 最后面的2，表示多少个哨兵ping不通master，就可以决定这个节点挂掉了，
+# 然后就可以故障转移了
+sentinel monitor mymaster 127.0.0.1 6379 2
+
+# 配置密码
+sentinel auth-pass mymaster password
+
+# 配置多少毫秒内断定节点属于宕机
+sentinel down-after-milliseconds mymaster 30000
+
+# 如果master挂掉之后，需要选举出一个slave节点作为master，这时其他的只节点需要和这个新的master节点同步数据，这个配置表示同步时的并行个数
+sentinel parallel-syncs mymaster 1
+
+# 发生故障时，需要做故障转移，如果某个哨兵在3分钟内（180000ms）没有操作，则由其他哨兵来完成转移
+sentinel failover-timeout mymaster 180000
+</code></pre>
+
+<h2 id="toc_1">哨兵模式启动</h2>
+
+<pre><code class="language-text">redis-sentinel /usr/local/redis/sentinel.conf
+</code></pre>
+
+<blockquote>
+<p>当原来挂掉的主节点恢复了以后，他会自动变为slave节点，不在是master节点。</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Redis 缓存过期机制]]></title>
+    <link href="jythons.github.io/16061468058717.html"/>
+    <updated>2020-11-23T23:53:25+08:00</updated>
+    <id>jythons.github.io/16061468058717.html</id>
+    <content type="html"><![CDATA[
+<ul>
+<li>（主动）定期删除</li>
+<li>（被动）惰性删除</li>
+</ul>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">定期删除</h2>
+
+<p>定期删除就是redis会定期去抽查缓存是否过期，默认1秒钟10次（可自己配置），如果过期就会自动删除，删除后就不可访问。</p>
+
+<pre><code class="language-text"># redis.conf
+# 设置自动检查数量
+hz 10
+</code></pre>
+
+<h2 id="toc_1">惰性删除</h2>
+
+<p>惰性删除是指客户端请求的时候，可能会请求到一个过期的key，这时redis会去检查这个key是否过期，如果过期就会删除，这种策略对CPU比较友好，不会占用过多的CPU，缺点就是内存会被一直占用。</p>
+
+<blockquote>
+<p>以上两种策略只针对设置了过期时间的key生效。</p>
+</blockquote>
+
+<h2 id="toc_2">内存淘汰管理机制</h2>
+
+<p>计算机的内存是有限的，redis自身带有内存管理机制（memory management）。<br/>
+可以在配置文件内设置一个阀值（maxmemory），如果超过了这个阀值，redis会自动去清理，会清理那些没有设置过期时间的数据。</p>
+
+<ul>
+<li>noeviction (默认)
+<ul>
+<li>内存满了之后不允许继续写入</li>
+</ul></li>
+<li>volatile-lru
+<ul>
+<li>针对时间，选择时间最少的去清理</li>
+</ul></li>
+<li>allkeys-lru
+<ul>
+<li>针对时间选择key去清理，任何key都有可能被清理掉</li>
+</ul></li>
+<li>volatile-lfu
+<ul>
+<li>针对设置过缓存时间的，在这些缓存里面清理较少使用的数据</li>
+</ul></li>
+<li>allkeys-lfu （推荐）
+<ul>
+<li>当内存满了之后，有新的key需要写入时，他会清理那些不经常使用的缓存清理掉</li>
+</ul></li>
+<li>volatile-random
+<ul>
+<li>针对设置了过期时间的缓存，随机清理掉，任何key 都可能删除</li>
+</ul></li>
+<li>allkeys-random
+<ul>
+<li>随机删除，任何的key都有可能删除掉</li>
+</ul></li>
+<li>volatile-ttl
+<ul>
+<li>设置了过期时间的，即将要过期的优先淘汰</li>
+</ul></li>
+</ul>
+
+<blockquote>
+<p>LRU 针对时间的，使用最少<br/>
+LFU 针对动作的，使用最少</p>
+</blockquote>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Redis 主从复制原理]]></title>
@@ -40,6 +294,47 @@
 <p>redis主从模式，一般都是一主2从，从节点不会太多，因为主从复制其实就是文件的上传和下载，如果从节点太多，主从复制的时候会占用很大一部分内网的带宽。<br/>
 如果需要多个从节点，可以在从节点上继续配置主从模式，也就是从节点下还有从节点。<br/>
 <img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F.png" alt="redis主从模式"/></p>
+
+<h2 id="toc_3">主从实践</h2>
+
+<blockquote>
+<p>在redis客户端，使用：info replication 命令，查看当前redis节点的主从配置信息。</p>
+</blockquote>
+
+<p>在redis.conf配置文件搜索 REPLICATION 找到配置主从的位置。配置主从时，只需要配置从节点即可，无需配置主节点。</p>
+
+<h3 id="toc_4">配置从节点</h3>
+
+<pre><code class="language-text"># 配置主节点的ip和端口
+replicaof &lt;masterip&gt; &lt;masterport&gt;
+
+# 配置主节点的登录密码（主节点没有配置密码，不需要配置该选项）
+masterauth &lt;master-password&gt;
+
+# 配置，只要是从节点，都开启，表示从节点只读，不进行写操作
+replica-read-only yes
+</code></pre>
+
+<h3 id="toc_5">无磁盘化复制</h3>
+
+<p>redis主从复制，默认是从节点将主节点保存在磁盘的rdb文件复制到从节点的磁盘，然后在将rdb文件恢复到内存。<br/>
+无磁盘化复制，是将主节点的数据从主节点的内存中直接读取并写入从节点的内存，这样的传输方式，是使用socket的方式进行传输。<br/>
+<img src="media/16057135385527/redis%E6%97%A0%E7%A3%81%E7%9B%98%E5%8C%96%E5%A4%8D%E5%88%B6.png" alt="redis无磁盘化复制"/></p>
+
+<pre><code class="language-text"># 数据同步策略：无磁盘化复制，yes 开启，no 关闭
+# 目前数据测试阶段，生产环境不建议使用 
+repl-diskless-sync no
+</code></pre>
+
+<blockquote>
+<p>redis数据同步策略有两种，一种是磁盘同步，也是默认的同步方式，redis新建一个进程，将数据写入rdb文件，这些rdb文件会定期向slave节点的磁盘同步。另一种数据同步的策略就是无磁盘化同步，master会创建一个新的进程，这个进程会向socket写入rdb文件，不向磁盘写入。如果服务器网络吞吐量比较大，可以使用第二种方式，提高效率。</p>
+</blockquote>
+
+<p>master节点可以配置一个时间，定期的向socket写入rdb文件。</p>
+
+<pre><code class="language-text"># 无磁盘化同步间隔时间，单位（秒）
+repl-diskless-sync-delay 5
+</code></pre>
 
 ]]></content>
   </entry>
@@ -1300,562 +1595,6 @@ vrrp_instance VI_2 {
     }
     virtual_ipaddress {
         192.168.1.162
-    }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Keepalived配置Nginx自动重启]]></title>
-    <link href="jythons.github.io/16042438752112.html"/>
-    <updated>2020-11-01T23:17:55+08:00</updated>
-    <id>jythons.github.io/16042438752112.html</id>
-    <content type="html"><![CDATA[
-<p>当主节点 Nginx 服务挂掉之后，Keepalived 还会继续挂在主节点上运行，这时请求网站时，网站是不能访问的，这时需要将 Nginx 重新启动，否则网站是不能访问的，如果 Nginx 不能再次启动，这时就需要将 Keepalived 主节点切换成备用节点。这时就需要写一个脚本，来实现这个功能。</p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">Keepalived自动重启Nginx服务</h2>
-
-<blockquote>
-<p>将自动重启 Nginx 服务的脚本写在 Keepalived 主配置文件同级目录下（/etc/keepalived）</p>
-</blockquote>
-
-<p><strong>检测 Nginx 服务是否存活脚本如下：</strong></p>
-
-<pre><code class="language-text">file_name check_nginx_alive_or_not.sh
-
-#!/bin/bash
-A=`ps -C nginx --no-header | wc -l`
-# 判断 nginx 是否宕机，如果宕机了，尝试重启
-if [ $A -eq 0 ];then
-    /usr/local/nginx/sbin/nginx
-    # 等待一小会再次检查 nginx，如果没有启动成功，则停止Keepalived，使其启动备用机
-    sleep 3
-    if [ `ps -C nginx --no-header | wc -l` -eq 0 ];then
-        killall keepalived
-    fi
-fi
-</code></pre>
-
-<p><strong>然后到 Keepalived 主配置文件内添加一个脚本的监听。</strong></p>
-
-<blockquote>
-<p>在主配置文件中定一个脚本：vrrp_script，然后在 VI_1 节点配置调用。<br/>
-配置完成后重启Keepalived：systemctl restart keepalived</p>
-</blockquote>
-
-<pre><code class="language-text">! 全局配置
-global_defs {
-   ! 配置切换通知的email
-   notification_email {
-     acassen@firewall.loc
-     failover@firewall.loc
-     sysadmin@firewall.loc
-   }
-   ! 配置发件人
-   notification_email_from Alexandre.Cassen@firewall.loc
-   ! 配置邮箱服务器地址
-   smtp_server 192.168.200.1
-   ! 配置链接邮箱服务器的超时时间
-   smtp_connect_timeout 30
-   ! 路由ID：当前安装Keepalived节点主机的标识符，全局唯一
-   router_id LVS_DEVEL
-   ! 全局vrrp协议配置
-   vrrp_skip_check_adv_addr
-   vrrp_strict
-   vrrp_garp_interval 0
-   vrrp_gna_interval 0
-}
-
-! 添加自动启动Nginx监听
-vrrp_script check_nginx_alive {
-    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
-    ! 每隔两秒运行上一行脚本
-    interval 2
-    ! 如果脚本运行成功，则升级权重+10
-    weight 10
-    ! 如果脚本运行失败，则降级权重-10
-    # weight -10
-}
-
-! 计算机节点，基于vrrp协议的一个实例
-vrrp_instance VI_1 {
-    ! 表示状态，当前服务器的nginx的主节点，MASTER/BACKUP
-    state MASTER
-    ! 当前实例绑定的网卡
-    interface eth0
-    ! 保证主备节点一致即可
-    virtual_router_id 51
-    ! 权重，master权重一般高于backup，如果有多个，那就是选举，谁的权重高，谁就当选
-    priority 100
-    ! 主备之间同步检查时间间隔，单位秒
-    advert_int 2
-    ! 认证权限密码。防止非法节点进入
-    authentication {
-        auth_type PASS
-        auth_pass 1111
-    }
-    
-    track_script {
-        check_nginx_alive # 追踪 nginx 脚本
-    }
-    
-    ! 虚拟出来的ip，可以有多个（vip）
-    virtual_ipaddress {
-        192.168.200.16
-        192.168.200.17
-        192.168.200.18
-    }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Keepalived]]></title>
-    <link href="jythons.github.io/16042148155872.html"/>
-    <updated>2020-11-01T15:13:35+08:00</updated>
-    <id>jythons.github.io/16042148155872.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">IP规划</h2>
-
-<p><img src="media/16042148155872/keepalived-IP%E8%A7%84%E5%88%92.png" alt="keepalived-IP规划"/></p>
-
-<blockquote>
-<p>keepalived官网<a href="https://www.keepalived.org/index.html">地址</a></p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_1">安装Keepalived</h2>
-
-<ol>
-<li><a href="https://www.keepalived.org/software/keepalived-2.1.5.tar.gz">下载安装包</a></li>
-<li>解压：tar -zxvf keepalived-2.1.5.tar.gz</li>
-<li>cd keepalived-2.1.5</li>
-<li>./configure --prefix=/usr/local/keepalived --sysconf=/etc</li>
-<li>make &amp;&amp; make install</li>
-</ol>
-
-<blockquote>
-<p>--prefix: 安装目录；--sysconf: 同步核心配置到/etc目录下，<code>/etc/keepalived/keepalived.conf</code>，固定位置，改成其他位置则keepalived启动不了，<code>/var/log/messages</code>中会报错。<br/>
-配置过程中可能会出现警告信息，如下所示：<br/>
-<code>*** WARNING - this build will not support IPVS with IPv6. Please install libnl/libnl-devel ...</code><br/>
-解决办法：安装libnl/libnl-3依赖，<code>yum -y install libnl libnl-devel</code>, 然后重新安装步骤的第4步和第五部一下，此时OK。</p>
-</blockquote>
-
-<h2 id="toc_2">Keepalived 核心配置文件</h2>
-
-<pre><code class="language-text">! 全局配置
-global_defs {
-   ! 配置切换通知的email
-   notification_email {
-     acassen@firewall.loc
-     failover@firewall.loc
-     sysadmin@firewall.loc
-   }
-   ! 配置发件人
-   notification_email_from Alexandre.Cassen@firewall.loc
-   ! 配置邮箱服务器地址
-   smtp_server 192.168.200.1
-   ! 配置链接邮箱服务器的超时时间
-   smtp_connect_timeout 30
-   ! 路由ID：当前安装Keepalived节点主机的标识符，全局唯一
-   router_id LVS_DEVEL
-   ! 全局vrrp协议配置
-   vrrp_skip_check_adv_addr
-   vrrp_strict
-   vrrp_garp_interval 0
-   vrrp_gna_interval 0
-}
-! 计算机节点，基于vrrp协议的一个实例
-vrrp_instance VI_1 {
-    ! 表示状态，当前服务器的nginx的主节点，MASTER/BACKUP
-    state MASTER
-    ! 当前实例绑定的网卡
-    interface eth0
-    ! 保证主备节点一致即可
-    virtual_router_id 51
-    ! 权重，master权重一般高于backup，如果有多个，那就是选举，谁的权重高，谁就当选
-    priority 100
-    ! 主备之间同步检查时间间隔，单位秒
-    advert_int 2
-    ! 认证权限密码。防止非法节点进入
-    authentication {
-        auth_type PASS
-        auth_pass 1111
-    }
-    ! 虚拟出来的ip，可以有多个（vip）
-    virtual_ipaddress {
-        192.168.200.16
-        192.168.200.17
-        192.168.200.18
-    }
-}
-! 下方都是虚拟主机，这里不需要可以删除
-virtual_server 192.168.200.100 443 {
-    delay_loop 6
-    lb_algo rr
-    lb_kind NAT
-    persistence_timeout 50
-    protocol TCP
-
-    real_server 192.168.201.100 443 {
-        weight 1
-        SSL_GET {
-            url {
-              path /
-              digest ff20ad2481f97b1754ef3e12ecd3a9cc
-            }
-            url {
-              path /mrtg/
-              digest 9b3a0c85a887a256d6939da88aabd8cd
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-}
-
-virtual_server 10.10.10.2 1358 {
-    delay_loop 6
-    lb_algo rr
-    lb_kind NAT
-    persistence_timeout 50
-    protocol TCP
-
-    sorry_server 192.168.200.200 1358
-
-    real_server 192.168.200.2 1358 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /testurl/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl2/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl3/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-    
-    real_server 192.168.200.3 1358 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /testurl/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334c
-            }
-            url {
-              path /testurl2/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334c
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-}
-
-virtual_server 10.10.10.3 1358 {
-    delay_loop 3
-    lb_algo rr
-    lb_kind NAT
-    persistence_timeout 50
-    protocol TCP
-
-    real_server 192.168.200.4 1358 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /testurl/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl2/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl3/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-    
-    real_server 192.168.200.5 1358 {
-        weight 1
-        HTTP_GET {
-            url {
-              path /testurl/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl2/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            url {
-              path /testurl3/test.jsp
-              digest 640205b7b0fc66c1ea91c463fac6334d
-            }
-            connect_timeout 3
-            retry 3
-            delay_before_retry 3
-        }
-    }
-}
-</code></pre>
-
-<h2 id="toc_3">启动 Keepalived</h2>
-
-<pre><code class="language-text">cd /usr/local/keepalived/sbin
-./keepalived
-</code></pre>
-
-<h2 id="toc_4">关闭 Keepalived</h2>
-
-<p><code>ps -ef | grep keepalived</code>, 查出进程号，直接kill -9 进程ID。</p>
-
-<h2 id="toc_5">Keepalived 注册为系统服务</h2>
-
-<p>进入Keepalived的安装目录（安装包解压后的文件夹内），里面有一个keepalived文件夹，进入，里面有一个 etc 文件夹。拷贝 etc/init.d/keepalived 到系统目录/etc/init.d/ 文件夹下。</p>
-
-<pre><code class="language-shell">cp ./keepalived/etc/init.d/keepalived /etc/init.d/
-cp ./keepalived/etc/sysconfig/keepalived /etc/sysconfig/
-</code></pre>
-
-<p>然后刷新系统服务，使刚加进去的服务生效。</p>
-
-<pre><code class="language-text">systemctl daemon-reload
-</code></pre>
-
-<p>这样就可以在系统服务中使用Keepalived了。</p>
-
-<h3 id="toc_6">系统中使用Keepalived</h3>
-
-<pre><code class="language-text">systemctl start keepalived.service    # 启动Keepalived服务
-systemctl stop keepalived.service     # 停止Keepalived服务
-systemctl restart keepalived.service  # 重新启动Keepalived服务
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Nginx高可用集群架构]]></title>
-    <link href="jythons.github.io/16042095103845.html"/>
-    <updated>2020-11-01T13:45:10+08:00</updated>
-    <id>jythons.github.io/16042095103845.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">高可用 HA（High Availability）</h2>
-
-<h3 id="toc_1">Keepalived双机主备原理</h3>
-
-<p>反向代理服务器，分为主节点和一个备用节点，当主节点挂掉之后，自动切换为备用节点。<br/>
-<img src="media/16042095103845/HA%E9%AB%98%E5%8F%AF%E7%94%A8.png" alt="HA高可用"/><br/>
-<span id="more"></span><!-- more --></p>
-
-<h3 id="toc_2">Keepalived概念</h3>
-
-<ul>
-<li>解决单点故障，不单单是在nginx上使用，也可以在redis等集群服务上使用。</li>
-<li>组件免费</li>
-<li>可以实现高可用HA机制</li>
-<li>基于VRRP协议</li>
-</ul>
-
-<h3 id="toc_3">虚拟路由冗余协议 VRRP</h3>
-
-<blockquote>
-<p>VRRP即虚拟路由冗余协议(Virtual Router Redundancy Protocol)，它是为了避免路由器出现单点故障的一种容错协议。 </p>
-</blockquote>
-
-<ul>
-<li>解决内网单机故障的路由协议</li>
-<li>通过该协议，可以构建有多个路由器 MASTER BACKUP</li>
-<li>虚拟IP - VIP（Virtual IP Address）</li>
-</ul>
-
-<h3 id="toc_4">Keepalived双机主备原理</h3>
-
-<p>用户以前是直接请求到Nginx，有了Keepalived之后，用户先请求到虚拟IP，由于虚拟IP是和Nginx的Master节点绑定的，所以，请求会到达Master节点的Nginx。<br/><br/>
-<img src="media/16042095103845/%E8%99%9A%E6%8B%9FIP%E8%AE%BF%E9%97%AEMaster-nginx.png" alt="虚拟IP访问Master-nginx"/></p>
-
-<p>虚拟IP会对Nginx做心跳检测，如果主节点Nginx挂掉之后，虚拟IP就会和Nginx的备用节点绑定，用户的请求还是先请求到虚拟IP，然后请求到备用节点的Nginx。<br/>
-<img src="media/16042095103845/%E8%99%9A%E6%8B%9FIP%E8%AE%BF%E9%97%AE%E5%A4%87%E7%94%A8Nginx%E8%8A%82%E7%82%B9.png" alt="虚拟IP访问备用Nginx节点"/></p>
-
-<blockquote>
-<p>不管是使用多个还是一个备用节点，要保证备用节点的配置和主节点的服务器配置是相同的。<br/>
-例如，主节点可以同时处理1000个请求，备用节点可以同时处理100个请求，当主节点挂掉之后，请求会全部打到备用节点，这时由于备用节点的配置比较低，不能同时处理100个以上的请求，因此，备用节点会瞬间挂掉。</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[动静分离的那些事]]></title>
-    <link href="jythons.github.io/16042031909226.html"/>
-    <updated>2020-11-01T11:59:50+08:00</updated>
-    <id>jythons.github.io/16042031909226.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">动静分离的特点</h2>
-
-<h3 id="toc_1">分布式</h3>
-
-<p>动静分离的本质就是分布式，把动态接口和静态的资源分开这样的话就可以减少后台服务器的压力，提高了静态资源的访问速度，因为静态资源是可以被缓存的，一旦有了缓存的话，用户访问的速度就回更快。后端就不需要再去渲染页面，以往的开发，html、jsp是需要服务器去渲染的，现在采用动静分离，静态资源都是交给客户端去渲染。<br/>
-<span id="more"></span><!-- more --></p>
-
-<h3 id="toc_2">前后端解耦</h3>
-
-<p>前后端分离的开发模式，前后端分开开发，分开部署。</p>
-
-<h3 id="toc_3">静态归Nginx</h3>
-
-<p>静态资源，例如：js、css、html等静态资源都交由Nginx管理，从Nginx里面去读去和加载静态资源的。</p>
-
-<h3 id="toc_4">接口的服务化</h3>
-
-<p>因为是动静分离，所以接口都是单独的去部署，通过集群去部署，这样就可以封装一些接口和数据，让前端去调用。</p>
-
-<h2 id="toc_5">动静分离</h2>
-
-<h3 id="toc_6">静态数据</h3>
-
-<p>例如像css、js、html、images、audios、videos这些，如果需要修改，Nginx会根据最后一次的修改时间来刷新数据。</p>
-
-<h3 id="toc_7">动态数据</h3>
-
-<p>动态数据往往都是以一个接口的形式去请求，动态数据可能第一次去请求和第二次去请求获得的结果是一样的。例如文章，文章列表数据。</p>
-
-<h2 id="toc_8">动静分离的方式</h2>
-
-<h3 id="toc_9">CDN</h3>
-
-<p>CDN是一个内容分发网络，他可以根据客户端的地域去选择最近的服务器来获取资源，加速访问速度。</p>
-
-<h3 id="toc_10">Nginx</h3>
-
-<p>根据url来判断请求的是静态资源还是动态资源，如果是请求的静态资源，就将请求转发到静态资源集群，如果请求的动态资源，就将请求转发到动态资源的上游服务器。</p>
-
-<h2 id="toc_11">动静分离的问题</h2>
-
-<h3 id="toc_12">跨域</h3>
-
-<p>解决方式：</p>
-
-<ul>
-<li>SpringBoot</li>
-<li>Nginx</li>
-<li>jsonp</li>
-</ul>
-
-<h3 id="toc_13">分布式会话</h3>
-
-<ul>
-<li>分布式缓存中间件，例如：redis</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Nginx中配置SSL证书]]></title>
-    <link href="jythons.github.io/16041606361898.html"/>
-    <updated>2020-11-01T00:10:36+08:00</updated>
-    <id>jythons.github.io/16041606361898.html</id>
-    <content type="html"><![CDATA[
-<p>Nginx默认访问使用的是http协议，如果要使用https协议，需要为网站配置SSL证书，因为https是安全的，对传输的数据进行了加密。使用https，必须要有一个域名，并且域名需要备案之后才可以使用。<br/>
-申请完SSL证书后，会得到两个文件，一个是.crt后缀的文件是证书文件，还有一个是.key文件，是密钥文件。<br/>
-<span id="more"></span><!-- more --></p>
-
-<h2 id="toc_0">新增Nginx的SSL模块</h2>
-
-<blockquote>
-<p>要在nginx中配置https，就必须安装ssl模块，也就是：http_ssl_module。</p>
-</blockquote>
-
-<ul>
-<li>进入到nginx的解压目录：/home/jythons/package/nginx-1.18.0</li>
-<li>新增ssl模块（原来的那些模块需要保留）</li>
-</ul>
-
-<pre><code class="language-text">./configure \
---prefix=/usr/local/nginx \
---pid-path=/var/run/nginx/nginx.pid \
---lock-path=/var/lock/nginx.lock \
---error-log-path=/var/log/nginx/error.log \
---http-log-path=/var/log/nginx/access.log \
---with-http_gzip_static_module \
---http-client-body-temp-path=/var/temp/nginx/client \
---http-proxy-temp-path=/var/temp/nginx/proxy \
---http-fastcgi-temp-path=/var/temp/nginx/fastcgi \
---http-uwsgi-temp-path=/var/temp/nginx/uwsgi \
---http-scgi-temp-path=/var/temp/nginx/scgi \
---with-http_ssl_module
-
-</code></pre>
-
-<ul>
-<li>编译和安装</li>
-</ul>
-
-<pre><code class="language-text">make
-make install
-</code></pre>
-
-<h2 id="toc_1">Nginx配置HTTPS</h2>
-
-<ul>
-<li>把ssl证书 *.crt和私钥 *.key 拷贝到/usr/local/nginx/conf 目录中。</li>
-<li>新增server监听443端口</li>
-</ul>
-
-<pre><code class="language-text">#配置上游服务器
-upstream tomcats {
-        server 192.168.3.26:8080;
-        server 192.168.3.27:8080;
-        server 192.168.3.28:8080;
-}
-
-server {
-    listen 443;
-    server_name www.tomcats.com;
-    
-    # 开启ssl
-    ssl on;
-    # 配置ssl证书
-    ssl_certificate 1_www.tomcats.com_bundle.crt;
-    # 配置证书密钥
-    ssl_certificate_key 1_www.tomcats.com.key;
-    
-    # ssl会话cache
-    ssl_session_cache shared:SSL:1m;
-    # ssl会话超时时间
-    ssl_session_timeout 5m;
-    
-    # 配置加密套件，写法遵循openssl标准
-    ssl_protocols TLSv1.1 TLSv1.2;
-    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
-    ssl_prefer_server_ciphers on;
-    
-    location / {
-        proxy_pass http://tomcats/;
-        index index.html index.htm;
     }
 }
 </code></pre>

@@ -131,6 +131,186 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2020-11-10T23:44:01+08:00" itemprop="datePublished">2020/11/10</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16050230410936.html" itemprop="url">
+		Redis的数据类型</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>redis一共有五大数据类型，分别是：String、Hash、List、set、zset。下面分别介绍下每个数据类型的基本使用方法。<br/>
+<a href="http://redisdoc.com">redis-doc</a></p>
+
+
+
+			 
+			<a href="16050230410936.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-10T23:34:26+08:00" itemprop="datePublished">2020/11/10</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16050224663931.html" itemprop="url">
+		Redis命令行客户端</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">基本使用</h2>
+
+<p>启动redis命令行客户端：</p>
+
+<pre><code class="language-text">redis-cli
+</code></pre>
+
+
+
+			 
+			<a href="16050224663931.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-09T23:33:40+08:00" itemprop="datePublished">2020/11/09</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16049360201300.html" itemprop="url">
+		Redis的安装与配置</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">Redis安装</h2>
+
+<p><a href="https://redis.io">Redis官网</a><br/>
+在官网下载redis的安装压缩包，然后解压：</p>
+
+<pre><code class="language-text">tar -zxvf redis-6.0.9.tar.gz
+cd redis-6.0.9
+</code></pre>
+
+<p>这里需要注意的是，安装redis之前需要先安装他的一个依赖：</p>
+
+<pre><code class="language-text">yum install gcc-c++
+</code></pre>
+
+<p>然后使用 make &amp;&amp; make install 安装；</p>
+
+<pre><code class="language-text">make &amp;&amp; make install
+</code></pre>
+
+
+
+			 
+			<a href="16049360201300.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-09T23:25:26+08:00" itemprop="datePublished">2020/11/09</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16049355266618.html" itemprop="url">
+		Redis简介</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">Redis优点</h2>
+
+<ul>
+<li>丰富的数据结构</li>
+<li>持久化</li>
+<li>主从同步、故障转移</li>
+<li>内存数据库</li>
+</ul>
+
+<h2 id="toc_1">Redis缺点</h2>
+
+<ul>
+<li>单线程</li>
+<li>单核</li>
+</ul>
+
+<blockquote>
+<p>redis作者认为单核单线程比较简单安全。redis不仅可以做缓存，也可以做存储，因为它支持持久化，并且数据类型更加丰富。</p>
+</blockquote>
+
+
+
+			 
+			<a href="16049355266618.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-08T23:19:55+08:00" itemprop="datePublished">2020/11/08</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16048487950121.html" itemprop="url">
+		搭建Keepalived + LVS + Nginx 高可用集群负载均衡</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><img src="media/16048487950121/%E5%8D%95%E4%B8%AA%E5%85%A5%E5%8F%A3%E5%9B%BE%E7%89%87.png" alt="单个入口图片"/></p>
+
+<p>当前配置的只有一个LVS负载均衡服务器，当这个服务器挂掉之后，后面所有的请求都无法到达上游RS服务器，整个服务就回挂掉，因此就需要在添加一台备用机，使用Keepalived实现主备自动切换，保证服务24小时可用。如下图所示：<br/>
+<img src="media/16048487950121/%E4%B8%BB%E5%A4%87LVS%E5%88%87%E6%8D%A2.png" alt="主备LVS切换"/><br/>
+使用Keepalived不但可以使LVS主备自动切换，还可以检测RS服务器是否可用，如果有挂掉的RS服务器，则会自动剔除，避免将请求转发到挂掉的RS服务器。</p>
+
+
+
+			 
+			<a href="16048487950121.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2020-11-08T23:04:53+08:00" itemprop="datePublished">2020/11/08</time>
 			</div>
 			<div class="tags">posted in 
@@ -278,154 +458,6 @@ LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是
 
 			 
 			<a href="16042463644403.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T23:17:55+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042438752112.html" itemprop="url">
-		Keepalived配置Nginx自动重启</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>当主节点 Nginx 服务挂掉之后，Keepalived 还会继续挂在主节点上运行，这时请求网站时，网站是不能访问的，这时需要将 Nginx 重新启动，否则网站是不能访问的，如果 Nginx 不能再次启动，这时就需要将 Keepalived 主节点切换成备用节点。这时就需要写一个脚本，来实现这个功能。</p>
-
-
-
-			 
-			<a href="16042438752112.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T15:13:35+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042148155872.html" itemprop="url">
-		Keepalived</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">IP规划</h2>
-
-<p><img src="media/16042148155872/keepalived-IP%E8%A7%84%E5%88%92.png" alt="keepalived-IP规划"/></p>
-
-<blockquote>
-<p>keepalived官网<a href="https://www.keepalived.org/index.html">地址</a></p>
-</blockquote>
-
-
-
-			 
-			<a href="16042148155872.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T13:45:10+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042095103845.html" itemprop="url">
-		Nginx高可用集群架构</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">高可用 HA（High Availability）</h2>
-
-<h3 id="toc_1">Keepalived双机主备原理</h3>
-
-<p>反向代理服务器，分为主节点和一个备用节点，当主节点挂掉之后，自动切换为备用节点。<br/>
-<img src="media/16042095103845/HA%E9%AB%98%E5%8F%AF%E7%94%A8.png" alt="HA高可用"/><br/>
-
-
-			 
-			<a href="16042095103845.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T11:59:50+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042031909226.html" itemprop="url">
-		动静分离的那些事</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">动静分离的特点</h2>
-
-<h3 id="toc_1">分布式</h3>
-
-<p>动静分离的本质就是分布式，把动态接口和静态的资源分开这样的话就可以减少后台服务器的压力，提高了静态资源的访问速度，因为静态资源是可以被缓存的，一旦有了缓存的话，用户访问的速度就回更快。后端就不需要再去渲染页面，以往的开发，html、jsp是需要服务器去渲染的，现在采用动静分离，静态资源都是交给客户端去渲染。<br/>
-
-
-			 
-			<a href="16042031909226.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T00:10:36+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16041606361898.html" itemprop="url">
-		Nginx中配置SSL证书</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>Nginx默认访问使用的是http协议，如果要使用https协议，需要为网站配置SSL证书，因为https是安全的，对传输的数据进行了加密。使用https，必须要有一个域名，并且域名需要备案之后才可以使用。<br/>
-申请完SSL证书后，会得到两个文件，一个是.crt后缀的文件是证书文件，还有一个是.key文件，是密钥文件。<br/>
-
-
-			 
-			<a href="16041606361898.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>

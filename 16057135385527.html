@@ -151,6 +151,47 @@
 如果需要多个从节点，可以在从节点上继续配置主从模式，也就是从节点下还有从节点。<br/>
 <img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F.png" alt="redis主从模式"/></p>
 
+<h2 id="toc_3">主从实践</h2>
+
+<blockquote>
+<p>在redis客户端，使用：info replication 命令，查看当前redis节点的主从配置信息。</p>
+</blockquote>
+
+<p>在redis.conf配置文件搜索 REPLICATION 找到配置主从的位置。配置主从时，只需要配置从节点即可，无需配置主节点。</p>
+
+<h3 id="toc_4">配置从节点</h3>
+
+<pre><code class="language-text"># 配置主节点的ip和端口
+replicaof &lt;masterip&gt; &lt;masterport&gt;
+
+# 配置主节点的登录密码（主节点没有配置密码，不需要配置该选项）
+masterauth &lt;master-password&gt;
+
+# 配置，只要是从节点，都开启，表示从节点只读，不进行写操作
+replica-read-only yes
+</code></pre>
+
+<h3 id="toc_5">无磁盘化复制</h3>
+
+<p>redis主从复制，默认是从节点将主节点保存在磁盘的rdb文件复制到从节点的磁盘，然后在将rdb文件恢复到内存。<br/>
+无磁盘化复制，是将主节点的数据从主节点的内存中直接读取并写入从节点的内存，这样的传输方式，是使用socket的方式进行传输。<br/>
+<img src="media/16057135385527/redis%E6%97%A0%E7%A3%81%E7%9B%98%E5%8C%96%E5%A4%8D%E5%88%B6.png" alt="redis无磁盘化复制"/></p>
+
+<pre><code class="language-text"># 数据同步策略：无磁盘化复制，yes 开启，no 关闭
+# 目前数据测试阶段，生产环境不建议使用 
+repl-diskless-sync no
+</code></pre>
+
+<blockquote>
+<p>redis数据同步策略有两种，一种是磁盘同步，也是默认的同步方式，redis新建一个进程，将数据写入rdb文件，这些rdb文件会定期向slave节点的磁盘同步。另一种数据同步的策略就是无磁盘化同步，master会创建一个新的进程，这个进程会向socket写入rdb文件，不向磁盘写入。如果服务器网络吞吐量比较大，可以使用第二种方式，提高效率。</p>
+</blockquote>
+
+<p>master节点可以配置一个时间，定期的向socket写入rdb文件。</p>
+
+<pre><code class="language-text"># 无磁盘化同步间隔时间，单位（秒）
+repl-diskless-sync-delay 5
+</code></pre>
+
 		</div>
 	</article>
 	<div class="share-comment">

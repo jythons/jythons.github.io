@@ -131,6 +131,108 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2020-11-30T22:56:07+08:00" itemprop="datePublished">2020/11/30</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16067481675978.html" itemprop="url">
+		Redis-Cluster集群</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">集群配置</h2>
+
+<p>打开redis配置文件，找到 REDIS CLUSTER 配置块。修改以下配置：</p>
+
+<pre><code class="language-text"># 开启redis-cluster集群配置
+cluster-enabled yes
+# 每一个节点在集群中的配置文件, 该文件有redis自己去维护 
+cluster-config-file nodes-6379.conf
+# 超时时间，超时自动切换
+cluster-node-timeout 5000
+# aof模式
+appendonly yes
+# aof日志文件名
+appendfilename &quot;appendonly.aof&quot;
+</code></pre>
+
+<blockquote>
+<p>构建集群时，需要将.rdb文件和.aof文件删除或者清空，否则会报错。</p>
+</blockquote>
+
+
+
+			 
+			<a href="16067481675978.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-24T22:37:45+08:00" itemprop="datePublished">2020/11/24</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16062286652893.html" itemprop="url">
+		Redis哨兵机制与实现</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>Redis使用源码安装的，在源码包内有一个 sentinel.conf 文件，这个文件就是哨兵机制的配置文件，将该配置文件拷贝到 /usr/local/redis 目录下。然后编辑配置即可。</p>
+
+
+
+			 
+			<a href="16062286652893.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-23T23:53:25+08:00" itemprop="datePublished">2020/11/23</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16061468058717.html" itemprop="url">
+		Redis 缓存过期机制</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ul>
+<li>（主动）定期删除</li>
+<li>（被动）惰性删除</li>
+</ul>
+
+
+
+			 
+			<a href="16061468058717.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2020-11-18T23:32:18+08:00" itemprop="datePublished">2020/11/18</time>
 			</div>
 			<div class="tags">posted in 
