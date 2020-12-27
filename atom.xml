@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-11-19T00:01:08+08:00</updated>
+  <updated>2020-12-27T16:46:50+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,551 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Elasticsearch安装]]></title>
+    <link href="jythons.github.io/16090525942611.html"/>
+    <updated>2020-12-27T15:03:14+08:00</updated>
+    <id>jythons.github.io/16090525942611.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">下载地址</h2>
+
+<p><a href="https://www.elastic/cn/downloads">官方下载</a></p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_1">安装方法</h2>
+
+<p>1.下载安装包解压</p>
+
+<pre><code class="language-text">tar -zxvf elasticsearch.tar.gz
+</code></pre>
+
+<p>2.将解压出来的文件夹转移到/user/lcoal文件夹下</p>
+
+<pre><code class="language-text">mv elasticsearch /usr/local/
+</code></pre>
+
+<p>3.创建一个用于存放数据的目录</p>
+
+<pre><code class="language-text">cd /usr/lcoal/elasticsearch/
+mkdir data
+</code></pre>
+
+<p>4.修改核心配置文件</p>
+
+<pre><code class="language-text">vim ./config/elasticsearch.yml
+
+# 配置文件解析
+cluster.name: my-application                # 集群名称
+node.name: node-name                        # 节点名称
+# paths相关配置
+path.data: /usr/lcoal/elasticsearch/data    # 存放数据的目录
+path.logs: /usr/lcoal/elasticsearch/logs    # 存放日志的目录
+# 网络相关的配置
+network.host: 0.0.0.0
+http.port: 9200 
+# 节点相关的配置
+# 这里的节点名称要与上面配置的node.name的名称相同
+cluster.initial_master_nodes: [&quot;node-1&quot;, &quot;node-2&quot;]
+</code></pre>
+
+<pre><code class="language-text">vim ./config/jvm.options
+
+修改内存大小
+-Xms1g # 初始化内存空间，默认1G，虚拟机建议修改为128m
+-Xmx1g # 最大使用内存空间，默认1G，虚拟机建议修改为128m
+</code></pre>
+
+<blockquote>
+<p>ES是不允许使用root用户启动的，启动ES需要使用非root用户启动。<br/>
+创建一个新用户：useradd esuser<br/>
+为esuser用户授权：chown -R esuser:esuser /usr/lcoal/elasticsearch</p>
+</blockquote>
+
+<p>5.启动ES<br/>
+进入到/usr/lcoal/elasticsearch/bin目录下</p>
+
+<pre><code class="language-text">切换为esuser用户
+su esuser
+启动ES
+./elasticsearch
+</code></pre>
+
+<blockquote>
+<p>启动时可能会遇到的错误<br/>
+1.max file descriptors [4096] for elasticsearch process is too low, increase to at least [65535]<br/>
+2.max number of threads [3756] for user [esuser] is too low, increase to at least [4096]<br/>
+3.max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]<br/>
+问题1：能够打开的文件数过少<br/>
+问题2：支持的最大线程数过少<br/>
+问题3：支持最大虚拟内存vm.max_map_count数太低<br/>
+解决以上问题，需要修改配置文件: /etc/security/limits.conf<br/>
+添加如下配置：</p>
+
+<pre><code class="language-text">* soft nofile 65536
+* hard nofile 131072
+* soft nproc 2048
+* soft nproc 4096
+</code></pre>
+
+<p>然后在/etc/sysctl.d文件内添加如下配置：</p>
+
+<pre><code class="language-text">vm.max_map_count=262145
+</code></pre>
+
+<p>修改/etc/sysctl.d文件需要刷新：<code>sysctl -p</code></p>
+</blockquote>
+
+<h2 id="toc_2">文件解析</h2>
+
+<table>
+<thead>
+<tr>
+<th>文件夹</th>
+<th>子文件</th>
+<th>作用</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>bin</td>
+<td></td>
+<td>可执行文件等</td>
+<td></td>
+</tr>
+<tr>
+<td>config</td>
+<td></td>
+<td>配置</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>elasticsearch.yml</td>
+<td>核心配置文件</td>
+<td></td>
+</tr>
+<tr>
+<td>jdk</td>
+<td></td>
+<td>java依赖</td>
+<td></td>
+</tr>
+<tr>
+<td>lib</td>
+<td></td>
+<td>工具类</td>
+<td></td>
+</tr>
+<tr>
+<td>logs</td>
+<td></td>
+<td>日志</td>
+<td></td>
+</tr>
+<tr>
+<td>modules</td>
+<td></td>
+<td>ES模块</td>
+<td></td>
+</tr>
+<tr>
+<td>plugins</td>
+<td></td>
+<td>ES拓展</td>
+<td></td>
+</tr>
+<tr>
+<td>data</td>
+<td></td>
+<td>用于存放数据</td>
+<td>自己创建</td>
+</tr>
+</tbody>
+</table>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Elasticsearch原理]]></title>
+    <link href="jythons.github.io/16076110407363.html"/>
+    <updated>2020-12-10T22:37:20+08:00</updated>
+    <id>jythons.github.io/16076110407363.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">Lucene</h2>
+
+<p>Lucene是一个代码库，使用Java开发的搜索引擎，不利于分布式拓展。</p>
+
+<h2 id="toc_1">Solr</h2>
+
+<p>Slor是基于Lucene开发的搜索引擎，是apache开源的搜索引擎，只支持Java。</p>
+
+<h2 id="toc_2">Elasticsearch</h2>
+
+<p>ES也是基于Lucene开发，支持分布式，以及多种语言，拓展性比较好。支持TB级别的搜索（TB级别是1024T容量查询）。<br/>
+ES是基于文档去检索的。</p>
+
+<h3 id="toc_3">ES核心术语</h3>
+
+<ul>
+<li>索引 Index
+<ul>
+<li>相当于数据库的表</li>
+</ul></li>
+<li>类型 type
+<ul>
+<li>相当于表的逻辑类型，用于区分索引，ES 7.x已经不在使用了，老得版本还在使用</li>
+</ul></li>
+<li>文档 document
+<ul>
+<li>相当于行，是json的形式去存在的</li>
+</ul></li>
+<li>字段 fields
+<ul>
+<li>列 </li>
+</ul></li>
+<li>映射 mapping
+<ul>
+<li>相当于表结构定义</li>
+</ul></li>
+<li>近实时 NRT
+<ul>
+<li>Near real time 接近真实的时间，当新建一个文档之后，一般会有1秒左右的时间的延时</li>
+</ul></li>
+<li>节点 node
+<ul>
+<li>每一个服务器，就是一个节点</li>
+</ul></li>
+<li>shard replica
+<ul>
+<li>数据分片与备份</li>
+</ul></li>
+</ul>
+
+<h4 id="toc_4">集群相关</h4>
+
+<p><img src="media/16076110407363/ES%E6%9E%B6%E6%9E%84%E7%89%B9%E7%82%B9.png" alt="ES架构特点"/></p>
+
+<p>分片（shard）：把索引库拆分为多份，分别放在不同的节点上，比如有3个节点，3个节点的所有数据内容加在一起是一个完整的索引库，分别保存到三个节点上，目的为了水平拓展，提高吞吐量。<br/>
+备份（replica）：每个shard的备份。</p>
+
+<h4 id="toc_5">简称</h4>
+
+<p>shard = primary shard（主分片）<br/>
+replica = replica shard（备份节点）</p>
+
+<h4 id="toc_6">倒排索引</h4>
+
+<p>倒排索引就是将正排索引的文档内容进行分词，然后记录这个词在每个文档出现的文档ID。<br/>
+<img src="media/16076110407363/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95.png" alt="倒排索引"/><br/>
+词频TF：位置POS<br/>
+词频是记录这个词在那个文档下出现的次数和位置，记录方法：1:1:<1>，表示文档ID1下，出现过1次，在下标为1的位置。<br/>
+<img src="media/16076110407363/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95%E8%AF%8D%E9%A2%91.png" alt="倒排索引词频"/></p>
+
+<blockquote>
+<p>倒排索引源于实际应用中需要根据属性的值来查找记录。这种索引表中的每一项都包括u一个属性值和包含该属性的各个记录地址。由于不是根据记录来确定属性，而是根据属性来确定记录的位置，所以称之为倒排索引。</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SpringBoot使用模版]]></title>
+    <link href="jythons.github.io/16073547198404.html"/>
+    <updated>2020-12-07T23:25:19+08:00</updated>
+    <id>jythons.github.io/16073547198404.html</id>
+    <content type="html"><![CDATA[
+<p>SpringBoot使用html模版，Controller需要使用注解：@Controller</p>
+
+<h2 id="toc_0">pom配置</h2>
+
+<pre><code class="language-text">&lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<h2 id="toc_1">yml配置</h2>
+
+<pre><code class="language-text">spring:
+    thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SpringBoot会话拦截器]]></title>
+    <link href="jythons.github.io/16073519255991.html"/>
+    <updated>2020-12-07T22:38:45+08:00</updated>
+    <id>jythons.github.io/16073519255991.html</id>
+    <content type="html"><![CDATA[
+<p>会话拦截器，用于在请求一些接口之前，统一去拦截请求，进行验证等操作。</p>
+
+<span id="more"></span><!-- more -->
+
+<pre><code class="language-text">package com.sample.controller.interceptor;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+public class UserTokenInterceptor implements HandlerInterceptor {
+    
+    /**
+     * 拦截请求，在访问controller调用之前
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean preHandle(HttpServletRequest request, 
+                             HttpServletResponse response,
+                             Object handler){
+         
+    }
+    
+    /**
+     * 请求访问controller之后，渲染视图之前
+     * @param request
+     * @param response
+     * @param handler
+     * @param modelAndView
+     * @throws Exception
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+    }
+
+    /**
+     * 请求访问controller之后，渲染视图之后
+     * @param request
+     * @param response
+     * @param handler
+     * @param ex
+     * @throws Exception
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>以上配置好之后，还需要将拦截器注册一下才可使用。</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SpringSession yml配置]]></title>
+    <link href="jythons.github.io/16073500415348.html"/>
+    <updated>2020-12-07T22:07:21+08:00</updated>
+    <id>jythons.github.io/16073500415348.html</id>
+    <content type="html"><![CDATA[
+<p>使用SpringSession，需要先引入依赖，查看Maven Dependency Spring Session, 目前都是使用分布式的方式部署，因此使用redis会好一点。</p>
+
+<h2 id="toc_0">Application配置</h2>
+
+<pre><code class="language-text">spring:
+    session:
+        store-type: redis
+</code></pre>
+
+<h2 id="toc_1">配置启动</h2>
+
+<p>在启动类里面配置启动</p>
+
+<pre><code class="language-text">// 开启使用redis作为Spring Session
+@EnableRedisHttpSession
+</code></pre>
+
+<h2 id="toc_2">使用方法</h2>
+
+<pre><code class="language-text">public Object setSession(HttpServletRequest request) {
+    HttpSession session = request.getSession();
+    session.setAttribute(&quot;userInfo&quot;, &quot;XXX&quot;);
+    session.setMaxInactiveInterval(3600);
+    session.getAttribute(&quot;userInfo);
+    session.removeAttribute(&quot;userInfo&quot;);
+}
+</code></pre>
+
+<blockquote>
+<p>因为使用Spring Session，需要安装Spring安全框架依赖，因为安装了这个依赖后，程序每次访问都需要登录，很麻烦，因此在启动类将它排除即可。排除方法见下方：</p>
+</blockquote>
+
+<pre><code class="language-text">@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Maven Dependency]]></title>
+    <link href="jythons.github.io/16073491976884.html"/>
+    <updated>2020-12-07T21:53:17+08:00</updated>
+    <id>jythons.github.io/16073491976884.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<pre><code class="language-text">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+    &lt;exclusions&gt;
+        &lt;exclusion&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;
+        &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;!-- 打包war [2] 移除自带内置tomcat --&gt;
+    &lt;exclusions&gt;
+        &lt;exclusion&gt;
+            &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;
+    &lt;optional&gt;true&lt;/optional&gt;
+&lt;/dependency&gt;
+        
+&lt;!-- redis --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;!-- SpringSession --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.session&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-session-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;!-- Spring 安全框架 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;!-- apache 工具类 --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;commons-codec&lt;/groupId&gt;
+      &lt;artifactId&gt;commons-codec&lt;/artifactId&gt;
+      &lt;version&gt;1.11&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+      &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+      &lt;version&gt;3.4&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+      &lt;artifactId&gt;commons-io&lt;/artifactId&gt;
+      &lt;version&gt;1.3.2&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- mysql驱动 --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;version&gt;5.1.41&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- mybatis --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;2.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- 通用mapper逆向工具 --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;
+      &lt;artifactId&gt;mapper-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;2.1.5&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!--pagehelper --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
+      &lt;artifactId&gt;pagehelper-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;1.2.12&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!--引入日志依赖 抽象层 与 实现层--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+    &lt;version&gt;1.7.21&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+    &lt;version&gt;1.7.21&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- 打包war [3] 添加依赖 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+
+&lt;!-- html模版 --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[缓存雪崩预防]]></title>
+    <link href="jythons.github.io/16068348833531.html"/>
+    <updated>2020-12-01T23:01:23+08:00</updated>
+    <id>jythons.github.io/16068348833531.html</id>
+    <content type="html"><![CDATA[
+<p>当缓存大面积失效，请求会全部打到数据库上，这种情况就是雪崩。</p>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">预防方法</h2>
+
+<ul>
+<li>设置缓存用不过期</li>
+<li>过期时间错开</li>
+<li>多级缓存</li>
+<li>采购第三方Redis</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[SpringBoot集成Redis集群]]></title>
@@ -986,617 +1531,6 @@ CONF=&quot;/usr/local/redis/redis.conf&quot;
 <p>然后执行如下命令：</p>
 
 <pre><code class="language-text">chkconfig redis_init_script on
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redis简介]]></title>
-    <link href="jythons.github.io/16049355266618.html"/>
-    <updated>2020-11-09T23:25:26+08:00</updated>
-    <id>jythons.github.io/16049355266618.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">Redis优点</h2>
-
-<ul>
-<li>丰富的数据结构</li>
-<li>持久化</li>
-<li>主从同步、故障转移</li>
-<li>内存数据库</li>
-</ul>
-
-<h2 id="toc_1">Redis缺点</h2>
-
-<ul>
-<li>单线程</li>
-<li>单核</li>
-</ul>
-
-<blockquote>
-<p>redis作者认为单核单线程比较简单安全。redis不仅可以做缓存，也可以做存储，因为它支持持久化，并且数据类型更加丰富。</p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_2">与Memcache对比</h2>
-
-<h3 id="toc_3">Memcache优点</h3>
-
-<ul>
-<li>简单的 key-value 存储</li>
-<li>内存使用率比较高</li>
-<li>多核处理，多线程</li>
-</ul>
-
-<h3 id="toc_4">Memcache缺点</h3>
-
-<ul>
-<li>无法容灾</li>
-<li>不支持持久化</li>
-</ul>
-
-<blockquote>
-<p>小数据量速度会比Memcache要快，大数据量Memcache更有优势，因为Memcache支持多核多线程处理，Redis是单核单线程的。</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[搭建Keepalived + LVS + Nginx 高可用集群负载均衡]]></title>
-    <link href="jythons.github.io/16048487950121.html"/>
-    <updated>2020-11-08T23:19:55+08:00</updated>
-    <id>jythons.github.io/16048487950121.html</id>
-    <content type="html"><![CDATA[
-<p><img src="media/16048487950121/%E5%8D%95%E4%B8%AA%E5%85%A5%E5%8F%A3%E5%9B%BE%E7%89%87.png" alt="单个入口图片"/></p>
-
-<p>当前配置的只有一个LVS负载均衡服务器，当这个服务器挂掉之后，后面所有的请求都无法到达上游RS服务器，整个服务就回挂掉，因此就需要在添加一台备用机，使用Keepalived实现主备自动切换，保证服务24小时可用。如下图所示：<br/>
-<img src="media/16048487950121/%E4%B8%BB%E5%A4%87LVS%E5%88%87%E6%8D%A2.png" alt="主备LVS切换"/><br/>
-使用Keepalived不但可以使LVS主备自动切换，还可以检测RS服务器是否可用，如果有挂掉的RS服务器，则会自动剔除，避免将请求转发到挂掉的RS服务器。</p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">在LVS服务器上配置Keepalived</h2>
-
-<p>首先安装Keepalived，安装方法见：<a href="/16042148155872.html">Keepalived安装</a><br/>
-然后编辑：keepalived.conf 配置文件</p>
-
-<pre><code class="language-text">! 全局配置
-global_defs {
-   ! 路由ID：当前安装Keepalived节点主机的标识符，全局唯一
-   router_id LVS_151
-}
-
-! 计算机节点，基于vrrp协议的一个实例
-vrrp_instance VI_1 {
-    ! 表示状态，当前服务器的nginx的主节点，MASTER/BACKUP
-    state MASTER
-    ! 当前实例绑定的网卡
-    interface ens33
-    ! 保证主备节点一致即可
-    virtual_router_id 41
-    ! 权重，master权重一般高于backup，如果有多个，那就是选举，谁的权重高，谁就当选
-    priority 100
-    ! 主备之间同步检查时间间隔，单位秒
-    advert_int 1
-    ! 认证权限密码。防止非法节点进入
-    authentication {
-        auth_type PASS
-        auth_pass 1111
-    }
-    
-    ! 虚拟出来的ip，可以有多个（vip）
-    virtual_ipaddress {
-        192.168.1.150
-    }
-}
-# 这里是LVS的配置，virtual_server是LVS服务，real_server是服务节点
-virtual_server 192.168.1.150 80 {
-    # 健康检查的时间，单位：秒
-    delay_loop 6
-    # 配置负载均衡的算法，默认是轮询，lb就是负载均衡的意思
-    lb_algo rr
-    # 设置LVS模式 NAT｜TUN｜DR
-    lb_kind DR
-    # 多少秒内多次请求转发到同一个服务器，设置会话持久化的时间
-    persistence_timeout 50
-    # 协议 -t
-    protocol TCP
-
-    # 负载均衡的真实服务器，也就是nginx节点的具体的真实IP地址
-    real_server 192.168.1.171 80 {
-        # 轮询的默认权重配比设置为1
-        weight 1
-        # 设置健康检查
-        TCP_CHECK {
-            # 检查80端口
-            connect_port 80
-            # 超时时间 单位：秒
-            connect_timeout 2 
-            # 重试次数
-            nb_get_retry 2
-            # 重试间隔时间，单位：秒
-            delay_before_retry 3
-        }
-    }
-    real_server 192.168.1.172 80 {
-        # 轮询的默认权重配比设置为1
-        weight 1
-        # 设置健康检查
-        TCP_CHECK {
-            # 检查80端口
-            connect_port 80
-            # 超时时间 单位：秒
-            connect_timeout 2 
-            # 重试次数
-            nb_get_retry 2
-            # 重试间隔时间，单位：秒
-            delay_before_retry 3
-        }
-    }
-}
-</code></pre>
-
-<p>配置好以上配置后，清除ipvsadm的配置</p>
-
-<pre><code class="language-text">ipvsadm -C
-</code></pre>
-
-<p>这样ipvs的配置就全被清除了，接下来重启Keepalived服务</p>
-
-<pre><code class="language-text">systemctl restart keepalived
-</code></pre>
-
-<p>查看ipvs的配置是否成功：</p>
-
-<pre><code class="language-text">ipvsadm -Ln
-</code></pre>
-
-<blockquote>
-<p>如果没有输出内容，可能是keepalived的配置文件错误。<br/>
-配置好MASTER之后，再将master的keepalived配置复制到backup节点配置一下，<br/>
-修改router_id LVS_152, state BACKUP, priority 50, 权重官方建议和MASTER相差50即可</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[LVS的持久化机制]]></title>
-    <link href="jythons.github.io/16048478935893.html"/>
-    <updated>2020-11-08T23:04:53+08:00</updated>
-    <id>jythons.github.io/16048478935893.html</id>
-    <content type="html"><![CDATA[
-<p>如果一个用户短时间内多次提交请求，那么他的请求都会转发到第一次请求的RS服务器，这个时间段默认是300秒。<br/>
-配置方式：</p>
-
-<pre><code class="language-text"># 详细信息使用：man ipvsadm
-ipvsadm -E -t 192.168.1.150:80 -s rr -p [time] 
-</code></pre>
-
-<blockquote>
-<p>-E 编辑服务，-t 服务地址</p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<p>通过以上配置，在访问的时候，经过time秒后，访问依然只请求到了一个服务器，这是因为有一个tcp或udp的链接超时时间，可以通过以下配置，修改超时时间。</p>
-
-<pre><code class="language-text">ipvsadm --set 1 1 1
-</code></pre>
-
-<blockquote>
-<p>ipvsadm -Lnc 查看是否有链接</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[搭建 LVS-DR 模式]]></title>
-    <link href="jythons.github.io/16043322529866.html"/>
-    <updated>2020-11-02T23:50:52+08:00</updated>
-    <id>jythons.github.io/16043322529866.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">服务器与 IP 约定</h2>
-
-<p><img src="media/16043322529866/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8EIP%E7%BA%A6%E5%AE%9A.png" alt="服务器与IP约定"/></p>
-
-<p>首先需要有一个LVS，LVS需要有两个IP，分别是：DIP（Direct IP）和VIP (Virtual IP)；DIP就是内网IP，用于与内网上游服务器通信使用；VIP是虚拟IP，用于客户端交互使用。<br/>
-然后上游服务器Nginx，Nginx服务器需要配置两个IP，分别是：RIP（Real Server IP）和VIP (Virtual IP); RIP也是内网IP，VIP也是虚拟IP，用户的请求处理完毕，通过VIP返回给客户端；Nginx服务器的VIP要和LVS的虚拟IP保持一致。</p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_1">开始搭建 LVS</h2>
-
-<h3 id="toc_2">配置虚拟IP</h3>
-
-<p>第一步，首先要关闭服务器网络配置管理器，如果不关闭，可能会引起接口网络的冲突，因为是在本地使用虚拟机的关系。</p>
-
-<pre><code class="language-text"># 关闭网络配置管理器
-systemctl stop NetworkManager
-systemctl disable NetworkManager
-</code></pre>
-
-<p>同样 Nginx 服务器也需要关闭网络配置管理器。</p>
-
-<p>第二步，构建LVS的IP。</p>
-
-<pre><code class="language-text"># 进入网卡配置文件目录
-cd /etc/sysconfig/network-script/
-# 拷贝一份网卡配置文件，起一个别名
-cp ifcfg-ens33 ifcfg-ens33:1
-</code></pre>
-
-<p>然后配置ifcfg-ens33:1文件, 配置如下：</p>
-
-<pre><code class="language-text">BOOTPROTO=static
-# 与网卡名称要保持统一
-DEVICE=ens33:1
-ONBOOT=yes
-IPADDR=192.168.1.150
-NETMASK=255.255.255.0
-</code></pre>
-
-<p>配置好网卡后，重启网卡：</p>
-
-<pre><code class="language-text">service network restart
-ip addr # 查看IP地址是否生效
-</code></pre>
-
-<p>到这里，虚拟IP就配置好了。</p>
-
-<h3 id="toc_3">配置集群管理工具</h3>
-
-<p>虚拟IP配置好了以后，接下来就需要配置集群管理工具。</p>
-
-<blockquote>
-<p>ipvs 是lvs自带的工具，ipvsadm需要安装。</p>
-</blockquote>
-
-<p>安装ipvsadm：</p>
-
-<pre><code class="language-text">yum install ipvsadm
-</code></pre>
-
-<p>接下来执行如下命令查看集群列表</p>
-
-<pre><code class="language-text">ipvsadm -Ln
-</code></pre>
-
-<blockquote>
-<p>阿里云云服务器不支持虚拟IP配置，需要购买他们的负载均衡服务，腾讯云服务器支持配置虚拟IP，但是要额外的去购买的，因为是建立在网卡之上的，需要使用成本的，腾讯云支持虚拟IP的最大数量是10个。</p>
-</blockquote>
-
-<h3 id="toc_4">配置RIS节点的IP</h3>
-
-<p>LVS服务器配置好以后，接下来去配置RIS节点服务器的IP，也就是Nginx所在的服务器。<br/>
-首先也需要配置一个虚拟IP，这个IP用于返回数据报文。<br/>
-首先进入到网卡配置文件所在的目录：</p>
-
-<pre><code class="language-text"># 进入网卡配置文件目录
-cd /etc/sysconfig/network-script/
-</code></pre>
-
-<p>在这个目录下，有一个 ifcfg-lo 配置文件，这个是服务器本地环回接口，我们要构建一个虚拟IP，这个IP不能被用户访问到，只是在返回报文时使用。<br/>
-复制一份 ifcfg-lo 配置文件为：ifcfg-lo:1。</p>
-
-<pre><code class="language-text">cp ifcfg-lo ifcfg-lo:1
-</code></pre>
-
-<p>修改成如下配置：</p>
-
-<pre><code class="language-text"># BOOTPROTO=static
-# 与网卡名称要保持统一
-DEVICE=lo:1
-ONBOOT=yes
-IPADDR=192.168.1.150
-NETMASK=255.255.255.255
-NETWORK=127.0.0.1
-BROADCAST=127.255.255.255
-NAME=loopback
-</code></pre>
-
-<h3 id="toc_5">RS服务器配置ARP</h3>
-
-<h4 id="toc_6">arp-ignore: ARP 响应级别（处理请求）</h4>
-
-<ul>
-<li>0: 只要本机配置了ip，就能响应请求（在lvs是不适用的）</li>
-<li>1: 请求的目标地址到达对应的网络接口，才会响应请求（这个才是需要的）</li>
-</ul>
-
-<blockquote>
-<p>配置LVS时，RS服务器需要配置一个环回地址，这个地址不能处理请求，所以要将 arp-ihnore配置成 1，请求哪个ip，哪个IP才会处理请求。</p>
-</blockquote>
-
-<h4 id="toc_7">arp-announce：ARP通告行为（返回响应）</h4>
-
-<ul>
-<li>0: 本机上任何网络接口都向外通告，所有的网卡都能接受到通告（在lvs是不适用的）</li>
-<li>1: 尽可能避免本网卡与不匹配的目标进行通告（在lvs是不适用的，要一定，不能尽可能）</li>
-<li>2: 只在本网卡通告（这个才是需要的） </li>
-</ul>
-
-<blockquote>
-<p>RS 服务器的环回IP是用来响应客户端请求的，所以不能使用其他IP来返回，必须使用环回地址返回，因为客户端请求的是VIP，所以接收请求也必须使用RS服务器上和VIP相同的环回IP才能使客户端识别。</p>
-</blockquote>
-
-<h3 id="toc_8">配置RS服务器APR</h3>
-
-<pre><code class="language-text"># 打开配置文件
-vim /etc/sysctl.conf
-# 配置如下内容：
-net.ipv4.conf.all.arp_ignore = 1
-net.ipv4.conf.default.arp_ignore = 1
-net.ipv4.conf.lo.arp_ignore = 1
-net.ipv4.conf.all.arp_announce = 2
-net.ipv4.conf.default.arp_announce = 2
-net.ipv4.conf.lo.arp_announce = 2
-# 保存后，刷新一下网卡
-sysctl -p
-</code></pre>
-
-<blockquote>
-<p>all：表示所有网卡<br/>
-default：表示默认网卡<br/>
-lo：环回网卡</p>
-</blockquote>
-
-<h3 id="toc_9">RS 服务器配置路由</h3>
-
-<pre><code class="language-text"># 临时配置路由，开机回失效，需要添加到开机启动配置文件内
-route add -host 192.168.1.150 dev lo:1
-# 永久添加, 执行如下命令
-echo &quot;route add -host 192.168.1.150 dev lo:1&quot; &gt;&gt; /etc/rc.local
-</code></pre>
-
-<blockquote>
-<p>通过192.168.1.150这个地址去接收请求，然后交给lo:1这个网卡去处理<br/>
-使用 route -n 查看路由</p>
-</blockquote>
-
-<h3 id="toc_10">使用ipvsadm配置集群规则</h3>
-
-<h4 id="toc_11">配置LVS服务以及节点</h4>
-
-<pre><code class="language-text"># 添加服务
-ipvsadm -A -t 192.168.1.150:80 -s rr
-# 查看配置列表
-ipvsadm -Ln
-</code></pre>
-
-<blockquote>
-<p>添加一个服务，-A 添加一个服务，-t tcp,添加服务地址，-s 负载均衡算法，rr 轮询，轮询是负载均衡里用的比较多的算法。</p>
-</blockquote>
-
-<pre><code class="language-text"># 构建服务
-ipvsadm -a -t 192.168.1.150:80 -r 192.168.1.171:80 -g
-</code></pre>
-
-<blockquote>
-<p>配置服务，-a 添加一个服务节点，-t 服务地址，表示为哪个服务地址添加节点，-r real server 的意思，写RS服务器的IP地址, -g 表示是DR模式。</p>
-</blockquote>
-
-<h4 id="toc_12">验证DR模式</h4>
-
-<pre><code class="language-text"># 查看LVS运行状态
-ipvsadm -Ln
-</code></pre>
-
-<blockquote>
-<p>DR 模式是LVS只负责接收请求，返回请求交给RS，通过上面的命令，查看InPkts有数据，而OutPkts为0，说明DR模式生效了。 </p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[LVS的三种模式]]></title>
-    <link href="jythons.github.io/16043306453976.html"/>
-    <updated>2020-11-02T23:24:05+08:00</updated>
-    <id>jythons.github.io/16043306453976.html</id>
-    <content type="html"><![CDATA[
-<blockquote>
-<p>NAT，基于网络地址转换；<br/>
-TUN，基于IP隧道的模式；<br/>
-DR，直接路由模式。</p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">LVS 模式之 NAT</h2>
-
-<p>网络地址转换<br/>
-<img src="media/16043306453976/NAT%E6%A8%A1%E5%9E%8B.png" alt="NAT模型"/></p>
-
-<p>NAT模型和Nginx相同，LVS需要同时处理请求和返回，这样在流量比较大的情况下，会出现负载过高的问题。<br/>
-NAT模型对外使用虚拟IP，与上游服务器交互使用的是私网IP，上游服务器是不能与客户端直接交互的。</p>
-
-<h2 id="toc_1">LVS 模式之 TUN</h2>
-
-<p>隧道模式<br/>
-<img src="media/16043306453976/TUN%E6%A8%A1%E5%9E%8B.png" alt="TUN模型"/></p>
-
-<p>TUN是基于隧道的通信方式，所有的服务器都需要通过隧道通信，使用TUN模型，所有的响应都不会经过LVS，在上游服务器处理完请求后，他会直接将响应返回给客户端，可以减轻上行请求的压力，大大提高了并发以及吞吐量。但是这个模型有一个硬性的要求，每一个服务器节点都要配备一个网卡，这样，每个服务器几点就回暴漏在公网。</p>
-
-<h2 id="toc_2">LVS 模式之 DR</h2>
-
-<p>直接路由模式<br/>
-<img src="media/16043306453976/DR%E6%A8%A1%E5%9E%8B.png" alt="DR模型"/></p>
-
-<p>DR模型和TUN模型相似，LVS只处理请求，响应由每个服务器节点返回，但是不同的是，服务器节点返回响应统一由路由返回，这样上游的服务器节点就不会暴漏在公网上面，大大提高的安全性。<br/>
-用户通过虚拟IP访问，响应时，在路由出也构建一个虚拟IP来统一返回响应。对于用户来说，通过虚拟IP，将服务器给隐藏了起来</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[LVS简介]]></title>
-    <link href="jythons.github.io/16042488055175.html"/>
-    <updated>2020-11-02T00:40:05+08:00</updated>
-    <id>jythons.github.io/16042488055175.html</id>
-    <content type="html"><![CDATA[
-<p>LVS (Linux Virtual Server)，linux虚拟服务，他是由章文嵩博士主导的开源的负载均衡项目，LVS（ipvs）被Linux系统默认集成到了Linux内核中；<br/>
-LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是7层的负载均衡，是在内容层对请求报文的负载均衡），四层负载均衡是一个基于IP+Port的负载均衡。<br/>
-<a href="http://www.linux-vs.org/index/html">官网地址</a></p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">LVS 网络拓扑图</h2>
-
-<p><img src="media/16042488055175/%E6%88%AA%E5%B1%8F2020-11-02%20%E4%B8%8B%E5%8D%8811.06.28.png" alt="截屏2020-11-02 下午11.06.28"/></p>
-
-<h2 id="toc_1">为什么要使用 LVS + Nginx</h2>
-
-<ul>
-<li>LVS基于四层，工作效率高，接收到请求之后可以直接转发，要比单个Nginx的性能要高几十倍</li>
-<li>单个Nginx承受不了压力，需要集群</li>
-<li>LVS充当Nginx集群的调度者，LVS是不会处理请求的报文的，因此承受负载的能力会更高</li>
-<li>Nginx接受请求来回，LVS可以直接受不响应</li>
-</ul>
-
-<h3 id="toc_2">Nginx网络拓扑图</h3>
-
-<p><img src="media/16042488055175/Nginx%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%9B%BE.png" alt="Nginx网络拓扑图"/><br/>
-Nginx在实现负载均衡时，需要处理请求，并处理返回结果，因此会大大增加Nginx的负载，举个例子，如果一个饭店进来吃饭和吃完饭出去的人都走同一个门，那么这个门会非常的堵。</p>
-
-<h3 id="toc_3">LVS网络拓扑图</h3>
-
-<p><img src="media/16042488055175/LVS%E7%BD%91%E7%BB%9C%E6%8B%93%E6%89%91%E5%9B%BE.png" alt="LVS网络拓扑图"/><br/>
-LVS实现负载均衡时，LVS接受所有的请求，将请求转发给上游服务器，上游服务器处理完请求，经过LVS的某种模式，直接返回给客户端，这样大大减少了LVS的负载，并提高了整个系统的并发能力。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Keepalived 双机热备原理]]></title>
-    <link href="jythons.github.io/16042463644403.html"/>
-    <updated>2020-11-01T23:59:24+08:00</updated>
-    <id>jythons.github.io/16042463644403.html</id>
-    <content type="html"><![CDATA[
-<p>双机主备的缺点：如果在主节点比较稳定，一直没有问题的话，这时备用节点的服务器一直不使用，这样会造成成本开销加大。<br/>
-因此就要采用双机热备的策略，将备用节点利用起来，在没有问题时，备用节点用来做其他的事情。</p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">原理图</h2>
-
-<p><img src="media/16042463644403/keeplived%E5%8F%8C%E4%B8%BB%E7%83%AD%E5%A4%87.png" alt="keeplived双主热备"/></p>
-
-<blockquote>
-<p>关于DNS轮训，可以在腾讯云或者阿里云控制台配置。</p>
-</blockquote>
-
-<h2 id="toc_1">原理</h2>
-
-<p>当主节点没有问题时，两个节点各自维护自己的服务请求，当其中一个节点发生故障时，发生故障的节点虚拟IP会与另一个没有故障的 Nginx 绑定，将请求发送到没有故障的节点，当故障恢复后，在自动绑定回原来节点的Nginx。这里就不再区分主节点和备用节点，两个节点互为主备。</p>
-
-<h2 id="toc_2">实现</h2>
-
-<blockquote>
-<p>规则：以一个虚拟IP分组归为同一个路由</p>
-</blockquote>
-
-<p><strong>主节点配置：</strong></p>
-
-<pre><code class="language-text">global_defs {
-    router_id keep_171
-}
-
-vrrp_script check_nginx_alive {
-    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
-    ! 每隔两秒运行上一行脚本
-    interval 2
-    ! 如果脚本运行成功，则升级权重+10
-    weight 10
-    ! 如果脚本运行失败，则降级权重-10
-    # weight -10
-}
-
-vrrp_instance VI_1 {
-    state MASTER
-    interface ens33
-    virtual_router_id 51
-    priority 100
-    advert_int 1
-    authentication {
-        auth_type PASS
-        auth_pass 1111
-    }
-    track_script {
-        check_nginx_alive # 追踪 nginx 脚本
-    }
-    virtual_ipaddress {
-        192.168.1.161
-    }
-}
-
-vrrp_instance VI_2 {
-    state BACKUP
-    interface ens33
-    virtual_router_id 52
-    priority 80
-    advert_int 1
-    authentication {
-        auth_type PASS
-        auth_pass 1111
-    }
-    virtual_ipaddress {
-        192.168.1.162
-    }
-}
-</code></pre>
-
-<p><strong>备用节点配置：</strong></p>
-
-<pre><code class="language-text">global_defs {
-    router_id keep_171
-}
-
-vrrp_script check_nginx_alive {
-    script &quot;/etc/keepalived/check_nginx_alive_or_not.sh&quot;
-    ! 每隔两秒运行上一行脚本
-    interval 2
-    ! 如果脚本运行成功，则升级权重+10
-    weight 10
-    ! 如果脚本运行失败，则降级权重-10
-    # weight -10
-}
-
-vrrp_instance VI_1 {
-    state BACKUP
-    interface ens33
-    virtual_router_id 51
-    priority 80
-    advert_int 1
-    authentication {
-        auth_type PASS
-        auth_pass 1111
-    }
-    virtual_ipaddress {
-        192.168.1.161
-    }
-}
-
-vrrp_instance VI_2 {
-    state MASTER
-    interface ens33
-    virtual_router_id 52
-    priority 100
-    advert_int 1
-    authentication {
-        auth_type PASS
-        auth_pass 1111
-    }
-    track_script {
-        check_nginx_alive # 追踪 nginx 脚本
-    }
-    virtual_ipaddress {
-        192.168.1.162
-    }
-}
 </code></pre>
 
 ]]></content>

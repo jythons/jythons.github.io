@@ -96,6 +96,8 @@
 						
 						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
 						
+						  <li id=""><a target="_self" href="ES.html">ES</a></li>
+						
 						</ul>
 					</nav>
 
@@ -128,6 +130,211 @@
 <div itemscope itemtype="http://schema.org/Blog">
 
 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-24T22:37:45+08:00" itemprop="datePublished">2020/11/24</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16062286652893.html" itemprop="url">
+		Redis哨兵机制与实现</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>Redis使用源码安装的，在源码包内有一个 sentinel.conf 文件，这个文件就是哨兵机制的配置文件，将该配置文件拷贝到 /usr/local/redis 目录下。然后编辑配置即可。</p>
+
+
+
+			 
+			<a href="16062286652893.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-23T23:53:25+08:00" itemprop="datePublished">2020/11/23</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16061468058717.html" itemprop="url">
+		Redis 缓存过期机制</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ul>
+<li>（主动）定期删除</li>
+<li>（被动）惰性删除</li>
+</ul>
+
+
+
+			 
+			<a href="16061468058717.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-18T23:32:18+08:00" itemprop="datePublished">2020/11/18</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16057135385527.html" itemprop="url">
+		Redis 主从复制原理</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">主从架构</h2>
+
+<p>单机单个节点，redis并发支持上万，但是随着业务的复杂度，redis的并发度还是会有上限的。因此还是需要在架构上进行优化。 <br/>
+主从架构是一种水平横向拓展的架构，读写分离。 主节点负责数据的写入，从节点负责读操作。<br/>
+<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.png" alt="redis主从架构"/></p>
+
+
+
+			 
+			<a href="16057135385527.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-17T22:58:00+08:00" itemprop="datePublished">2020/11/17</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16056250808598.html" itemprop="url">
+		Redis的持久化机制</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>Redis的数据是存放在缓存里面的，当计算机重启后，缓存内的数据会被清除，这时数据就会消失，因此，redis是可以支持持久化的，他可以根据策略将缓存中的数据存放到硬盘当中，保证数据的持久性。<br/>
+Reids的持久化有两种方式，一种是RDB，另一种是AOF。下面分别介绍一下两种持久化机制的使用。</p>
+
+
+
+			 
+			<a href="16056250808598.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-17T22:51:47+08:00" itemprop="datePublished">2020/11/17</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16056247075354.html" itemprop="url">
+		openssh-java</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><a href="https://github.com/apivovarov/openssh-java">https://github.com/apivovarov/openssh-java</a></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-16T23:24:02+08:00" itemprop="datePublished">2020/11/16</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16055402422958.html" itemprop="url">
+		Redis发布与订阅</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>发布订阅，首先有一个发布者，然后有多个订阅者，每个订阅者需要去发布者那里去订阅消息，有了订阅之后，就相当于发布和订阅者之间有了一层绑定关系。当发布者发布了消息之后，所有的订阅者都可以收到这个消息。<br/>
+<img src="media/16055402422958/redis%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85.png" alt="redis发布和订阅"/></p>
+
+<blockquote>
+<p>例如：很多人关注了B站的up主，当up主发布了一条新的动态之后，所有的关注人员都会收到一条消息。这里的up主就相当于发布者，粉丝就相当于订阅者。</p>
+</blockquote>
+
+
+
+			 
+			<a href="16055402422958.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-16T22:54:32+08:00" itemprop="datePublished">2020/11/16</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16055384723975.html" itemprop="url">
+		SpringBoot整合redis</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">添加依赖</h2>
+
+<pre><code class="language-text">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+
+
+			 
+			<a href="16055384723975.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
@@ -226,238 +433,6 @@ cd redis-6.0.9
 
 			 
 			<a href="16049360201300.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-09T23:25:26+08:00" itemprop="datePublished">2020/11/09</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16049355266618.html" itemprop="url">
-		Redis简介</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">Redis优点</h2>
-
-<ul>
-<li>丰富的数据结构</li>
-<li>持久化</li>
-<li>主从同步、故障转移</li>
-<li>内存数据库</li>
-</ul>
-
-<h2 id="toc_1">Redis缺点</h2>
-
-<ul>
-<li>单线程</li>
-<li>单核</li>
-</ul>
-
-<blockquote>
-<p>redis作者认为单核单线程比较简单安全。redis不仅可以做缓存，也可以做存储，因为它支持持久化，并且数据类型更加丰富。</p>
-</blockquote>
-
-
-
-			 
-			<a href="16049355266618.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-08T23:19:55+08:00" itemprop="datePublished">2020/11/08</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16048487950121.html" itemprop="url">
-		搭建Keepalived + LVS + Nginx 高可用集群负载均衡</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p><img src="media/16048487950121/%E5%8D%95%E4%B8%AA%E5%85%A5%E5%8F%A3%E5%9B%BE%E7%89%87.png" alt="单个入口图片"/></p>
-
-<p>当前配置的只有一个LVS负载均衡服务器，当这个服务器挂掉之后，后面所有的请求都无法到达上游RS服务器，整个服务就回挂掉，因此就需要在添加一台备用机，使用Keepalived实现主备自动切换，保证服务24小时可用。如下图所示：<br/>
-<img src="media/16048487950121/%E4%B8%BB%E5%A4%87LVS%E5%88%87%E6%8D%A2.png" alt="主备LVS切换"/><br/>
-使用Keepalived不但可以使LVS主备自动切换，还可以检测RS服务器是否可用，如果有挂掉的RS服务器，则会自动剔除，避免将请求转发到挂掉的RS服务器。</p>
-
-
-
-			 
-			<a href="16048487950121.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-08T23:04:53+08:00" itemprop="datePublished">2020/11/08</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16048478935893.html" itemprop="url">
-		LVS的持久化机制</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>如果一个用户短时间内多次提交请求，那么他的请求都会转发到第一次请求的RS服务器，这个时间段默认是300秒。<br/>
-配置方式：</p>
-
-<pre><code class="language-text"># 详细信息使用：man ipvsadm
-ipvsadm -E -t 192.168.1.150:80 -s rr -p [time] 
-</code></pre>
-
-<blockquote>
-<p>-E 编辑服务，-t 服务地址</p>
-</blockquote>
-
-
-
-			 
-			<a href="16048478935893.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-02T23:50:52+08:00" itemprop="datePublished">2020/11/02</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16043322529866.html" itemprop="url">
-		搭建 LVS-DR 模式</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">服务器与 IP 约定</h2>
-
-<p><img src="media/16043322529866/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8EIP%E7%BA%A6%E5%AE%9A.png" alt="服务器与IP约定"/></p>
-
-<p>首先需要有一个LVS，LVS需要有两个IP，分别是：DIP（Direct IP）和VIP (Virtual IP)；DIP就是内网IP，用于与内网上游服务器通信使用；VIP是虚拟IP，用于客户端交互使用。<br/>
-然后上游服务器Nginx，Nginx服务器需要配置两个IP，分别是：RIP（Real Server IP）和VIP (Virtual IP); RIP也是内网IP，VIP也是虚拟IP，用户的请求处理完毕，通过VIP返回给客户端；Nginx服务器的VIP要和LVS的虚拟IP保持一致。</p>
-
-
-
-			 
-			<a href="16043322529866.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-02T23:24:05+08:00" itemprop="datePublished">2020/11/02</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16043306453976.html" itemprop="url">
-		LVS的三种模式</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p>NAT，基于网络地址转换；<br/>
-TUN，基于IP隧道的模式；<br/>
-DR，直接路由模式。</p>
-</blockquote>
-
-
-
-			 
-			<a href="16043306453976.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-02T00:40:05+08:00" itemprop="datePublished">2020/11/02</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042488055175.html" itemprop="url">
-		LVS简介</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>LVS (Linux Virtual Server)，linux虚拟服务，他是由章文嵩博士主导的开源的负载均衡项目，LVS（ipvs）被Linux系统默认集成到了Linux内核中；<br/>
-LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是7层的负载均衡，是在内容层对请求报文的负载均衡），四层负载均衡是一个基于IP+Port的负载均衡。<br/>
-<a href="http://www.linux-vs.org/index/html">官网地址</a></p>
-
-
-
-			 
-			<a href="16042488055175.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T23:59:24+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042463644403.html" itemprop="url">
-		Keepalived 双机热备原理</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>双机主备的缺点：如果在主节点比较稳定，一直没有问题的话，这时备用节点的服务器一直不使用，这样会造成成本开销加大。<br/>
-因此就要采用双机热备的策略，将备用节点利用起来，在没有问题时，备用节点用来做其他的事情。</p>
-
-
-
-			 
-			<a href="16042463644403.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>

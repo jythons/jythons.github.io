@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	一致性哈希算法 - Jythons小站
+  	Elasticsearch安装 - Jythons小站
   	
 	</title>
 
@@ -129,15 +129,166 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">一致性哈希算法</h1>
+		<h1 class="title" itemprop="name">Elasticsearch安装</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<blockquote>
-<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
-</blockquote>
+			<h2 id="toc_0">下载地址</h2>
+
+<p><a href="https://www.elastic/cn/downloads">官方下载</a></p>
 
 <span id="more"></span><!-- more -->
 
-<p><img src="media/16038127730075/%E4%B8%80%E8%87%B4%E6%80%A7hash.png" alt="一致性hash"/></p>
+<h2 id="toc_1">安装方法</h2>
+
+<p>1.下载安装包解压</p>
+
+<pre><code class="language-text">tar -zxvf elasticsearch.tar.gz
+</code></pre>
+
+<p>2.将解压出来的文件夹转移到/user/lcoal文件夹下</p>
+
+<pre><code class="language-text">mv elasticsearch /usr/local/
+</code></pre>
+
+<p>3.创建一个用于存放数据的目录</p>
+
+<pre><code class="language-text">cd /usr/lcoal/elasticsearch/
+mkdir data
+</code></pre>
+
+<p>4.修改核心配置文件</p>
+
+<pre><code class="language-text">vim ./config/elasticsearch.yml
+
+# 配置文件解析
+cluster.name: my-application                # 集群名称
+node.name: node-name                        # 节点名称
+# paths相关配置
+path.data: /usr/lcoal/elasticsearch/data    # 存放数据的目录
+path.logs: /usr/lcoal/elasticsearch/logs    # 存放日志的目录
+# 网络相关的配置
+network.host: 0.0.0.0
+http.port: 9200 
+# 节点相关的配置
+# 这里的节点名称要与上面配置的node.name的名称相同
+cluster.initial_master_nodes: [&quot;node-1&quot;, &quot;node-2&quot;]
+</code></pre>
+
+<pre><code class="language-text">vim ./config/jvm.options
+
+修改内存大小
+-Xms1g # 初始化内存空间，默认1G，虚拟机建议修改为128m
+-Xmx1g # 最大使用内存空间，默认1G，虚拟机建议修改为128m
+</code></pre>
+
+<blockquote>
+<p>ES是不允许使用root用户启动的，启动ES需要使用非root用户启动。<br/>
+创建一个新用户：useradd esuser<br/>
+为esuser用户授权：chown -R esuser:esuser /usr/lcoal/elasticsearch</p>
+</blockquote>
+
+<p>5.启动ES<br/>
+进入到/usr/lcoal/elasticsearch/bin目录下</p>
+
+<pre><code class="language-text">切换为esuser用户
+su esuser
+启动ES
+./elasticsearch
+</code></pre>
+
+<blockquote>
+<p>启动时可能会遇到的错误<br/>
+1.max file descriptors [4096] for elasticsearch process is too low, increase to at least [65535]<br/>
+2.max number of threads [3756] for user [esuser] is too low, increase to at least [4096]<br/>
+3.max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]<br/>
+问题1：能够打开的文件数过少<br/>
+问题2：支持的最大线程数过少<br/>
+问题3：支持最大虚拟内存vm.max_map_count数太低<br/>
+解决以上问题，需要修改配置文件: /etc/security/limits.conf<br/>
+添加如下配置：</p>
+
+<pre><code class="language-text">* soft nofile 65536
+* hard nofile 131072
+* soft nproc 2048
+* soft nproc 4096
+</code></pre>
+
+<p>然后在/etc/sysctl.d文件内添加如下配置：</p>
+
+<pre><code class="language-text">vm.max_map_count=262145
+</code></pre>
+
+<p>修改/etc/sysctl.d文件需要刷新：<code>sysctl -p</code></p>
+</blockquote>
+
+<h2 id="toc_2">文件解析</h2>
+
+<table>
+<thead>
+<tr>
+<th>文件夹</th>
+<th>子文件</th>
+<th>作用</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>bin</td>
+<td></td>
+<td>可执行文件等</td>
+<td></td>
+</tr>
+<tr>
+<td>config</td>
+<td></td>
+<td>配置</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>elasticsearch.yml</td>
+<td>核心配置文件</td>
+<td></td>
+</tr>
+<tr>
+<td>jdk</td>
+<td></td>
+<td>java依赖</td>
+<td></td>
+</tr>
+<tr>
+<td>lib</td>
+<td></td>
+<td>工具类</td>
+<td></td>
+</tr>
+<tr>
+<td>logs</td>
+<td></td>
+<td>日志</td>
+<td></td>
+</tr>
+<tr>
+<td>modules</td>
+<td></td>
+<td>ES模块</td>
+<td></td>
+</tr>
+<tr>
+<td>plugins</td>
+<td></td>
+<td>ES拓展</td>
+<td></td>
+</tr>
+<tr>
+<td>data</td>
+<td></td>
+<td>用于存放数据</td>
+<td>自己创建</td>
+</tr>
+</tbody>
+</table>
 
 		</div>
 	</article>

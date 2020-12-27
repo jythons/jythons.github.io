@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	一致性哈希算法 - Jythons小站
+  	SpringSession yml配置 - Jythons小站
   	
 	</title>
 
@@ -129,15 +129,42 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">一致性哈希算法</h1>
+		<h1 class="title" itemprop="name">SpringSession yml配置</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<blockquote>
-<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
+			<p>使用SpringSession，需要先引入依赖，查看Maven Dependency Spring Session, 目前都是使用分布式的方式部署，因此使用redis会好一点。</p>
+
+<h2 id="toc_0">Application配置</h2>
+
+<pre><code class="language-text">spring:
+    session:
+        store-type: redis
+</code></pre>
+
+<h2 id="toc_1">配置启动</h2>
+
+<p>在启动类里面配置启动</p>
+
+<pre><code class="language-text">// 开启使用redis作为Spring Session
+@EnableRedisHttpSession
+</code></pre>
+
+<h2 id="toc_2">使用方法</h2>
+
+<pre><code class="language-text">public Object setSession(HttpServletRequest request) {
+    HttpSession session = request.getSession();
+    session.setAttribute(&quot;userInfo&quot;, &quot;XXX&quot;);
+    session.setMaxInactiveInterval(3600);
+    session.getAttribute(&quot;userInfo);
+    session.removeAttribute(&quot;userInfo&quot;);
+}
+</code></pre>
+
+<blockquote>
+<p>因为使用Spring Session，需要安装Spring安全框架依赖，因为安装了这个依赖后，程序每次访问都需要登录，很麻烦，因此在启动类将它排除即可。排除方法见下方：</p>
 </blockquote>
 
-<span id="more"></span><!-- more -->
-
-<p><img src="media/16038127730075/%E4%B8%80%E8%87%B4%E6%80%A7hash.png" alt="一致性hash"/></p>
+<pre><code class="language-text">@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+</code></pre>
 
 		</div>
 	</article>

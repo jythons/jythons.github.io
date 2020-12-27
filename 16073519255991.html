@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	一致性哈希算法 - Jythons小站
+  	SpringBoot会话拦截器 - Jythons小站
   	
 	</title>
 
@@ -129,15 +129,63 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">一致性哈希算法</h1>
+		<h1 class="title" itemprop="name">SpringBoot会话拦截器</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<blockquote>
-<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
-</blockquote>
+			<p>会话拦截器，用于在请求一些接口之前，统一去拦截请求，进行验证等操作。</p>
 
 <span id="more"></span><!-- more -->
 
-<p><img src="media/16038127730075/%E4%B8%80%E8%87%B4%E6%80%A7hash.png" alt="一致性hash"/></p>
+<pre><code class="language-text">package com.sample.controller.interceptor;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+public class UserTokenInterceptor implements HandlerInterceptor {
+    
+    /**
+     * 拦截请求，在访问controller调用之前
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean preHandle(HttpServletRequest request, 
+                             HttpServletResponse response,
+                             Object handler){
+         
+    }
+    
+    /**
+     * 请求访问controller之后，渲染视图之前
+     * @param request
+     * @param response
+     * @param handler
+     * @param modelAndView
+     * @throws Exception
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+    }
+
+    /**
+     * 请求访问controller之后，渲染视图之后
+     * @param request
+     * @param response
+     * @param handler
+     * @param ex
+     * @throws Exception
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>以上配置好之后，还需要将拦截器注册一下才可使用。</p>
+</blockquote>
 
 		</div>
 	</article>

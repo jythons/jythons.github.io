@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	一致性哈希算法 - Jythons小站
+  	Maven Dependency - Jythons小站
   	
 	</title>
 
@@ -129,15 +129,130 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">一致性哈希算法</h1>
+		<h1 class="title" itemprop="name">Maven Dependency</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<blockquote>
-<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
-</blockquote>
+			<span id="more"></span><!-- more -->
 
-<span id="more"></span><!-- more -->
+<pre><code class="language-text">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+    &lt;exclusions&gt;
+        &lt;exclusion&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;
+        &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;!-- 打包war [2] 移除自带内置tomcat --&gt;
+    &lt;exclusions&gt;
+        &lt;exclusion&gt;
+            &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;/exclusion&gt;
+    &lt;/exclusions&gt;
+&lt;/dependency&gt;
 
-<p><img src="media/16038127730075/%E4%B8%80%E8%87%B4%E6%80%A7hash.png" alt="一致性hash"/></p>
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;
+    &lt;optional&gt;true&lt;/optional&gt;
+&lt;/dependency&gt;
+        
+&lt;!-- redis --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;!-- SpringSession --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.session&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-session-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;!-- Spring 安全框架 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;
+
+&lt;!-- apache 工具类 --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;commons-codec&lt;/groupId&gt;
+      &lt;artifactId&gt;commons-codec&lt;/artifactId&gt;
+      &lt;version&gt;1.11&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+      &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+      &lt;version&gt;3.4&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+      &lt;artifactId&gt;commons-io&lt;/artifactId&gt;
+      &lt;version&gt;1.3.2&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- mysql驱动 --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;version&gt;5.1.41&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- mybatis --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;2.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- 通用mapper逆向工具 --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;
+      &lt;artifactId&gt;mapper-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;2.1.5&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!--pagehelper --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
+      &lt;artifactId&gt;pagehelper-spring-boot-starter&lt;/artifactId&gt;
+      &lt;version&gt;1.2.12&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!--引入日志依赖 抽象层 与 实现层--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+    &lt;version&gt;1.7.21&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+    &lt;version&gt;1.7.21&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- 打包war [3] 添加依赖 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+    &lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+
+&lt;!-- html模版 --&gt;
+&lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
 
 		</div>
 	</article>

@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	一致性哈希算法 - Jythons小站
+  	Elasticsearch原理 - Jythons小站
   	
 	</title>
 
@@ -129,15 +129,83 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">一致性哈希算法</h1>
+		<h1 class="title" itemprop="name">Elasticsearch原理</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<blockquote>
-<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
+			<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">Lucene</h2>
+
+<p>Lucene是一个代码库，使用Java开发的搜索引擎，不利于分布式拓展。</p>
+
+<h2 id="toc_1">Solr</h2>
+
+<p>Slor是基于Lucene开发的搜索引擎，是apache开源的搜索引擎，只支持Java。</p>
+
+<h2 id="toc_2">Elasticsearch</h2>
+
+<p>ES也是基于Lucene开发，支持分布式，以及多种语言，拓展性比较好。支持TB级别的搜索（TB级别是1024T容量查询）。<br/>
+ES是基于文档去检索的。</p>
+
+<h3 id="toc_3">ES核心术语</h3>
+
+<ul>
+<li>索引 Index
+<ul>
+<li>相当于数据库的表</li>
+</ul></li>
+<li>类型 type
+<ul>
+<li>相当于表的逻辑类型，用于区分索引，ES 7.x已经不在使用了，老得版本还在使用</li>
+</ul></li>
+<li>文档 document
+<ul>
+<li>相当于行，是json的形式去存在的</li>
+</ul></li>
+<li>字段 fields
+<ul>
+<li>列 </li>
+</ul></li>
+<li>映射 mapping
+<ul>
+<li>相当于表结构定义</li>
+</ul></li>
+<li>近实时 NRT
+<ul>
+<li>Near real time 接近真实的时间，当新建一个文档之后，一般会有1秒左右的时间的延时</li>
+</ul></li>
+<li>节点 node
+<ul>
+<li>每一个服务器，就是一个节点</li>
+</ul></li>
+<li>shard replica
+<ul>
+<li>数据分片与备份</li>
+</ul></li>
+</ul>
+
+<h4 id="toc_4">集群相关</h4>
+
+<p><img src="media/16076110407363/ES%E6%9E%B6%E6%9E%84%E7%89%B9%E7%82%B9.png" alt="ES架构特点"/></p>
+
+<p>分片（shard）：把索引库拆分为多份，分别放在不同的节点上，比如有3个节点，3个节点的所有数据内容加在一起是一个完整的索引库，分别保存到三个节点上，目的为了水平拓展，提高吞吐量。<br/>
+备份（replica）：每个shard的备份。</p>
+
+<h4 id="toc_5">简称</h4>
+
+<p>shard = primary shard（主分片）<br/>
+replica = replica shard（备份节点）</p>
+
+<h4 id="toc_6">倒排索引</h4>
+
+<p>倒排索引就是将正排索引的文档内容进行分词，然后记录这个词在每个文档出现的文档ID。<br/>
+<img src="media/16076110407363/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95.png" alt="倒排索引"/><br/>
+词频TF：位置POS<br/>
+词频是记录这个词在那个文档下出现的次数和位置，记录方法：1:1:<1>，表示文档ID1下，出现过1次，在下标为1的位置。<br/>
+<img src="media/16076110407363/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95%E8%AF%8D%E9%A2%91.png" alt="倒排索引词频"/></p>
+
+<blockquote>
+<p>倒排索引源于实际应用中需要根据属性的值来查找记录。这种索引表中的每一项都包括u一个属性值和包含该属性的各个记录地址。由于不是根据记录来确定属性，而是根据属性来确定记录的位置，所以称之为倒排索引。</p>
 </blockquote>
-
-<span id="more"></span><!-- more -->
-
-<p><img src="media/16038127730075/%E4%B8%80%E8%87%B4%E6%80%A7hash.png" alt="一致性hash"/></p>
 
 		</div>
 	</article>

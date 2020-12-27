@@ -96,6 +96,8 @@
 						
 						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
 						
+						  <li id=""><a target="_self" href="ES.html">ES</a></li>
+						
 						</ul>
 					</nav>
 
@@ -128,6 +130,157 @@
 <div itemscope itemtype="http://schema.org/Blog">
 
 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-12-07T23:25:19+08:00" itemprop="datePublished">2020/12/07</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16073547198404.html" itemprop="url">
+		SpringBoot使用模版</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>SpringBoot使用html模版，Controller需要使用注解：@Controller</p>
+
+<h2 id="toc_0">pom配置</h2>
+
+<pre><code class="language-text">&lt;dependency&gt;
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<h2 id="toc_1">yml配置</h2>
+
+<pre><code class="language-text">spring:
+    thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-12-07T22:38:45+08:00" itemprop="datePublished">2020/12/07</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16073519255991.html" itemprop="url">
+		SpringBoot会话拦截器</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>会话拦截器，用于在请求一些接口之前，统一去拦截请求，进行验证等操作。</p>
+
+
+
+			 
+			<a href="16073519255991.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-12-07T22:07:21+08:00" itemprop="datePublished">2020/12/07</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16073500415348.html" itemprop="url">
+		SpringSession yml配置</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>使用SpringSession，需要先引入依赖，查看Maven Dependency Spring Session, 目前都是使用分布式的方式部署，因此使用redis会好一点。</p>
+
+<h2 id="toc_0">Application配置</h2>
+
+<pre><code class="language-text">spring:
+    session:
+        store-type: redis
+</code></pre>
+
+<h2 id="toc_1">配置启动</h2>
+
+<p>在启动类里面配置启动</p>
+
+<pre><code class="language-text">// 开启使用redis作为Spring Session
+@EnableRedisHttpSession
+</code></pre>
+
+<h2 id="toc_2">使用方法</h2>
+
+<pre><code class="language-text">public Object setSession(HttpServletRequest request) {
+    HttpSession session = request.getSession();
+    session.setAttribute(&quot;userInfo&quot;, &quot;XXX&quot;);
+    session.setMaxInactiveInterval(3600);
+    session.getAttribute(&quot;userInfo);
+    session.removeAttribute(&quot;userInfo&quot;);
+}
+</code></pre>
+
+<blockquote>
+<p>因为使用Spring Session，需要安装Spring安全框架依赖，因为安装了这个依赖后，程序每次访问都需要登录，很麻烦，因此在启动类将它排除即可。排除方法见下方：</p>
+</blockquote>
+
+<pre><code class="language-text">@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-12-07T21:53:17+08:00" itemprop="datePublished">2020/12/07</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16073491976884.html" itemprop="url">
+		Maven Dependency</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			
+
+			 
+			<a href="16073491976884.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">

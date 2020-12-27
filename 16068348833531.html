@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	一致性哈希算法 - Jythons小站
+  	缓存雪崩预防 - Jythons小站
   	
 	</title>
 
@@ -129,15 +129,20 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">一致性哈希算法</h1>
+		<h1 class="title" itemprop="name">缓存雪崩预防</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<blockquote>
-<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
-</blockquote>
+			<p>当缓存大面积失效，请求会全部打到数据库上，这种情况就是雪崩。</p>
 
 <span id="more"></span><!-- more -->
 
-<p><img src="media/16038127730075/%E4%B8%80%E8%87%B4%E6%80%A7hash.png" alt="一致性hash"/></p>
+<h2 id="toc_0">预防方法</h2>
+
+<ul>
+<li>设置缓存用不过期</li>
+<li>过期时间错开</li>
+<li>多级缓存</li>
+<li>采购第三方Redis</li>
+</ul>
 
 		</div>
 	</article>
