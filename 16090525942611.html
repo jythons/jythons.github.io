@@ -168,6 +168,9 @@ path.logs: /usr/lcoal/elasticsearch/logs    # 存放日志的目录
 # 网络相关的配置
 network.host: 0.0.0.0
 http.port: 9200 
+# 配置跨域访问
+http.cors.enabled: true
+http.core.allow-origin: &quot;*&quot;
 # 节点相关的配置
 # 这里的节点名称要与上面配置的node.name的名称相同
 cluster.initial_master_nodes: [&quot;node-1&quot;, &quot;node-2&quot;]
@@ -219,6 +222,11 @@ su esuser
 
 <p>修改/etc/sysctl.d文件需要刷新：<code>sysctl -p</code></p>
 </blockquote>
+
+<p>6.后台启动ES</p>
+
+<pre><code class="language-text">./elasticsearch -d
+</code></pre>
 
 <h2 id="toc_2">文件解析</h2>
 
@@ -289,6 +297,10 @@ su esuser
 </tr>
 </tbody>
 </table>
+
+<h2 id="toc_3">安装ES可视化插件（elasticsearch-head）</h2>
+
+<p><a href="https://github.com/mobz/elasticsearch-head">elasticsearch-head</a>插件可以去上去下载，具体安装方法可以参考GitHub的README.md说明。</p>
 
 		</div>
 	</article>
