@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-12-28T22:37:34+08:00</updated>
+  <updated>2020-12-28T22:40:03+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -99,8 +99,8 @@ su esuser
 
 <pre><code class="language-text">* soft nofile 65536
 * hard nofile 131072
-* soft nproc 2048
 * soft nproc 4096
+* hard nproc 4096
 </code></pre>
 
 <p>然后在/etc/sysctl.d文件内添加如下配置：</p>
@@ -108,7 +108,8 @@ su esuser
 <pre><code class="language-text">vm.max_map_count=262145
 </code></pre>
 
-<p>修改/etc/sysctl.d文件需要刷新：<code>sysctl -p</code></p>
+<p>修改/etc/sysctl.d文件需要刷新：<code>sysctl -p</code><br/>
+如果还是不能启动，重启服务器即可</p>
 </blockquote>
 
 <p>6.后台启动ES</p>
