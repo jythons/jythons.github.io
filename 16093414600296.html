@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	ES - Jythons小站
+  	ES基本操作 - Jythons小站
   	
 	</title>
 
@@ -127,127 +127,53 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-12-30T23:29:38+08:00" itemprop="datePublished">2020/12/30</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ES.html'>ES</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16093421785520.html" itemprop="url">
-		ES数据类型</a></h1>
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">ES基本操作</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
-			
+			<span id="more"></span><!-- more -->
 
-			 
-			<a href="16093421785520.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
+<h2 id="toc_0">Mappings自定义创建映射</h2>
+
+<h3 id="toc_1">创建mapping</h3>
+
+<pre><code class="language-text">接口地址：http://es_service_addr/索引名称
+请求方式：put
+body: 
+    {
+        &quot;mappings&quot;: {
+           # 属性
+            &quot;properties&quot;: {
+               # 字段
+                &quot;realname&quot;: {
+                    &quot;type&quot;: &quot;text&quot;,
+                    &quot;index&quot;: true  # index表示是否需要索引，true表示需要（默认），false表示不需要索引
+                }
+            }
+        }
+    }
+</code></pre>
+
+<h3 id="toc_2">响应</h3>
+
+<pre><code class="language-text">{
+    &quot;acknowledged&quot;: true,
+    &quot;shards_acknowledged&quot;: true,
+    &quot;index&quot;: &quot;index_mapping&quot;
+}
+</code></pre>
+
 		</div>
-
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-12-30T23:17:40+08:00" itemprop="datePublished">2020/12/30</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ES.html'>ES</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16093414600296.html" itemprop="url">
-		ES基本操作</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="16093414600296.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-12-27T15:03:14+08:00" itemprop="datePublished">2020/12/27</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ES.html'>ES</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16090525942611.html" itemprop="url">
-		Elasticsearch安装</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">下载地址</h2>
-
-<p><a href="https://www.elastic.co/cn/elasticsearch/">官方下载</a></p>
-
-
-
-			 
-			<a href="16090525942611.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-12-10T22:37:20+08:00" itemprop="datePublished">2020/12/10</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ES.html'>ES</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16076110407363.html" itemprop="url">
-		Elasticsearch原理</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="16076110407363.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
-  
-
-</div>
-<nav id="pagenavi">
+	<div class="share-comment">
 	 
-	
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
-</nav>
+	  
 
-</div>
+	  
 
-
-
-        </div>
+	</div>
+</div>        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2020
 Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
