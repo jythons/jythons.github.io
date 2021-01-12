@@ -147,14 +147,19 @@ body:
                # 字段
                 &quot;realname&quot;: {
                     &quot;type&quot;: &quot;text&quot;,
-                    &quot;index&quot;: true  # index表示是否需要索引，true表示需要（默认），false表示不需要索引
+                    &quot;index&quot;: true  # index表示是否需要索引，true表示需要（默认），false表示不需要索引，需要索引就表示会被分词
                 }
             }
         }
     }
 </code></pre>
 
+<blockquote>
+<p>mapping一旦创建，就不能够在修改。如果需要修改，要把现有的索引删除，重新添加。<br/>
+如果需要添加，可以post访问：http://es_service_addr/索引名称/_mapping, 参数格式同上面相同，注意增加需要去掉mappings，直接写properties。</p>
+
 <h3 id="toc_2">响应</h3>
+</blockquote>
 
 <pre><code class="language-text">{
     &quot;acknowledged&quot;: true,
@@ -162,6 +167,166 @@ body:
     &quot;index&quot;: &quot;index_mapping&quot;
 }
 </code></pre>
+
+<h3 id="toc_3">分析是否分词</h3>
+
+<pre><code class="language-text">接口地址：http://es_service_addr/索引名称/_analyze
+请求方式：GET
+body:
+{
+    &quot;field&quot;: &quot;realname&quot;, # 分析的字段
+    &quot;text&quot;: &quot;我爱我的祖国&quot; # 分析字段对应的值
+}
+</code></pre>
+
+<p>响应：</p>
+
+<pre><code class="language-text">{
+    &quot;tokens&quot;: [
+        {
+            &quot;token&quot;: &quot;我&quot;,
+            &quot;start_offset&quot;: 0,
+            &quot;end_offset&quot;: 1,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 0
+        },
+        {
+            &quot;token&quot;: &quot;爱&quot;,
+            &quot;start_offset&quot;: 1,
+            &quot;end_offset&quot;: 2,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 1
+        },
+        {
+            &quot;token&quot;: &quot;我&quot;,
+            &quot;start_offset&quot;: 2,
+            &quot;end_offset&quot;: 3,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 2
+        },
+        {
+            &quot;token&quot;: &quot;的&quot;,
+            &quot;start_offset&quot;: 3,
+            &quot;end_offset&quot;: 4,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 3
+        },
+        {
+            &quot;token&quot;: &quot;祖&quot;,
+            &quot;start_offset&quot;: 4,
+            &quot;end_offset&quot;: 5,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 4
+        },
+        {
+            &quot;token&quot;: &quot;国&quot;,
+            &quot;start_offset&quot;: 5,
+            &quot;end_offset&quot;: 6,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 5
+        }
+    ]
+}
+</code></pre>
+
+<blockquote>
+<p>默认是支持英文的分词，所以上面的返回值把中文拆解成了单独的汉字，如果要使用英文可以去做拓展。</p>
+</blockquote>
+
+<h2 id="toc_4">文档的基本操作</h2>
+
+<h3 id="toc_5">添加文档与自动映射</h3>
+
+<pre><code class="language-text">创建文档
+接口地址：http://es_service_addr/my_doc/_doc/1
+    my_doc：索引名称
+    _doc: 操作类型
+    1：ES主键
+body:
+{
+    &quot;id&quot;: 1001,
+    &quot;name&quot;: &quot;no-1&quot;,
+    &quot;desc&quot;: &quot;we are number one&quot;,
+    &quot;create_date&quot;: &quot;2021-01-05&quot;
+}
+
+响应：
+{
+    &quot;_index&quot;: &quot;my_doc&quot;,
+    &quot;_type&quot;: &quot;_doc&quot;,
+    &quot;_id&quot;: &quot;ulVN03YBVWKanGeCxsTB&quot;,
+    &quot;_version&quot;: 1,
+    &quot;result&quot;: &quot;created&quot;,
+    &quot;_shards&quot;: {
+        &quot;total&quot;: 1,
+        &quot;successful&quot;: 1,
+        &quot;failed&quot;: 0
+    },
+    &quot;_seq_no&quot;: 0,
+    &quot;_primary_term&quot;: 1
+}
+</code></pre>
+
+<h3 id="toc_6">删除文档内的数据</h3>
+
+<pre><code class="language-text">接口地址: http://es_service_addr/my_doc/_doc/1
+访求方式：delete
+解析: 表示删除索引my_doc下的_id=1的文档数据
+</code></pre>
+
+<blockquote>
+<p>删除操作其实不是物理删除，实际上是逻辑删除，通过添加逻辑标识符来判断是否删除，当磁盘数据过载后，才会去删除被标记为删除的数据</p>
+</blockquote>
+
+<h3 id="toc_7">修改文档数据</h3>
+
+<pre><code class="language-text">接口地址: http://es_service_addr/my_doc/_doc/1/_update
+请求方式：post
+解析: 修改索引为my_doc数据_id=1的文档数据内容
+
+body:
+{
+    &quot;doc&quot;: {
+        &quot;name&quot;:&quot;abc&quot;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>这种对某个字段数据进行局部的修改，实际上在ES底层是将数据重新写了一次，并不是对这个字段修改了一下。我们自己也可以添加一个全字段的数据，ID与原来的相同，这样也可以做到更新数据的作用。</p>
+</blockquote>
+
+<h3 id="toc_8">查询文档数据</h3>
+
+<pre><code class="language-text">请求方式：GET
+请求地址：http://es_service_addr/my_doc/_doc/1?_source=id,name
+解析：查询文档_doc下索引my_doc，索引_id=1的数据，并且只查询id和name这两个字段的数据
+
+查询所有数据的id和name
+http://es_service_addr/my_doc/_doc/_search?_source=id,name
+</code></pre>
+
+<h4 id="toc_9">判断查询数据是否存在</h4>
+
+<table>
+<thead>
+<tr>
+<th>请求方式</th>
+<th>HEAD</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td>http://es_service_addr/my_doc/_doc/1</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>如果请求状态码返回200，表示数据存在，请求状态码返回404，表示数据不存在</p>
+</blockquote>
 
 		</div>
 	</article>

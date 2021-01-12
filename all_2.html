@@ -133,6 +133,67 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2020-11-16T22:54:32+08:00" itemprop="datePublished">2020/11/16</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16055384723975.html" itemprop="url">
+		SpringBoot整合redis</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">添加依赖</h2>
+
+<pre><code class="language-text">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+
+
+			 
+			<a href="16055384723975.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-10T23:44:01+08:00" itemprop="datePublished">2020/11/10</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16050230410936.html" itemprop="url">
+		Redis的数据类型</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>redis一共有五大数据类型，分别是：String、Hash、List、set、zset。下面分别介绍下每个数据类型的基本使用方法。<br/>
+<a href="http://redisdoc.com">redis-doc</a></p>
+
+
+
+			 
+			<a href="16050230410936.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2020-11-10T23:34:26+08:00" itemprop="datePublished">2020/11/10</time>
 			</div>
 			<div class="tags">posted in 
@@ -404,61 +465,6 @@ LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是
 
 			 
 			<a href="16042488055175.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T23:59:24+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042463644403.html" itemprop="url">
-		Keepalived 双机热备原理</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>双机主备的缺点：如果在主节点比较稳定，一直没有问题的话，这时备用节点的服务器一直不使用，这样会造成成本开销加大。<br/>
-因此就要采用双机热备的策略，将备用节点利用起来，在没有问题时，备用节点用来做其他的事情。</p>
-
-
-
-			 
-			<a href="16042463644403.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T23:17:55+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16042438752112.html" itemprop="url">
-		Keepalived配置Nginx自动重启</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>当主节点 Nginx 服务挂掉之后，Keepalived 还会继续挂在主节点上运行，这时请求网站时，网站是不能访问的，这时需要将 Nginx 重新启动，否则网站是不能访问的，如果 Nginx 不能再次启动，这时就需要将 Keepalived 主节点切换成备用节点。这时就需要写一个脚本，来实现这个功能。</p>
-
-
-
-			 
-			<a href="16042438752112.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>

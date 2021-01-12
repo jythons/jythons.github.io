@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2020-12-28T23:32:21+08:00</updated>
+  <updated>2021-01-13T00:19:52+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,193 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ES 分词与内置分词器]]></title>
+    <link href="jythons.github.io/16103794709126.html"/>
+    <updated>2021-01-11T23:37:50+08:00</updated>
+    <id>jythons.github.io/16103794709126.html</id>
+    <content type="html"><![CDATA[
+<blockquote>
+<p>分词就是将一段文字进行切分，将里面的词汇提取出来，这个过程就是分词。<br/>
+ES 本身不支持中文的分词</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">分词的简单使用</h2>
+
+<table>
+<thead>
+<tr>
+<th>请求方式</th>
+<th>POST</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/_analyze">http://192.168.3.214:9200/_analyze</a></td>
+</tr>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/my_doc/_analyze">http://192.168.3.214:9200/my_doc/_analyze</a></td>
+</tr>
+<tr>
+<td>请求body</td>
+<td>见下方代码</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-text">{
+    &quot;analyzer&quot; : &quot;standard&quot;,
+    &quot;text&quot;: &quot;I study ES&quot;
+}
+</code></pre>
+
+<blockquote>
+<p>默认的分词器在解析中文的时候，会将中文的每一个汉字提取出来。如果要解析中文，需要使用中文分词器。</p>
+</blockquote>
+
+<h2 id="toc_1">分词器类型</h2>
+
+<table>
+<thead>
+<tr>
+<th>分词器</th>
+<th>名称</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>standard</td>
+<td>默认分词器，单词会被拆分</td>
+<td>大写字母会被转换为小写</td>
+</tr>
+<tr>
+<td>whitespace</td>
+<td>按照空格分词，忽略大小写</td>
+<td>会保留大写字母</td>
+</tr>
+<tr>
+<td>stop</td>
+<td>去除无意义的单词</td>
+<td>例如：a、the等助词会被去除</td>
+</tr>
+<tr>
+<td>keyword</td>
+<td>不做分词，把整个文本作为一个单独的关键词</td>
+<td></td>
+</tr>
+<tr>
+<td>simple</td>
+<td>按照非字母分词，大写转为小写</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="toc_2">建立ik中文分词器</h2>
+
+<blockquote>
+<p>上面的分词器都不支持中文，如果要对中文进行分词，我们就要用到一个开源的中文分词器: ik分词器。</p>
+</blockquote>
+
+<p>源码地址：<a href="https://github.com/medcl/elasticsearch-analysis-ik">ik分词器</a></p>
+
+<h3 id="toc_3">ik分词器安装</h3>
+
+<p>将下载好的包解压到ES目录下的plugins目录下</p>
+
+<pre><code class="language-text">tar -zxvf elasticsearch-analysis-ik-7.10.1.zip -d /usr/local/es/plugins/ik
+</code></pre>
+
+<p>然后重新启动ES即可。 </p>
+
+<h3 id="toc_4">ik分词器（来自GitHub说明）</h3>
+
+<p>ik分词器有以下两种：ik_max_word和ik_smart<br/>
+ik_max_word: 会将文本做最细粒度的拆分，比如会将“中华人民共和国国歌”拆分为“中华人民共和国,中华人民,中华,华人,人民共和国,人民,人,民,共和国,共和,和,国国,国歌”，会穷尽各种可能的组合，适合 Term Query；<br/>
+ik_smart: 会做最粗粒度的拆分，比如会将“中华人民共和国国歌”拆分为“中华人民共和国,国歌”，适合 Phrase 查询。</p>
+
+<h2 id="toc_5">自定义中文分词库</h2>
+
+<blockquote>
+<p>因为有些词汇是一些网络用语，在中文分词的时候，会将其拆分开来，不能达到我们想要的效果，因此需要我们自定义分词库，来解析出这些词汇。<br/>
+ik分词器已经有了自定义分词库的方法，按照文档上描述操作即可。</p>
+</blockquote>
+
+<h3 id="toc_6">操作方法</h3>
+
+<p>找到ik插件下，config目录下的：IKAnalyzer.cfg.xml配置文件<br/>
+编辑如下配置：</p>
+
+<pre><code class="language-text">&lt;!DOCTYPE properties SYSTEM &quot;http://java.sun.com/dtd/properties.dtd&quot;&gt;
+&lt;properties&gt;
+        &lt;comment&gt;IK Analyzer 扩展配置&lt;/comment&gt;
+        &lt;!--用户可以在这里配置自己的扩展字典 --&gt;
+        &lt;entry key=&quot;ext_dict&quot;&gt;custom.dic&lt;/entry&gt;
+         &lt;!--用户可以在这里配置自己的扩展停止词字典--&gt;
+        &lt;entry key=&quot;ext_stopwords&quot;&gt;&lt;/entry&gt;
+        &lt;!--用户可以在这里配置远程扩展字典 --&gt;
+        &lt;!-- &lt;entry key=&quot;remote_ext_dict&quot;&gt;words_location&lt;/entry&gt; --&gt;
+        &lt;!--用户可以在这里配置远程扩展停止词字典--&gt;
+        &lt;!-- &lt;entry key=&quot;remote_ext_stopwords&quot;&gt;words_location&lt;/entry&gt; --&gt;
+&lt;/properties&gt;
+</code></pre>
+
+<p>然后在同级目录下创建一个：custom.dic文件，将自己需要的词汇添加到这个文件，每行一个词汇。然后保存，重启ES即可。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ES文档的乐观锁控制]]></title>
+    <link href="jythons.github.io/16103778537691.html"/>
+    <updated>2021-01-11T23:10:53+08:00</updated>
+    <id>jythons.github.io/16103778537691.html</id>
+    <content type="html"><![CDATA[
+<blockquote>
+<p>文档的乐观锁，文档数据内有很多的源数据，其中_version就是用来控制文档的乐观锁的，如果文档被删除或者修改，他的_version会累加，如果有多个线程或用户同时去更新同一个数据，ES会判断数据的版本号，如果版本号匹配，则可以更新，如果版本号不匹配，就不允许更新。</p>
+</blockquote>
+
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">ES乐观锁的使用</h2>
+
+<p>当我们要使用乐观锁去控制ES数据的时候，可以使用下面的方法去实现。<br/>
+使用乐观锁会涉及到两个参数，分别是: _seq_no和_primary_term,<br/>
+_seq_no: 类似于版本号，会像_version一样去增长<br/>
+_primary_term: 表示数据在集群中的位置信息</p>
+
+<p>使用方式：</p>
+
+<table>
+<thead>
+<tr>
+<th>请求方式</th>
+<th>POST</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/index/_doc/1?if_seq_no=30&amp;if_primary_term=1">http://192.168.3.214:9200/index/_doc/1?if_seq_no=30&amp;if_primary_term=1</a></td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>ES 老的版本只使用_version 去控制锁的机制，新版本中使用_seq_no和_primary_term两个字段去控制。</p>
+</blockquote>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ES数据类型]]></title>
@@ -788,14 +975,19 @@ body:
                # 字段
                 &quot;realname&quot;: {
                     &quot;type&quot;: &quot;text&quot;,
-                    &quot;index&quot;: true  # index表示是否需要索引，true表示需要（默认），false表示不需要索引
+                    &quot;index&quot;: true  # index表示是否需要索引，true表示需要（默认），false表示不需要索引，需要索引就表示会被分词
                 }
             }
         }
     }
 </code></pre>
 
+<blockquote>
+<p>mapping一旦创建，就不能够在修改。如果需要修改，要把现有的索引删除，重新添加。<br/>
+如果需要添加，可以post访问：http://es_service_addr/索引名称/_mapping, 参数格式同上面相同，注意增加需要去掉mappings，直接写properties。</p>
+
 <h3 id="toc_2">响应</h3>
+</blockquote>
 
 <pre><code class="language-text">{
     &quot;acknowledged&quot;: true,
@@ -803,6 +995,166 @@ body:
     &quot;index&quot;: &quot;index_mapping&quot;
 }
 </code></pre>
+
+<h3 id="toc_3">分析是否分词</h3>
+
+<pre><code class="language-text">接口地址：http://es_service_addr/索引名称/_analyze
+请求方式：GET
+body:
+{
+    &quot;field&quot;: &quot;realname&quot;, # 分析的字段
+    &quot;text&quot;: &quot;我爱我的祖国&quot; # 分析字段对应的值
+}
+</code></pre>
+
+<p>响应：</p>
+
+<pre><code class="language-text">{
+    &quot;tokens&quot;: [
+        {
+            &quot;token&quot;: &quot;我&quot;,
+            &quot;start_offset&quot;: 0,
+            &quot;end_offset&quot;: 1,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 0
+        },
+        {
+            &quot;token&quot;: &quot;爱&quot;,
+            &quot;start_offset&quot;: 1,
+            &quot;end_offset&quot;: 2,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 1
+        },
+        {
+            &quot;token&quot;: &quot;我&quot;,
+            &quot;start_offset&quot;: 2,
+            &quot;end_offset&quot;: 3,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 2
+        },
+        {
+            &quot;token&quot;: &quot;的&quot;,
+            &quot;start_offset&quot;: 3,
+            &quot;end_offset&quot;: 4,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 3
+        },
+        {
+            &quot;token&quot;: &quot;祖&quot;,
+            &quot;start_offset&quot;: 4,
+            &quot;end_offset&quot;: 5,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 4
+        },
+        {
+            &quot;token&quot;: &quot;国&quot;,
+            &quot;start_offset&quot;: 5,
+            &quot;end_offset&quot;: 6,
+            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
+            &quot;position&quot;: 5
+        }
+    ]
+}
+</code></pre>
+
+<blockquote>
+<p>默认是支持英文的分词，所以上面的返回值把中文拆解成了单独的汉字，如果要使用英文可以去做拓展。</p>
+</blockquote>
+
+<h2 id="toc_4">文档的基本操作</h2>
+
+<h3 id="toc_5">添加文档与自动映射</h3>
+
+<pre><code class="language-text">创建文档
+接口地址：http://es_service_addr/my_doc/_doc/1
+    my_doc：索引名称
+    _doc: 操作类型
+    1：ES主键
+body:
+{
+    &quot;id&quot;: 1001,
+    &quot;name&quot;: &quot;no-1&quot;,
+    &quot;desc&quot;: &quot;we are number one&quot;,
+    &quot;create_date&quot;: &quot;2021-01-05&quot;
+}
+
+响应：
+{
+    &quot;_index&quot;: &quot;my_doc&quot;,
+    &quot;_type&quot;: &quot;_doc&quot;,
+    &quot;_id&quot;: &quot;ulVN03YBVWKanGeCxsTB&quot;,
+    &quot;_version&quot;: 1,
+    &quot;result&quot;: &quot;created&quot;,
+    &quot;_shards&quot;: {
+        &quot;total&quot;: 1,
+        &quot;successful&quot;: 1,
+        &quot;failed&quot;: 0
+    },
+    &quot;_seq_no&quot;: 0,
+    &quot;_primary_term&quot;: 1
+}
+</code></pre>
+
+<h3 id="toc_6">删除文档内的数据</h3>
+
+<pre><code class="language-text">接口地址: http://es_service_addr/my_doc/_doc/1
+访求方式：delete
+解析: 表示删除索引my_doc下的_id=1的文档数据
+</code></pre>
+
+<blockquote>
+<p>删除操作其实不是物理删除，实际上是逻辑删除，通过添加逻辑标识符来判断是否删除，当磁盘数据过载后，才会去删除被标记为删除的数据</p>
+</blockquote>
+
+<h3 id="toc_7">修改文档数据</h3>
+
+<pre><code class="language-text">接口地址: http://es_service_addr/my_doc/_doc/1/_update
+请求方式：post
+解析: 修改索引为my_doc数据_id=1的文档数据内容
+
+body:
+{
+    &quot;doc&quot;: {
+        &quot;name&quot;:&quot;abc&quot;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>这种对某个字段数据进行局部的修改，实际上在ES底层是将数据重新写了一次，并不是对这个字段修改了一下。我们自己也可以添加一个全字段的数据，ID与原来的相同，这样也可以做到更新数据的作用。</p>
+</blockquote>
+
+<h3 id="toc_8">查询文档数据</h3>
+
+<pre><code class="language-text">请求方式：GET
+请求地址：http://es_service_addr/my_doc/_doc/1?_source=id,name
+解析：查询文档_doc下索引my_doc，索引_id=1的数据，并且只查询id和name这两个字段的数据
+
+查询所有数据的id和name
+http://es_service_addr/my_doc/_doc/_search?_source=id,name
+</code></pre>
+
+<h4 id="toc_9">判断查询数据是否存在</h4>
+
+<table>
+<thead>
+<tr>
+<th>请求方式</th>
+<th>HEAD</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td>http://es_service_addr/my_doc/_doc/1</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>如果请求状态码返回200，表示数据存在，请求状态码返回404，表示数据不存在</p>
+</blockquote>
 
 ]]></content>
   </entry>
@@ -1871,344 +2223,6 @@ psubscribe moto*
 <blockquote>
 <p>redis只是实现的发布订阅的功能，生产上不建议使用redis做消息队列，专人专事，发布订阅的功能还是要使用mq去实现。</p>
 </blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SpringBoot整合redis]]></title>
-    <link href="jythons.github.io/16055384723975.html"/>
-    <updated>2020-11-16T22:54:32+08:00</updated>
-    <id>jythons.github.io/16055384723975.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">添加依赖</h2>
-
-<pre><code class="language-text">&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_1">配置yml</h2>
-
-<pre><code class="language-text">spring:
-    redis:
-        database: 0
-        host: 192.168.1.111
-        port: 6379
-        password: psword
-</code></pre>
-
-<h2 id="toc_2">使用方法</h2>
-
-<pre><code class="language-text">@ApiIgnore
-@RestController
-@RequestMapping(&quot;redis&quot;)
-public class RedisController {
-
-    @Autowired
-    private RedisTemplate redisTemplate
-
-    @GetMapping(&quot;/set&quot;)
-    public Object set(String key, String value) {
-        redisTemplate.opsForValue().set(key, value);
-        return &quot;OK&quot;;
-    }
-    
-    @GetMapping(&quot;/get&quot;)
-    public String get(String key) {
-        return (String)redisTemplate.opsForValue().get (key);
-    }
-    
-    @GetMapping(&quot;/delete&quot;)
-    public Object delete(String key) {
-        redisTemplate.delete(key);
-        return &quot;OK&quot;;
-    }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redis的数据类型]]></title>
-    <link href="jythons.github.io/16050230410936.html"/>
-    <updated>2020-11-10T23:44:01+08:00</updated>
-    <id>jythons.github.io/16050230410936.html</id>
-    <content type="html"><![CDATA[
-<p>redis一共有五大数据类型，分别是：String、Hash、List、set、zset。下面分别介绍下每个数据类型的基本使用方法。<br/>
-<a href="http://redisdoc.com">redis-doc</a></p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">String数据类型</h2>
-
-<blockquote>
-<p>keys * 查看有多少个key，使用keys命令需要慎重，他是阻塞的，因此不要在正式环境使用。</p>
-</blockquote>
-
-<pre><code class="language-text"># 查看所有的key
-keys *
-
-# 查看所有 a 开头的key
-keys a*
-
-# 查看所有以e结尾的key
-keys *e
-
-# 查询key的类型，keyname是某个key的名字
-type keyname
-</code></pre>
-
-<p><strong>set：</strong> 设置一个变量，变量存在更新</p>
-
-<blockquote>
-<p>例子：set key value</p>
-</blockquote>
-
-<p><strong>setnx：</strong> 设置一个变量，变量存在，不更新，不存在则添加 </p>
-
-<blockquote>
-<p>例子：setnx key value</p>
-</blockquote>
-
-<p><strong>ttl：</strong> （time to leave）查看key剩下的时间，返回 -1，表示永久保存</p>
-
-<blockquote>
-<p>例子：ttl key</p>
-</blockquote>
-
-<p><strong>expire：</strong> 为某个key设置过期时间</p>
-
-<blockquote>
-<p>例子：expire key second</p>
-</blockquote>
-
-<p><strong>set ex：</strong> 设置带有过期时间的key</p>
-
-<blockquote>
-<p>例子：set key value ex second</p>
-</blockquote>
-
-<p><strong>append：</strong> 字符串的拼接，在现有的key字符串后拼接一个：123</p>
-
-<blockquote>
-<p>例子：append key 123</p>
-</blockquote>
-
-<p><strong>strlen：</strong> 查看字符串的长度，查看key这个字付串的长度</p>
-
-<blockquote>
-<p>例子：strlen key</p>
-</blockquote>
-
-<p><strong>incr：</strong> 累加，在当前的key对应的value数值上 +1</p>
-
-<blockquote>
-<p>例子：incr key</p>
-</blockquote>
-
-<p><strong>decr：</strong> 累减，在当前的key对应的value数值上 -1</p>
-
-<blockquote>
-<p>例子：decr key</p>
-</blockquote>
-
-<p><strong>incrby：</strong> 带有步长的累加</p>
-
-<blockquote>
-<p>例子：incrby key 步长数值，【incrby key 10】</p>
-</blockquote>
-
-<p><strong>decrby：</strong> 带有步长的累减</p>
-
-<blockquote>
-<p>例子：decrby key 步长数值，【decrby key 10】</p>
-</blockquote>
-
-<p><strong>getrange：</strong> 截取字符串的一段返回</p>
-
-<blockquote>
-<p>例子：getrange key 1 2，获取key这个字符串的第1个字符到第2个字符，从0开始算</p>
-</blockquote>
-
-<p><strong>setrange：</strong> 替换字符串的某一段</p>
-
-<blockquote>
-<p>例子：setrange key 2 aa，从第2个字符开始，替换两个字符为aa，abcde -&gt; abaae</p>
-</blockquote>
-
-<p><strong>mset：</strong> 批量设置key</p>
-
-<blockquote>
-<p>mset key value [key value ...]，mset key1 value1 key2 value2</p>
-</blockquote>
-
-<p><strong>mget：</strong> 批量获取key</p>
-
-<blockquote>
-<p>mget key [key ...]，mget key1 key2</p>
-</blockquote>
-
-<p><strong>msetnx：</strong> 设置多个key，不能设置重复的key</p>
-
-<blockquote>
-<p>msetnx key1 value1 key2 value2 , 如果当前有key1，则本命令会执行失败，key2也不会保存</p>
-
-<p>默认情况下，redis是有16个库，默认使用的是0，可以在配置文件内修改：databases参数来设置有多少个库。使用：select num（num表示库的下标），切换不同的库。</p>
-</blockquote>
-
-<p><strong>flushdb：</strong> 清除当前库里所有的数据<br/>
-<strong>flushdball：</strong> 清除所有库里的数据</p>
-
-<blockquote>
-<p>flushdb和flushdball谨慎使用</p>
-</blockquote>
-
-<h2 id="toc_1">Hash数据类型</h2>
-
-<p>hash数据类型，可以将结构化的数据存放到内存里面去。</p>
-
-<blockquote>
-<p>记忆：hash操作的命令都是以 h 开头，后面的基本和string命令相同。</p>
-</blockquote>
-
-<h3 id="toc_2">使用方法</h3>
-
-<p><strong>hset key field value</strong>: 添加hash类型的数据</p>
-
-<ul>
-<li>hset 表示添加一个hash数据类型的数据</li>
-<li>key 数据的key</li>
-<li>field 数据的字段</li>
-<li>value 字段对应的值</li>
-</ul>
-
-<blockquote>
-<p>例子：想要存放一个 user:{&quot;name&quot;:&quot;xiaoming&quot;, &quot;age&quot;:18, &quot;sex&quot;:&quot;man&quot;}<br/>
-hset user name xiaoming<br/>
-hset user age 18<br/>
-hset user sex man</p>
-</blockquote>
-
-<p><strong>hget key field</strong>：获取hash类型的数据</p>
-
-<ul>
-<li>hset 表示添加一个hash数据类型的数据</li>
-<li>key 数据的key</li>
-<li>field 数据的字段</li>
-</ul>
-
-<blockquote>
-<p>例子：获取 user:{&quot;name&quot;:&quot;xiaoming&quot;, &quot;age&quot;:18, &quot;sex&quot;:&quot;man&quot;}数据的名字<br/>
-hget user name</p>
-</blockquote>
-
-<p><strong>hmset key field value [field value ...]</strong>: 为某个key批量设置字段和值</p>
-
-<p><strong>hmget key field [field ...]</strong>: 同时获取某个key下多个字段的值</p>
-
-<p><strong>hgetall key</strong>：获取某个key下所有的字段和值</p>
-
-<blockquote>
-<p>hgetall 的返回值是field value field value 的形式。</p>
-</blockquote>
-
-<p><strong>hlen key</strong>：返回这个key下属性的数量<br/>
-<strong>hkeys key</strong>：返回key下所有的属性（field）<br/>
-<strong>hvals key</strong>：返回key下所有的值（value）<br/>
-<strong>hincrby key field number</strong>：key下field字段的值累加number<br/>
-<strong>hincrbyfloat key field number</strong>：key下field字段的值累加number，number可以是小数<br/>
-<strong>hexists key field</strong>：判断key下是否存在field属性，存在返回1<br/>
-<strong>hdel key field [field ...]</strong>: 删除key的field属性，支持同时删除多个属性</p>
-
-<h2 id="toc_3">List数据类型</h2>
-
-<p>List 是一个列表，可以理解为数组。<br/>
-List操作的命令都以 l 开头。</p>
-
-<h3 id="toc_4">使用方法</h3>
-
-<p><strong>lpush key value [value ...]</strong>: 从左边添加一个list数据类型的数据<br/>
-<strong>lrange key start end</strong>：获取key 的数据</p>
-
-<blockquote>
-<p>例子：lrange key 0 -1 获取列表key下的所有数据</p>
-</blockquote>
-
-<p><strong>rpush key value [value ...]</strong>: 从右边添加一个list数据类型的数据<br/>
-<strong>lpop key</strong>：从左边取出一个值<br/>
-<strong>rpop key</strong>：从右边取出一个值<br/>
-<strong>llen key</strong>：获取key的长度<br/>
-<strong>lindex key num</strong>：获取key列表的下标为num的value，该方法不会删除列表的数据<br/>
-<strong>lset key num value</strong>：将key列表下标为num的值修改为value<br/>
-<strong>linsert key before｜after pivot value</strong>：将value插入到key列表pivot数值的前面（before）或后面（after）<br/>
-<strong>lrem key count value</strong>：删除key列表内count个value<br/>
-<strong>ltrim key start stop</strong>：截取key列表从start开始到stop，包含start和stop</p>
-
-<blockquote>
-<p>del key 可以删除任何数据类型的key</p>
-</blockquote>
-
-<h2 id="toc_5">Set 数据类型（集合）</h2>
-
-<p>set数据类型，会自动删除掉重复的数据。<br/>
-set数据类型的操作命令都是以 s 开头。</p>
-
-<h3 id="toc_6">使用方法</h3>
-
-<p><strong>sadd key member [member ...]</strong>: 添加数据<br/>
-<strong>smembers key</strong>：查看key集合下所有数据<br/>
-<strong>scard key</strong>：查看key集合下数据的数量<br/>
-<strong>sismember key member</strong>：查看member是否在key集合下<br/>
-<strong>srem key member [member ...]</strong>: 删除key集合下member，支持同时删除多个<br/>
-<strong>spop key [num]</strong>: 随机获取并删除key集合下一个或多个member，num表示删除个数<br/>
-<strong>srandmembe key [num]</strong>：在key集合下随机抽取一个或多个数，num表示随机抽取个数<br/>
-<strong>smove source destination member</strong>：从source集合移除member并添加到destinaction集合<br/>
-<strong>sdiff key [key ...]</strong>: 获取key1集合内有的，在key2内没有的数据，key1相对于key2的差集<br/>
-<strong>sinter key [key ...]</strong>: 获取key1和key2集合的交集<br/>
-<strong>sunion key [key ...]</strong>: 获取key1和key2集合的并集</p>
-
-<h2 id="toc_7">Zset 数据类型（有序集合）</h2>
-
-<p>zset和set的区别是zset每一个member都有一个分数，这个分数是有序排列的。<br/>
-zset的操作命令都是以 z 开头。</p>
-
-<h3 id="toc_8">使用方法</h3>
-
-<p><strong>zadd key score member [score member]</strong>：有序集合添加一个key 分数为score，值为member的数据，可以添加多个。<br/>
-<strong>zrange key start stop [withscores]</strong>：查询key下的数据</p>
-
-<blockquote>
-<p>例1：zrange key 0 -1 # 查看所有<br/>
-例2：zrange key 0 1  # 查看下标0到1的数据<br/>
-例3：zrange key 0 -1 withscores # 查看数据和分数</p>
-</blockquote>
-
-<p><strong>zrank key member</strong>：查询key下的值为member的下标</p>
-
-<blockquote>
-<p>zrank key abc 查询key下值为abc的数据在key集合的位置，这里的位置不是分数。</p>
-</blockquote>
-
-<p><strong>zscore key member</strong>：查询key集合下值为member的分数</p>
-
-<p><strong>zcard key</strong>：查询key集合下有多少个值</p>
-
-<p><strong>zcount key min max</strong>：查询key集合下，分数大于等于min小于等于max的值有多少个</p>
-
-<p><strong>zrangebyscore key min max [withscores] [limit offset count]</strong>：查看分数大于等于min小于等于max的值， 加上withscores，可以展示分数</p>
-
-<blockquote>
-<p>如果查询时不想要等于边界的数据，可以使用如下方式获取：<br/>
-zrangebyscore key (min (max  这样就不会包含边界值了，上面的命令也可以使用。<br/>
-limit 相当于mysql的分页，limit 1 2，在结果集从第一个开始获取2个返回。</p>
-</blockquote>
-
-<p><strong>zrem key member [member]</strong>：删除key集合下值为member的数据，可删除多个</p>
 
 ]]></content>
   </entry>
