@@ -1,0 +1,609 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	ES dsl搜索 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">工作学习中的点点滴滴。</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+						
+						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+						
+						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+						
+						  <li id=""><a target="_self" href="ES.html">ES</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">ES dsl搜索</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">QueryString的方式查询数据</h2>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>值</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求方式</td>
+<td>GET</td>
+<td></td>
+</tr>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/index/_search?q=desc:%E4%BD%A0%E5%A5%BD">http://192.168.3.214:9200/index/_search?q=desc:你好</a></td>
+<td></td>
+</tr>
+<tr>
+<td>解析</td>
+<td>index</td>
+<td>索引名称</td>
+</tr>
+<tr>
+<td></td>
+<td>_search</td>
+<td>表示搜索</td>
+</tr>
+<tr>
+<td></td>
+<td>q=desc:你好</td>
+<td>表示查询desc这个字段里面包含你好的数据</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote>
+<p>多个查询条件可以在q后面再加一个q=age:22.<br/>
+例如：?q=desc:你好&amp;q=age:22</p>
+</blockquote>
+
+<h2 id="toc_1">DSL的方式查询数据</h2>
+
+<blockquote>
+<p>QueryString的方式查询数据不够灵活，不适用复杂查询。<br/>
+使用DSL的方式查询更加灵活、方便、支持复杂查询。</p>
+</blockquote>
+
+<h3 id="toc_2">使用DSL查询数据方法</h3>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>值</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求方式</td>
+<td>POST</td>
+<td></td>
+</tr>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/index/_doc/_search">http://192.168.3.214:9200/index/_doc/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td>参数类型</td>
+<td>JSON</td>
+<td>参数格式见下表</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="toc_3">根据字段内容查询数据</h4>
+
+<blockquote>
+<p>根据字段查询数据，如果该字段不支持分词，例如keyword类型的字段，查询的字段内容只是一部分的话，是查不出来数据的。</p>
+</blockquote>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match&quot;: {
+            &quot;desc&quot;: &quot;你好&quot;
+        }
+    }
+}
+</code></pre>
+
+<p>如果要查询同时满足两个词汇都存在的数据，可以使用下面这种方式查询：</p>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match&quot;: {
+            &quot;desc&quot;: {
+                &quot;query&quot;: &quot;你好 学习&quot;,
+                &quot;operator&quot;:&quot;and&quot; # 表示要同时满足查询的所有词汇，默认是or，相当于上面的方式查询
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>minimum_should_match, 这个属性表示查询的字符串被分词后，匹配百分之多少词汇的数据。例如查询：今天天气好晴朗，我想出去玩。假设这个句子被分成10个词汇，minimum_should_match参数设置60%（向下取整 ），表示查询的数据中，匹配上6个词汇就会被查询出来。</p>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match&quot;: {
+            &quot;desc&quot;: {
+                &quot;query&quot;: &quot;今天天气好晴朗，我想出去玩&quot;,
+                &quot;minimum_should_match&quot;: &quot;60%&quot; 
+            }
+        }
+    }
+}
+</code></pre>
+
+<h4 id="toc_4">查询索引是否包含某个属性</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;exists&quot;: {
+            &quot;field&quot;: &quot;username&quot;
+        }
+    }
+}
+</code></pre>
+
+<h4 id="toc_5">查询所有</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match_all&quot;: {}
+    }
+}
+</code></pre>
+
+<h4 id="toc_6">查询部分字段数据</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match_all&quot;: {}
+    },
+    &quot;_source&quot;: [
+        &quot;id&quot;,
+        &quot;nickname&quot;,
+        &quot;age&quot;
+    ]
+}
+</code></pre>
+
+<h4 id="toc_7">分页查询</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match_all&quot;: {}
+    },
+    &quot;_source&quot;: [
+        &quot;id&quot;,
+        &quot;nickname&quot;,
+        &quot;age&quot;
+    ],
+    &quot;from&quot;: 0, # 数据起始位置
+    &quot;size&quot;: 10 # 每页展示数量
+}
+</code></pre>
+
+<h4 id="toc_8">根据字段内容模糊匹配</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;term&quot;: {
+            &quot;desc&quot;: &quot;你好&quot;
+        }
+    },
+    &quot;_source&quot;: [
+        &quot;id&quot;,
+        &quot;nickname&quot;,
+        &quot;desc&quot;
+    ]
+}
+</code></pre>
+
+<blockquote>
+<p>term 是模糊搜索这个字段内容，只要这个字段内容包含搜索的字符串，就展示出来，match是分词搜索，首先会对搜索的字符串进行分词，然后会检索出所有包含这些分词的数据。</p>
+</blockquote>
+
+<p>也可以同时查询多个词汇：</p>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;terms&quot;: {
+            &quot;desc&quot;: [&quot;你好&quot;, &quot;学习&quot;]
+        }
+    },
+    &quot;_source&quot;: [
+        &quot;id&quot;,
+        &quot;nickname&quot;,
+        &quot;desc&quot;
+    ]
+}
+</code></pre>
+
+<blockquote>
+<p>使用terms是可以支持多个词汇查询，只要包含搜索词汇中的其中一个，就会被检索出来。</p>
+</blockquote>
+
+<h4 id="toc_9">根据词条去查询</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match_phrase&quot;: {
+            &quot;desc&quot;: {
+                &quot;query&quot;: &quot;大学 毕业&quot;
+            }
+        }
+    },
+    &quot;_source&quot;: [
+        &quot;id&quot;,
+        &quot;nickname&quot;,
+        &quot;desc&quot;
+    ]
+}
+
+</code></pre>
+
+<blockquote>
+<p>使用match_phrase查询，首先会对查询的词条进行分词，然后去找这些分词同时在这个字段内容下的数据。上面的例子两个词汇，需要连贯在一起才能查询出来。如果要查询非连贯的词汇，可以使用下面的方式。</p>
+</blockquote>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match_phrase&quot;: {
+            &quot;desc&quot;: {
+                &quot;query&quot;: &quot;大学 毕业&quot;,
+                &quot;slop&quot;: 3 # 这个参数表示大学和毕业中间可以跳过多少个词汇
+            }
+        }
+    },
+    &quot;_source&quot;: [
+        &quot;id&quot;,
+        &quot;nickname&quot;,
+        &quot;desc&quot;
+    ]
+}
+
+</code></pre>
+
+<h4 id="toc_10">指定多个ID查询</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;ids&quot;: {
+            &quot;type&quot;: &quot;_doc&quot;,
+            &quot;values&quot;: [&quot;1001&quot;, &quot;1002&quot;, &quot;1009&quot;]
+        }
+    },
+    &quot;_source&quot;: [
+        &quot;id&quot;,
+        &quot;nickname&quot;,
+        &quot;desc&quot;
+    ]
+}
+</code></pre>
+
+<h4 id="toc_11">在多个字段去查询</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;multi_match&quot;: {
+            &quot;desc&quot;: &quot;你好啊&quot;,
+            &quot;fields&quot;: [
+                &quot;desc&quot;, &quot;nickname^10&quot;
+            ]
+        }
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>由于默认匹配的词汇越少，分数越低，搜索出来的数据排名会靠下，如果要对某个字段查询出来的数据提升排名，则可以为这个字段设置权重，设置方法见上方：&quot;nickname ^ 10&quot;</p>
+</blockquote>
+
+<h4 id="toc_12">布尔查询</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;bool&quot;: {
+            &quot;must&quot;: [
+                {
+                    &quot;multi_match&quot;: {
+                        &quot;query&quot;: &quot;你好&quot;,
+                        &quot;fields&quot;: [&quot;desc&quot;, &quot;nickname&quot;]
+                    }
+                },{
+                    &quot;term&quot;: {
+                        &quot;sex&quot;: 0
+                    }
+                }
+            ],
+            &quot;should&quot;: [
+                {
+                    &quot;match&quot;: {
+                       &quot;desc&quot;: &quot;我 &quot;
+                    }
+                }
+            ]
+        }
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>must: 表示同时满足对应的词汇才会被搜索出来（相当于mysql的AND）<br/>
+must_not: 表示所有词汇都不满足才会被搜索出来 (相当于MySQL的not)<br/>
+should: 表示所有词汇只要满足一个就会被搜索出来（相当于MySQL的or）</p>
+</blockquote>
+
+<p>有时候我们想把分数较低的词汇排名靠前，可以是boost属性为这个词汇加权，使用方法见下方示例:</p>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;bool&quot;: {
+            &quot;should&quot;: [
+                {
+                    &quot;match&quot;: {
+                        &quot;query&quot;: &quot;你好&quot;,
+                        &quot;boost&quot;: 2
+                    }
+                },{
+                    &quot;match&quot;: {
+                        &quot;query&quot;: &quot;律师&quot;,
+                        &quot;boost&quot;: 10
+                    }
+                }
+            ]
+        }
+    }
+}
+</code></pre>
+
+<h4 id="toc_13">过滤器</h4>
+
+<p>过滤器，顾名思义可以在数据集合中过滤出自己想要的数据，比如过滤数据中金额在50~60之间的数据。</p>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match&quot;: {
+            &quot;desc&quot;: &quot;五子棋游戏&quot;
+        }
+    },
+    &quot;post_filter&quot;: {
+        &quot;range&quot;: {
+            &quot;money&quot;: {
+                &quot;gt&quot;: 50,
+                &quot;lt&quot;: 60
+            }
+        }
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>上面参数中，post_filter表示过滤的意思，与query平级；range表示范围查询，money是mapping的一个字段。<br/>
+gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
+</blockquote>
+
+<h4 id="toc_14">排序</h4>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match&quot;: {
+            &quot;desc&quot;: &quot;五子棋游戏&quot;
+        }
+    },
+    &quot;sort&quot;: [
+        {
+            &quot;age&quot;: &quot;desc&quot;
+        }
+    ]
+}
+</code></pre>
+
+<blockquote>
+<p>支持分词的字段，是不能进行排序的，比如text类型的字段，如果要对这个字段进行排序，可以为这个字段添加一个附属的属性用于排序，可以参考下面创建mapping的例子：</p>
+</blockquote>
+
+<pre><code class="language-text">{
+    &quot;properties&quot;: {
+        &quot;id&quot;: {
+            &quot;type&quot;: &quot;long&quot;
+        },
+        &quot;nickname&quot;: {
+            &quot;type&quot;: &quot;text&quot;,
+            &quot;analyzer&quot;: &quot;ik_max_word&quot;,
+            &quot;fields&quot;: {
+                &quot;keyword&quot;: { # 这里的keyword，如果下面有text类型的字段需要排序也可以取相同的名字
+                    &quot;type&quot;: &quot;keyword&quot;
+                }
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>创建好可以排序的text类型的字段后，在使用这个字段排序时，需要使用如下方式去排序：</p>
+
+<pre><code class="language-text">{
+    &quot;sort&quot;: [
+        {
+            &quot;nickname.keyword&quot;: &quot;desc&quot;
+        }
+    ]
+}
+</code></pre>
+
+<blockquote>
+<p>这里的nickname是字段名称，keyword是这个字段的附属属性的名称。</p>
+</blockquote>
+
+<h4 id="toc_15">搜索出的数据中匹配的词汇高亮</h4>
+
+<p>在我们搜索出来的数据，是根据查询的字符串分词后的词汇匹配出来的，我们可以将这些词汇进行高亮显示。<br/>
+使用高亮显示的方式如下:</p>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match&quot;: {
+            &quot;desc&quot;: &quot;五子棋游戏&quot;
+        }
+    },
+    &quot;highlight&quot;: { # 高亮显示配置
+        &quot;pre_tags&quot;: [&quot;&lt;span&gt;&quot;],   # 高亮显示的词汇前置标签
+        &quot;post_tags&quot;: [&quot;&lt;/span&gt;&quot;], # 高亮显示的词汇结束标签
+        &quot;fields&quot;: {
+            &quot;desc&quot;: {}  # 高亮显示的字段
+        }
+    }
+}
+</code></pre>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2020
+Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>

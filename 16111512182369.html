@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	ES 深度分页 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">工作学习中的点点滴滴。</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+						
+						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+						
+						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+						
+						  <li id=""><a target="_self" href="ES.html">ES</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">ES 深度分页</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<p>正常的使用from和size去分页查询的时候，from+size的结果要小于10000，因为ES内部考虑到性能的因素，对此做了限制。<br/>
+ES在查询数据的时候，例如获取9999-10009的数据时，他的from=9999，size=10，假如有3个shard，每个shard有10W条数据，他会从每个shard获取10009条数据，合成一个结果集，在从这个结果集中取10条数据，剩下的30017条数据就会丢弃，这么做的缺点会造成资源和性能的浪费。<br/>
+<span id="more"></span><!-- more --><br/>
+<img src="media/16111512182369/ES%E6%B7%B1%E5%BA%A6%E5%88%86%E9%A1%B5.png" alt="ES深度分页"/></p>
+
+<blockquote>
+<p>针对上述问题，可以使用限制总页数的方式去规避，查询大于10000条数据的问题，例如，查询页数，限制在最大100页。</p>
+</blockquote>
+
+<h2 id="toc_0">突破10000条数据的限制</h2>
+
+<p>如果在某些企业内部，对查询数据有特殊的要求，对于性能没有必要的要求的话，可以通过修改配置来突破10000数据的查询限制。</p>
+
+<h3 id="toc_1">查询配置信息的方法</h3>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>数值</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/shop/_settings">http://192.168.3.214:9200/shop/_settings</a></td>
+<td></td>
+</tr>
+<tr>
+<td>请求类型</td>
+<td>GET</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="toc_2">修改配置</h3>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>数值</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/shop/_settings">http://192.168.3.214:9200/shop/_settings</a></td>
+<td>shop:索引</td>
+</tr>
+<tr>
+<td>请求方式</td>
+<td>put</td>
+<td></td>
+</tr>
+<tr>
+<td>参数类型</td>
+<td>json</td>
+<td></td>
+</tr>
+<tr>
+<td>请求参数</td>
+<td>见下方请求参数</td>
+<td></td>
+</tr>
+<tr>
+<td>响应类型</td>
+<td>json</td>
+<td></td>
+</tr>
+<tr>
+<td>响应数据</td>
+<td>见下方响应数据</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>请求参数</strong></p>
+
+<pre><code class="language-text">{
+    &quot;index.max_result_windows&quot;: 100000
+}
+</code></pre>
+
+<p><strong>响应数据</strong></p>
+
+<pre><code class="language-text">{
+    &quot;acknowledged&quot;: true
+}
+</code></pre>
+
+<h2 id="toc_3">Scroll 滚动搜索</h2>
+
+<p>上面通过对配置的修改来获取大数据量的搜索，对性能上是有影响，实际生产上是不推荐这么做的，我们还可以通过使用scroll滚动搜索的方式来查询大数据量的搜索工作。</p>
+
+<h3 id="toc_4">滚动搜索原理</h3>
+
+<p>可以把 scroll 理解爲关系型数据库里的 cursor，因此，scroll 并不适合用来做实时搜索，而更适用于后台批处理任务，比如群发。<br/>
+scroll 具体分为初始化和遍历两步，初始化时将所有符合搜索条件的搜索结果缓存起来，可以想象成快照，在遍历时，从这个快照里取数据，也就是说，在初始化后对索引插入、删除、更新数据都不会影响遍历结果。游标可以增加性能的原因，是因为如果做深分页，每次搜索都必须重新排序，非常浪费，使用scroll就是一次把要用的数据都排完了，分批取出，因此比使用from+size还好。</p>
+
+<h3 id="toc_5">搜索示例</h3>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>数值</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/shop/_search?scroll=1m">http://192.168.3.214:9200/shop/_search?scroll=1m</a></td>
+<td>scroll表示滚动时间，也就是说缓存起来的数据的有效期，这里设置的是1分钟。</td>
+</tr>
+<tr>
+<td>请求类型</td>
+<td>POST</td>
+<td></td>
+</tr>
+<tr>
+<td>请求参数</td>
+<td>见下方请求参数</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>请求参数</strong></p>
+
+<pre><code class="language-text">{
+    &quot;query&quot;: {
+        &quot;match_all&quot;: {}
+    },
+    &quot;sort&quot;: [&quot;_doc&quot;],
+    &quot;size&quot;: 5   # 每次滚动的数据数量
+}
+</code></pre>
+
+<blockquote>
+<p>第一次查询会返回一个scroll_id，在第二次滚动查询时，需要带上这个scroll_id。</p>
+</blockquote>
+
+<p><strong>第二次滚动搜索</strong></p>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>数值</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/_search/scroll">http://192.168.3.214:9200/_search/scroll</a></td>
+<td></td>
+</tr>
+<tr>
+<td>请求类型</td>
+<td>POST</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-text">{
+    &quot;scroll_id&quot;: &quot;SGsguighdasdhkHSkhdashkd==&quot;,
+    &quot;scroll&quot;: &quot;1m&quot;
+}
+</code></pre>
+
+<blockquote>
+<p>每一次滚动查询，都要将上一次查询的scroll_id携带过来，直到查询得结果集为空。 <br/>
+上面设置的size是作用于单个分片，所以如果有多个分片的话，每次实际返回的文档数量最大为：size * 分片数量</p>
+</blockquote>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2020
+Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>

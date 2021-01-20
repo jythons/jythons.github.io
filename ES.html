@@ -133,6 +133,84 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2021-01-20T22:37:34+08:00" itemprop="datePublished">2021/01/20</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ES.html'>ES</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16111534541333.html" itemprop="url">
+		ES查询 - 批量操作</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>使用id查询单条记录的方式，如果要查询n次，我们就要调用n次查询接口，这样做会对资源造成浪费，因此ES提供了批量查询的方法。<br/>
+
+
+			 
+			<a href="16111534541333.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2021-01-20T22:00:18+08:00" itemprop="datePublished">2021/01/20</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ES.html'>ES</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16111512182369.html" itemprop="url">
+		ES 深度分页</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>正常的使用from和size去分页查询的时候，from+size的结果要小于10000，因为ES内部考虑到性能的因素，对此做了限制。<br/>
+ES在查询数据的时候，例如获取9999-10009的数据时，他的from=9999，size=10，假如有3个shard，每个shard有10W条数据，他会从每个shard获取10009条数据，合成一个结果集，在从这个结果集中取10条数据，剩下的30017条数据就会丢弃，这么做的缺点会造成资源和性能的浪费。<br/>
+
+
+			 
+			<a href="16111512182369.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2021-01-13T22:56:20+08:00" itemprop="datePublished">2021/01/13</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ES.html'>ES</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16105497801984.html" itemprop="url">
+		ES dsl搜索</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			
+
+			 
+			<a href="16105497801984.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2021-01-11T23:37:50+08:00" itemprop="datePublished">2021/01/11</time>
 			</div>
 			<div class="tags">posted in 
