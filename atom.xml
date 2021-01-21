@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2021-01-20T23:58:10+08:00</updated>
+  <updated>2021-01-21T23:03:19+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -22,7 +22,7 @@
 <p>使用id查询单条记录的方式，如果要查询n次，我们就要调用n次查询接口，这样做会对资源造成浪费，因此ES提供了批量查询的方法。<br/>
 <span id="more"></span><!-- more --></p>
 
-<h2 id="toc_0">mget</h2>
+<h2 id="toc_0">1 批量查询：mget</h2>
 
 <table>
 <thead>
@@ -58,6 +58,121 @@
 <p>使用mget搜索不会像使用_search指定ID查询数据那样，展示源信息。<br/>
 使用mget查询数据时，如果这个数据不存在，则，这个id对应的数据行也会查询出来，不过，这行数据的found字段对应的值是：false；使用_search查询，如果数据不存在，则不会展示那行数据。</p>
 </blockquote>
+
+<h2 id="toc_1">2 批量操作：_bulk</h2>
+
+<h3 id="toc_2">2.1 基本语法</h3>
+
+<p>bulk操作和以往的普通请求格式有区别，不要格式化json，不然就不在同一行了，这个需要注意。</p>
+
+<pre><code class="language-text">{action: {metadata}}\n
+{request body      }\n
+{action: {meatdata}}\n
+{request body      }\n
+</code></pre>
+
+<blockquote>
+<p>{action: {metadata}} 代表批量操作的类型，可以是新增、删除或修改<br/>
+\n是每行结尾必须填写的一个规范，每一行包括最后一行都要写，用于es的解析<br/>
+{request body}是请求body，增加和修改操作需要，删除操作则不需要</p>
+</blockquote>
+
+<h3 id="toc_3">2.2 批量操作的类型</h3>
+
+<p>action必须是以下选项之一：</p>
+
+<ul>
+<li>create: 如果文档不存在，那么久创建他，存在会报错。发生异常报错不会影响其他操作。</li>
+<li>index: 创建一个新文档或者替换一个现有的文档。</li>
+<li>update: 部分更新一个文档。</li>
+<li>delete: 删除一个文档</li>
+</ul>
+
+<blockquote>
+<p>metadata中需要指定要操作的文档的_index、type和_id，_index、_type也可以在url中指定。</p>
+</blockquote>
+
+<h3 id="toc_4">2.3 实际操作</h3>
+
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>数值</th>
+<th>备注</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>请求地址</td>
+<td><a href="http://192.168.3.214:9200/_bulk">http://192.168.3.214:9200/_bulk</a></td>
+<td></td>
+</tr>
+<tr>
+<td>请求方式</td>
+<td>POST</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="toc_5">2.3.1 批量创建：create</h4>
+
+<pre><code class="language-text">{&quot;create&quot;: {&quot;_index&quot;: &quot;shop&quot;, &quot;_type&quot;: &quot;_doc&quot;, &quot;_id&quot;: &quot;2001&quot;}}
+{&quot;id&quot;: &quot;2001&quot;, &quot;nickname&quot;: &quot;name-2001&quot;}
+{&quot;create&quot;: {&quot;_index&quot;: &quot;shop&quot;, &quot;_type&quot;: &quot;_doc&quot;, &quot;_id&quot;: &quot;2002&quot;}}
+{&quot;id&quot;: &quot;2002&quot;, &quot;nickname&quot;: &quot;name-2002&quot;}
+{&quot;create&quot;: {&quot;_index&quot;: &quot;shop&quot;, &quot;_type&quot;: &quot;_doc&quot;, &quot;_id&quot;: &quot;2003&quot;}}
+{&quot;id&quot;: &quot;2003&quot;, &quot;nickname&quot;: &quot;name-2003&quot;}
+
+</code></pre>
+
+<blockquote>
+<p>创建文档时，如果文档不存在，则他会创建，如果这个文档存在，则他会报一个异常，不过这个异常不会影响其他的批量操作。上面的参数中，索引和类型可以写到URL上面，不必再参数中每一个文档都写一遍：<a href="http://192.168.3.214:9200/shop/_doc/_bulk%E3%80%82">http://192.168.3.214:9200/shop/_doc/_bulk。</a></p>
+</blockquote>
+
+<h4 id="toc_6">2.3.2 批量创建：index</h4>
+
+<p>上面的create在创建时，如果文档存在，则会抛出异常，如果我们想在文档存在时更新这个文档的话，可以使用：index。</p>
+
+<pre><code class="language-text">{&quot;index&quot;: {&quot;_id&quot;: &quot;2001&quot;}}
+{&quot;id&quot;: &quot;2001&quot;, &quot;nickname&quot;: &quot;name-2001&quot;}
+{&quot;index&quot;: {&quot;_id&quot;: &quot;2002&quot;}}
+{&quot;id&quot;: &quot;2002&quot;, &quot;nickname&quot;: &quot;name-2002&quot;}
+{&quot;index&quot;: {&quot;_id&quot;: &quot;2003&quot;}}
+{&quot;id&quot;: &quot;2003&quot;, &quot;nickname&quot;: &quot;name-2003&quot;}
+
+</code></pre>
+
+<h4 id="toc_7">2.3.3 批量更新：update</h4>
+
+<pre><code class="language-text">{&quot;update&quot;: {&quot;_id&quot;: &quot;2001&quot;}}
+{&quot;doc&quot;: {&quot;id&quot;: &quot;2001&quot;}}
+{&quot;update&quot;: {&quot;_id&quot;: &quot;2002&quot;}}
+{&quot;doc&quot;: {&quot;nickname&quot;: &quot;name-2002&quot;}}
+
+</code></pre>
+
+<blockquote>
+<p>批量更新可以局部更新，参数中只需要填写想要更新的文档内的某个字段。</p>
+</blockquote>
+
+<h4 id="toc_8">2.3.4 批量删除：delete</h4>
+
+<pre><code class="language-text">{&quot;delete&quot;: {&quot;_id&quot;: &quot;2001&quot;}}
+{&quot;delete&quot;: {&quot;_id&quot;: &quot;2002&quot;}}
+
+</code></pre>
+
+<h2 id="toc_9">总结</h2>
+
+<p>上面的CURD的操作可以混合在一起使用，同一个请求参数可以混合所有的操作。 <br/>
+整个批量请求都需要由接收到请求的节点加载到内存中，因此该请求越大，其他请求所能获得的内存就越少。 批量请求的大小有一个最佳值，大于这个值，性能将不再提升，甚至会下降。 但是最佳值不是一个固定的值。它完全取决于硬件、文档的大小和复杂度、索引和搜索的负载的整体情况。<br/>
+幸运的是，很容易找到这个 最佳点 ：通过批量索引典型文档，并不断增加批量大小进行尝试。 当性能开始下降，那么你的批量大小就太大了。一个好的办法是开始时将 1,000 到 5,000 个文档作为一个批次, 如果你的文档非常大，那么就减少批量的文档个数。<br/>
+密切关注你的批量请求的物理大小往往非常有用，一千个 1KB 的文档是完全不同于一千个 1MB 文档所占的物理大小。 一个好的批量大小在开始处理后所占用的物理大小约为 5-15 MB。</p>
+
+<p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/bulk.html">官方文档</a></p>
 
 ]]></content>
   </entry>
