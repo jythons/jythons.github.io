@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2021-01-23T17:31:01+08:00</updated>
+  <updated>2021-01-23T17:31:06+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,16 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[]]></title>
+    <link href="jythons.github.io/16114061687150.html"/>
+    <updated>2021-01-23T20:49:28+08:00</updated>
+    <id>jythons.github.io/16114061687150.html</id>
+    <content type="html"><![CDATA[
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[常用命令]]></title>
@@ -2746,70 +2756,6 @@ redis-cli --cluster create 192.168.1.201:6379 192.168.1.202:6379 192.168.1.203:6
             master: master-redis # master节点名称
             nodes： 192.168.1.191:26379,192.168.1.191:26379,192.168.1.191:26379 # 哨兵节点地址
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redis哨兵机制与实现]]></title>
-    <link href="jythons.github.io/16062286652893.html"/>
-    <updated>2020-11-24T22:37:45+08:00</updated>
-    <id>jythons.github.io/16062286652893.html</id>
-    <content type="html"><![CDATA[
-<p>Redis使用源码安装的，在源码包内有一个 sentinel.conf 文件，这个文件就是哨兵机制的配置文件，将该配置文件拷贝到 /usr/local/redis 目录下。然后编辑配置即可。</p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">sentinel.conf配置</h2>
-
-<pre><code class="language-text"># 绑定一个IP，如果redis需要暴漏在公网下，就需要绑定一个IP地址，
-bind 127.0.0.1 192.168.1.1
-
-# 是否开启保护模式, 默认：no 不开启，保证所有节点都可以访问
-protected-mode no
-
-# 端口号
-port 26379
-
-# 是否在后台启用
-daemonize yes
-
-# 哨兵的进程
-pidfile /var/run/redis-sentinel.pid
-
-# 日志文件
-logfile /usr/local/redis/sentinel/redis-sentinel.log
-
-# 工作目录
-dir /usr/local/redis/sentinel
-
-# 哨兵机制的核心配置：mymaster 相当于redis master节点的名称
-# 后面的IP 端口是master节点的地址和端口，
-# 最后面的2，表示多少个哨兵ping不通master，就可以决定这个节点挂掉了，
-# 然后就可以故障转移了
-sentinel monitor mymaster 127.0.0.1 6379 2
-
-# 配置密码
-sentinel auth-pass mymaster password
-
-# 配置多少毫秒内断定节点属于宕机
-sentinel down-after-milliseconds mymaster 30000
-
-# 如果master挂掉之后，需要选举出一个slave节点作为master，这时其他的只节点需要和这个新的master节点同步数据，这个配置表示同步时的并行个数
-sentinel parallel-syncs mymaster 1
-
-# 发生故障时，需要做故障转移，如果某个哨兵在3分钟内（180000ms）没有操作，则由其他哨兵来完成转移
-sentinel failover-timeout mymaster 180000
-</code></pre>
-
-<h2 id="toc_1">哨兵模式启动</h2>
-
-<pre><code class="language-text">redis-sentinel /usr/local/redis/sentinel.conf
-</code></pre>
-
-<blockquote>
-<p>当原来挂掉的主节点恢复了以后，他会自动变为slave节点，不在是master节点。</p>
-</blockquote>
 
 ]]></content>
   </entry>
