@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	Shell - Jythons小站
+  	ES集群 - Jythons小站
   	
 	</title>
 
@@ -127,76 +127,99 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container"> <div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
 
-
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2021-01-23T15:09:07+08:00" itemprop="datePublished">2021/01/23</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Shell.html'>Shell</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16113857471276.html" itemprop="url">
-		常用命令</a></h1>
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">ES集群</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">输出文件内容去除注释</h2>
+			<h2 id="toc_0">1 集群的概念</h2>
 
-<pre><code class="language-text">more file.conf | grep ^[^#]
+<blockquote>
+<p>ES 集群中主分片和副本分片是不能放到同一个服务器中的。这样可以保证主分片挂掉之后，数据依然可用。</p>
+</blockquote>
+
+<p><img src="media/16113278876159/ES%E9%9B%86%E7%BE%A4%E6%A6%82%E5%BF%B5.png" alt="ES集群概念"/><br/>
+<span id="more"></span><!-- more --></p>
+
+<h2 id="toc_1">2 搭建ES集群</h2>
+
+<blockquote>
+<p>搭建集群之前，如果之前有启动过，需要将节点数据删除。ES根目录下data文件夹下的node目录。</p>
+</blockquote>
+
+<p><strong>修改各个节点的配置文件</strong></p>
+
+<pre><code class="language-text"># 修改各个服务的名称, 每个服务的名称需要相同
+cluster.name: es-cluster-name
+# 修改节点名称，每个节点需要使用不同的名称
+node.name: es-node1
+# master代表它是一个主节点
+node.master: true
+# data代表它是一个数据节点
+node.data: true
+# 发现节点的host,配置上所有 节点的IP
+discovery.seed_hosts: [&quot;host1&quot;, &quot;host2&quot;]
+# 配置初始化时的master节点
+cluster.initial_master_nodes: [&quot;es-node1&quot;]
 </code></pre>
 
+<blockquote>
+<p>master设置为true的这些节点，如果当前主节点挂掉，其他的主节点就会被选举成master节点。<br/>
+主节点的作用是负责管理整个集群，负责创建和删除索引，也可以去管理非master的节点。<br/>
+数据节点主要是用于文档数据的处理，例如数据的增删改查等都是基于数据节点去处理。<br/>
+每个节点的配置除了节点名称不一样，其他的都是相同的。</p>
+</blockquote>
 
-			
-			
+<p><strong>启动</strong><br/>
+每个几点分别启动，启动命令<br/>
+进入到/usr/lcoal/elasticsearch/bin目录下</p>
+
+<pre><code class="language-text">切换为esuser用户
+su esuser
+启动ES
+./elasticsearch -d
+</code></pre>
+
+<blockquote>
+<p>使用时，我们连接任意节点的地址，效果都是一样的。</p>
+</blockquote>
+
+<h2 id="toc_2">3 集群脑裂</h2>
+
+<p>当发生网络中断或者网络抖动、服务器宕机等等情况，服务器集群可能会被划分为两个部分，各自有自己的master节点来进行管理，这种情况就是集群脑裂。<br/>
+<img src="media/16113278876159/ES%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82.png" alt="ES集群脑裂"/></p>
+
+<p>当服务器1宕机后，服务器2可能会被选举为master节点，这时服务器1恢复了，并且也是master节点，这时就会出现集群割裂问题，原因是，选举master节点有一个最小投票人数的选举，服务器1本身就是一台服务器。</p>
+
+<p><strong>脑裂问题解决</strong><br/>
+需要修改最小投票人数，默认值是1，新版本的ES在ES内部已经解决了脑裂的问题，老版本需要注意一下以下配置。</p>
+
+<pre><code class="language-text"># 这里的n是指master被设置成true的节点数量
+discovery.zen.minimum_master_nodes = (n/2)+1 
+</code></pre>
+
+<h2 id="toc_3">4 集群文档读写原理</h2>
+
+<p>1.首先会在服务器集群中选择一个协调节点，这个节点用于负责用户的请求和响应，当我们要做一个写操作，协调节点会做一个路由，根据hash算法去判断将数据写入到那个主分片内。<br/>
+2.假设路由到了P1主分片，他会转发到P1主分片，数据写入到主分片内后，主分片会将数据同步到R1副本分片。<br/>
+3.当数据同步完成之后，会将请求返回到协调节点，并相应给客户端。<br/>
+<img src="media/16113278876159/%E6%96%87%E6%A1%A3%E5%86%99%E5%8E%9F%E7%90%86.png" alt="文档写原理"/></p>
+
+<h2 id="toc_4">5 文档读原理</h2>
+
+<p>1.当请求过来，请求到了第一个服务器上，这个节点将充当协调节点，协调节点根据请求参数，来计算文档存储在那个分片上，由于主分片和副本分片的数据是相同的，所以，当有下一个请求过来时，可能会请求到副本分片上，主分片和副本分片分配轮询读操作。<br/>
+<img src="media/16113278876159/ES%E6%96%87%E6%A1%A3%E8%AF%BB%E5%8E%9F%E7%90%86.png" alt="ES文档读原理"/></p>
+
 		</div>
-
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-27T23:50:35+08:00" itemprop="datePublished">2020/10/27</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Shell.html'>Shell</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038138353128.html" itemprop="url">
-		shell编程</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>总结一下shell编程的语法规则以及注意事项。<br/>
-
-
-			 
-			<a href="16038138353128.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
-  
-
-</div>
-<nav id="pagenavi">
+	<div class="share-comment">
 	 
-	
-	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
-</nav>
+	  
 
-</div>
+	  
 
-
-
-        </div>
+	</div>
+</div>        </div>
 			<footer id="footer" class="inner">Copyright &copy; 2020
 Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
 Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>

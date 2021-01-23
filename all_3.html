@@ -133,6 +133,73 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2020-11-08T23:19:55+08:00" itemprop="datePublished">2020/11/08</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16048487950121.html" itemprop="url">
+		搭建Keepalived + LVS + Nginx 高可用集群负载均衡</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p><img src="media/16048487950121/%E5%8D%95%E4%B8%AA%E5%85%A5%E5%8F%A3%E5%9B%BE%E7%89%87.png" alt="单个入口图片"/></p>
+
+<p>当前配置的只有一个LVS负载均衡服务器，当这个服务器挂掉之后，后面所有的请求都无法到达上游RS服务器，整个服务就回挂掉，因此就需要在添加一台备用机，使用Keepalived实现主备自动切换，保证服务24小时可用。如下图所示：<br/>
+<img src="media/16048487950121/%E4%B8%BB%E5%A4%87LVS%E5%88%87%E6%8D%A2.png" alt="主备LVS切换"/><br/>
+使用Keepalived不但可以使LVS主备自动切换，还可以检测RS服务器是否可用，如果有挂掉的RS服务器，则会自动剔除，避免将请求转发到挂掉的RS服务器。</p>
+
+
+
+			 
+			<a href="16048487950121.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-08T23:04:53+08:00" itemprop="datePublished">2020/11/08</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16048478935893.html" itemprop="url">
+		LVS的持久化机制</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>如果一个用户短时间内多次提交请求，那么他的请求都会转发到第一次请求的RS服务器，这个时间段默认是300秒。<br/>
+配置方式：</p>
+
+<pre><code class="language-text"># 详细信息使用：man ipvsadm
+ipvsadm -E -t 192.168.1.150:80 -s rr -p [time] 
+</code></pre>
+
+<blockquote>
+<p>-E 编辑服务，-t 服务地址</p>
+</blockquote>
+
+
+
+			 
+			<a href="16048478935893.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2020-11-02T23:50:52+08:00" itemprop="datePublished">2020/11/02</time>
 			</div>
 			<div class="tags">posted in 
@@ -365,62 +432,6 @@ LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是
 
 			 
 			<a href="16042031909226.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-01T00:10:36+08:00" itemprop="datePublished">2020/11/01</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16041606361898.html" itemprop="url">
-		Nginx中配置SSL证书</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>Nginx默认访问使用的是http协议，如果要使用https协议，需要为网站配置SSL证书，因为https是安全的，对传输的数据进行了加密。使用https，必须要有一个域名，并且域名需要备案之后才可以使用。<br/>
-申请完SSL证书后，会得到两个文件，一个是.crt后缀的文件是证书文件，还有一个是.key文件，是密钥文件。<br/>
-
-
-			 
-			<a href="16041606361898.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-28T23:11:39+08:00" itemprop="datePublished">2020/10/28</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038978992618.html" itemprop="url">
-		Nginx控制浏览器缓存</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">原理图</h2>
-
-<p><img src="media/16038978992618/Nginx%E6%8E%A7%E5%88%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98.png" alt="Nginx控制浏览器缓存"/></p>
-
-
-
-			 
-			<a href="16038978992618.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>

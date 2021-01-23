@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2021-01-21T23:03:19+08:00</updated>
+  <updated>2021-01-23T17:31:01+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,107 @@
   </author>
   <generator uri="http://www.coderforart.com/">CoderForArt</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[常用命令]]></title>
+    <link href="jythons.github.io/16113857471276.html"/>
+    <updated>2021-01-23T15:09:07+08:00</updated>
+    <id>jythons.github.io/16113857471276.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">输出文件内容去除注释</h2>
+
+<pre><code class="language-text">more file.conf | grep ^[^#]
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ES集群]]></title>
+    <link href="jythons.github.io/16113278876159.html"/>
+    <updated>2021-01-22T23:04:47+08:00</updated>
+    <id>jythons.github.io/16113278876159.html</id>
+    <content type="html"><![CDATA[
+<h2 id="toc_0">1 集群的概念</h2>
+
+<blockquote>
+<p>ES 集群中主分片和副本分片是不能放到同一个服务器中的。这样可以保证主分片挂掉之后，数据依然可用。</p>
+</blockquote>
+
+<p><img src="media/16113278876159/ES%E9%9B%86%E7%BE%A4%E6%A6%82%E5%BF%B5.png" alt="ES集群概念"/><br/>
+<span id="more"></span><!-- more --></p>
+
+<h2 id="toc_1">2 搭建ES集群</h2>
+
+<blockquote>
+<p>搭建集群之前，如果之前有启动过，需要将节点数据删除。ES根目录下data文件夹下的node目录。</p>
+</blockquote>
+
+<p><strong>修改各个节点的配置文件</strong></p>
+
+<pre><code class="language-text"># 修改各个服务的名称, 每个服务的名称需要相同
+cluster.name: es-cluster-name
+# 修改节点名称，每个节点需要使用不同的名称
+node.name: es-node1
+# master代表它是一个主节点
+node.master: true
+# data代表它是一个数据节点
+node.data: true
+# 发现节点的host,配置上所有 节点的IP
+discovery.seed_hosts: [&quot;host1&quot;, &quot;host2&quot;]
+# 配置初始化时的master节点
+cluster.initial_master_nodes: [&quot;es-node1&quot;]
+</code></pre>
+
+<blockquote>
+<p>master设置为true的这些节点，如果当前主节点挂掉，其他的主节点就会被选举成master节点。<br/>
+主节点的作用是负责管理整个集群，负责创建和删除索引，也可以去管理非master的节点。<br/>
+数据节点主要是用于文档数据的处理，例如数据的增删改查等都是基于数据节点去处理。<br/>
+每个节点的配置除了节点名称不一样，其他的都是相同的。</p>
+</blockquote>
+
+<p><strong>启动</strong><br/>
+每个几点分别启动，启动命令<br/>
+进入到/usr/lcoal/elasticsearch/bin目录下</p>
+
+<pre><code class="language-text">切换为esuser用户
+su esuser
+启动ES
+./elasticsearch -d
+</code></pre>
+
+<blockquote>
+<p>使用时，我们连接任意节点的地址，效果都是一样的。</p>
+</blockquote>
+
+<h2 id="toc_2">3 集群脑裂</h2>
+
+<p>当发生网络中断或者网络抖动、服务器宕机等等情况，服务器集群可能会被划分为两个部分，各自有自己的master节点来进行管理，这种情况就是集群脑裂。<br/>
+<img src="media/16113278876159/ES%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82.png" alt="ES集群脑裂"/></p>
+
+<p>当服务器1宕机后，服务器2可能会被选举为master节点，这时服务器1恢复了，并且也是master节点，这时就会出现集群割裂问题，原因是，选举master节点有一个最小投票人数的选举，服务器1本身就是一台服务器。</p>
+
+<p><strong>脑裂问题解决</strong><br/>
+需要修改最小投票人数，默认值是1，新版本的ES在ES内部已经解决了脑裂的问题，老版本需要注意一下以下配置。</p>
+
+<pre><code class="language-text"># 这里的n是指master被设置成true的节点数量
+discovery.zen.minimum_master_nodes = (n/2)+1 
+</code></pre>
+
+<h2 id="toc_3">4 集群文档读写原理</h2>
+
+<p>1.首先会在服务器集群中选择一个协调节点，这个节点用于负责用户的请求和响应，当我们要做一个写操作，协调节点会做一个路由，根据hash算法去判断将数据写入到那个主分片内。<br/>
+2.假设路由到了P1主分片，他会转发到P1主分片，数据写入到主分片内后，主分片会将数据同步到R1副本分片。<br/>
+3.当数据同步完成之后，会将请求返回到协调节点，并相应给客户端。<br/>
+<img src="media/16113278876159/%E6%96%87%E6%A1%A3%E5%86%99%E5%8E%9F%E7%90%86.png" alt="文档写原理"/></p>
+
+<h2 id="toc_4">5 文档读原理</h2>
+
+<p>1.当请求过来，请求到了第一个服务器上，这个节点将充当协调节点，协调节点根据请求参数，来计算文档存储在那个分片上，由于主分片和副本分片的数据是相同的，所以，当有下一个请求过来时，可能会请求到副本分片上，主分片和副本分片分配轮询读操作。<br/>
+<img src="media/16113278876159/ES%E6%96%87%E6%A1%A3%E8%AF%BB%E5%8E%9F%E7%90%86.png" alt="ES文档读原理"/></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ES查询 - 批量操作]]></title>
@@ -2709,156 +2810,6 @@ sentinel failover-timeout mymaster 180000
 <blockquote>
 <p>当原来挂掉的主节点恢复了以后，他会自动变为slave节点，不在是master节点。</p>
 </blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redis 缓存过期机制]]></title>
-    <link href="jythons.github.io/16061468058717.html"/>
-    <updated>2020-11-23T23:53:25+08:00</updated>
-    <id>jythons.github.io/16061468058717.html</id>
-    <content type="html"><![CDATA[
-<ul>
-<li>（主动）定期删除</li>
-<li>（被动）惰性删除</li>
-</ul>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">定期删除</h2>
-
-<p>定期删除就是redis会定期去抽查缓存是否过期，默认1秒钟10次（可自己配置），如果过期就会自动删除，删除后就不可访问。</p>
-
-<pre><code class="language-text"># redis.conf
-# 设置自动检查数量
-hz 10
-</code></pre>
-
-<h2 id="toc_1">惰性删除</h2>
-
-<p>惰性删除是指客户端请求的时候，可能会请求到一个过期的key，这时redis会去检查这个key是否过期，如果过期就会删除，这种策略对CPU比较友好，不会占用过多的CPU，缺点就是内存会被一直占用。</p>
-
-<blockquote>
-<p>以上两种策略只针对设置了过期时间的key生效。</p>
-</blockquote>
-
-<h2 id="toc_2">内存淘汰管理机制</h2>
-
-<p>计算机的内存是有限的，redis自身带有内存管理机制（memory management）。<br/>
-可以在配置文件内设置一个阀值（maxmemory），如果超过了这个阀值，redis会自动去清理，会清理那些没有设置过期时间的数据。</p>
-
-<ul>
-<li>noeviction (默认)
-<ul>
-<li>内存满了之后不允许继续写入</li>
-</ul></li>
-<li>volatile-lru
-<ul>
-<li>针对时间，选择时间最少的去清理</li>
-</ul></li>
-<li>allkeys-lru
-<ul>
-<li>针对时间选择key去清理，任何key都有可能被清理掉</li>
-</ul></li>
-<li>volatile-lfu
-<ul>
-<li>针对设置过缓存时间的，在这些缓存里面清理较少使用的数据</li>
-</ul></li>
-<li>allkeys-lfu （推荐）
-<ul>
-<li>当内存满了之后，有新的key需要写入时，他会清理那些不经常使用的缓存清理掉</li>
-</ul></li>
-<li>volatile-random
-<ul>
-<li>针对设置了过期时间的缓存，随机清理掉，任何key 都可能删除</li>
-</ul></li>
-<li>allkeys-random
-<ul>
-<li>随机删除，任何的key都有可能删除掉</li>
-</ul></li>
-<li>volatile-ttl
-<ul>
-<li>设置了过期时间的，即将要过期的优先淘汰</li>
-</ul></li>
-</ul>
-
-<blockquote>
-<p>LRU 针对时间的，使用最少<br/>
-LFU 针对动作的，使用最少</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redis 主从复制原理]]></title>
-    <link href="jythons.github.io/16057135385527.html"/>
-    <updated>2020-11-18T23:32:18+08:00</updated>
-    <id>jythons.github.io/16057135385527.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">主从架构</h2>
-
-<p>单机单个节点，redis并发支持上万，但是随着业务的复杂度，redis的并发度还是会有上限的。因此还是需要在架构上进行优化。 <br/>
-主从架构是一种水平横向拓展的架构，读写分离。 主节点负责数据的写入，从节点负责读操作。<br/>
-<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.png" alt="redis主从架构"/></p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_1">主从原理</h2>
-
-<p>当主节点和从节点启动后，在从节点会有一些相关的配置，启动后，从节点会对主节点发出ping请求，这时主节点会将全量数据复制给从节点，也就是复制RDB。<br/>
-主节点会将内存里面的数据备份一个RDB文件，然后将RDB文件复制给从节点，从节点拿到主节点传过来的RDB文件后，将RDB文件的内容加载到从节点的内存当中。这是一个初始化的过程，当以后主节点有数据写入时，主节点会把命令发送给从节点，从节点将数据写入到内存。<br/>
-<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E5%8E%9F%E7%90%86.png" alt="redis主从原理"/><br/>
-当从节点下线一段时间后，再次恢复时，主节点会把下线这段时间的增量数据，一起同步给从节点。<br/>
-如果要使用主从的话，主节点必须开启持久化，<strong>如果主节点没有开启持久化，当主节点宕机后，再次上线之后，主节点会将从节点的数据清空</strong>。</p>
-
-<h2 id="toc_2">主从模式</h2>
-
-<p>redis主从模式，一般都是一主2从，从节点不会太多，因为主从复制其实就是文件的上传和下载，如果从节点太多，主从复制的时候会占用很大一部分内网的带宽。<br/>
-如果需要多个从节点，可以在从节点上继续配置主从模式，也就是从节点下还有从节点。<br/>
-<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%A8%A1%E5%BC%8F.png" alt="redis主从模式"/></p>
-
-<h2 id="toc_3">主从实践</h2>
-
-<blockquote>
-<p>在redis客户端，使用：info replication 命令，查看当前redis节点的主从配置信息。</p>
-</blockquote>
-
-<p>在redis.conf配置文件搜索 REPLICATION 找到配置主从的位置。配置主从时，只需要配置从节点即可，无需配置主节点。</p>
-
-<h3 id="toc_4">配置从节点</h3>
-
-<pre><code class="language-text"># 配置主节点的ip和端口
-replicaof &lt;masterip&gt; &lt;masterport&gt;
-
-# 配置主节点的登录密码（主节点没有配置密码，不需要配置该选项）
-masterauth &lt;master-password&gt;
-
-# 配置，只要是从节点，都开启，表示从节点只读，不进行写操作
-replica-read-only yes
-</code></pre>
-
-<h3 id="toc_5">无磁盘化复制</h3>
-
-<p>redis主从复制，默认是从节点将主节点保存在磁盘的rdb文件复制到从节点的磁盘，然后在将rdb文件恢复到内存。<br/>
-无磁盘化复制，是将主节点的数据从主节点的内存中直接读取并写入从节点的内存，这样的传输方式，是使用socket的方式进行传输。<br/>
-<img src="media/16057135385527/redis%E6%97%A0%E7%A3%81%E7%9B%98%E5%8C%96%E5%A4%8D%E5%88%B6.png" alt="redis无磁盘化复制"/></p>
-
-<pre><code class="language-text"># 数据同步策略：无磁盘化复制，yes 开启，no 关闭
-# 目前数据测试阶段，生产环境不建议使用 
-repl-diskless-sync no
-</code></pre>
-
-<blockquote>
-<p>redis数据同步策略有两种，一种是磁盘同步，也是默认的同步方式，redis新建一个进程，将数据写入rdb文件，这些rdb文件会定期向slave节点的磁盘同步。另一种数据同步的策略就是无磁盘化同步，master会创建一个新的进程，这个进程会向socket写入rdb文件，不向磁盘写入。如果服务器网络吞吐量比较大，可以使用第二种方式，提高效率。</p>
-</blockquote>
-
-<p>master节点可以配置一个时间，定期的向socket写入rdb文件。</p>
-
-<pre><code class="language-text"># 无磁盘化同步间隔时间，单位（秒）
-repl-diskless-sync-delay 5
-</code></pre>
 
 ]]></content>
   </entry>
