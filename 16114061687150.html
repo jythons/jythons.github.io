@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>  
 	  
-  	 - Jythons小站
+  	SpringBoot整合ElasticSearch - Jythons小站
   	
 	</title>
 
@@ -98,6 +98,8 @@
 						
 						  <li id=""><a target="_self" href="ES.html">ES</a></li>
 						
+						  <li id=""><a target="_self" href="mq.html">MQ</a></li>
+						
 						</ul>
 					</nav>
 
@@ -129,9 +131,72 @@
 			<div class="mid-col-container"> <div id="content" class="inner">
 
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name"></h1>
+		<h1 class="title" itemprop="name">SpringBoot整合ElasticSearch</h1>
 		<div class="entry-content" itemprop="articleBody">
-			
+			<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">添加依赖</h2>
+
+<pre><code class="language-text">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-data-elasticsearch&lt;/artifactId&gt;
+        &lt;version&gt;2.2.2.RELEASE&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+
+<blockquote>
+<p>注意SpringBoot安装的ES依赖，要保持与ES服务的版本保持一致。</p>
+</blockquote>
+
+<h2 id="toc_1">配置ES</h2>
+
+<pre><code class="language-text">spring:
+    data:
+        elasticsearch:
+            cluster-name: es6
+            cluster-nodes: 192.168.3.214:9300
+</code></pre>
+
+<blockquote>
+<p>使用ES客户端连接ES服务的时候，端口号使用的是9200，但是在java中要使用9300，这个需要注意一下。如果是ES集群的话，在nodes后面配置所有的节点地址，用逗号分隔。</p>
+</blockquote>
+
+<p><strong>Netty issue fix</strong></p>
+
+<pre><code class="language-text">@Configuration
+public class ESConfig {
+    /**
+     * 解决netty引起的issue
+     */
+    @PostConstruct
+    void init() {
+        System.setProperty(&quot;es.set.netty.runtime.available.processors&quot;, &quot;false&quot;);
+    } 
+}
+</code></pre>
+
+<blockquote>
+<p>将上面的类，放到和启动类同级目录下即可。</p>
+</blockquote>
+
+<h2 id="toc_2">使用ElasticsearchTemplate注意</h2>
+
+<blockquote>
+<p>不建议使用ElasticsearchTemplate对索引进行管理（创建索引，更新映射，删除索引）<br/>
+索引就像是数据库或者数据库中的表，我们平时是不会通过Java代码频繁的去创建修改删除数据库的<br/>
+我们只会针对数据做CURD的操作<br/>
+在ES中也是同理，我们尽量使用ElasticsearchTemplate对文档数据做CRUD的操作<br/>
+1.属性（FieldType）类型不灵活<br/>
+2.主分片与副本分片数无法设置</p>
+</blockquote>
+
 		</div>
 	</article>
 	<div class="share-comment">

@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	Kafka介绍与高性能分析 - Jythons小站
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	<script src="asset/highlightjs/highlight.pack.js"></script>
+	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
+<script>hljs.initHighlightingOnLoad();</script>
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">Jythons小站</a></h1>
+					<p class="subtitle">工作学习中的点点滴滴。</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+						
+						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+						
+						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+						
+						  <li id=""><a target="_self" href="ES.html">ES</a></li>
+						
+						  <li id=""><a target="_self" href="mq.html">MQ</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">Kafka介绍与高性能分析</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<p>Kafka是LinkedIn开源的分布式消息系统，目前归属于Apache顶级项目，Kafka主要特点是基于Pull的模式来处理消息消费，追求高吞吐量，一开始的目的就是用于日志收集和传输。<br/>
+Kafka0.8版本开始支持复制，不支持事务，对消息的重复、丢失、错误没有严格要求，适合产生大量数据的互联网服务的数据收集业务。<br/>
+<span id="more"></span><!-- more --></p>
+
+<h2 id="toc_0">1 Kafka特点</h2>
+
+<ul>
+<li>支持分布式，支持消息分区的概念，他的生产者和消费者是一一对应的，否则会造成资源的浪费</li>
+<li>跨平台，支持多种语言</li>
+<li>实时性，数据支持实时处理和离线处理，只要存储足够，即使消息堆积上亿级别也是可以的</li>
+<li>伸缩性，支持水平扩展 </li>
+</ul>
+
+<h2 id="toc_1">2 Kafka高性能</h2>
+
+<ul>
+<li>顺序写，Page Cache空中接力，高效读写
+<ul>
+<li>顺序写可以提高磁盘的利用率，消费者可以顺序不删除消费，避免磁盘的随机写</li>
+<li>Page Cache （TODO）</li>
+</ul></li>
+<li>高性能、高吞吐</li>
+<li>后台异步、主动Flush</li>
+<li>预读策略、IO调度</li>
+</ul>
+
+<h3 id="toc_2">2.1 Page Cache</h3>
+
+<p>Page Cache是操作系统主要实现的一种磁盘缓存机制，他的目的是减少磁盘IO的操作，因为频繁的磁盘IO操作，会影响系统的性能。具体来说就是讲磁盘中的数据缓存到内存中，把对磁盘的访问变成对内存的访问。<br/>
+<img src="media/16115028294909/PageCache.png" alt="PageCache"/><br/>
+上图所示，应用程序想获取相应的数据时，首先会在内存中查询，看是否存在想要的数据，如果存在，直接返回，若不存在，则需要对磁盘发起IO请求，获取到数据之后，首先会将数据加入到缓存页中，去做一个缓存，然后在返回给应用程序进程。<br/>
+当应用程序想将数据写入到磁盘中时，同样也会先去缓存区中check是否存在，如果不存在，会先在缓存区创建一个页，将数据先写入到缓存页中，操作系统会通过自行调度将数据写入硬盘中。 <br/>
+上图流程中，对数据一共做了4次copy，通常常用的是zerocopy。</p>
+
+<h3 id="toc_3">2.2 ZeroCopy</h3>
+
+<p><img src="media/16115028294909/zerocopy.png" alt="zerocopy"/><br/>
+Kafka内部使用了大量的PageCache，ZeroCopy，这是它高性能高吞吐的重要原因。<br/>
+上图从磁盘将数据写入到内核缓冲区后，直接将数据写入到网卡接口，发送给消费者去消费，如果有多个消费者，也都是从同一个缓冲区直接写入，从而实现了0拷贝。</p>
+
+<h2 id="toc_4">3 Kafka集群模式</h2>
+
+<p><img src="media/16115028294909/kafka%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F.png" alt="kafka集群模式"/><br/>
+Kafka使用Zookeeper来协调，kafka大部分时间都是采用内存级别的存储，当生产者和消费者速率相当的时候，它很少回去向磁盘中存取数据，并且它采用内存级别的副本来实现数据的可靠性，当一个节点宕机后，会由其他节点继续提供服务。</p>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2020
+Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+  
+    
+
+
+
+</body>
+</html>

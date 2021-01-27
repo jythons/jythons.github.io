@@ -4,7 +4,7 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2021-01-23T17:31:06+08:00</updated>
+  <updated>2021-01-27T08:31:38+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,11 +14,494 @@
 
   
   <entry>
-    <title type="html"><![CDATA[]]></title>
+    <title type="html"><![CDATA[RabbitMQ安装]]></title>
+    <link href="jythons.github.io/16116746644581.html"/>
+    <updated>2021-01-26T23:24:24+08:00</updated>
+    <id>jythons.github.io/16116746644581.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">下载所需软件包：</h2>
+
+<p>erlang、socat、rabbitmq-server的rpm包</p>
+
+<h2 id="toc_1">安装</h2>
+
+<pre><code class="language-text">rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm
+rpm -ivh socat-17.3.2-5.el7.lux.x86_64.rpm
+rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
+</code></pre>
+
+<h2 id="toc_2">启动</h2>
+
+<pre><code class="language-text">sbin]$ ./rabbitmq-server -detached
+</code></pre>
+
+<h2 id="toc_3">启动管理工具</h2>
+
+<pre><code class="language-text">sbin]$ ./rabbitmq-plugins enable rabbitmq_management
+</code></pre>
+
+<blockquote>
+<p>使用RabbitMQ 管理工具登录时，提示guest用户只能本地登录，解决方法如下：<br/>
+./rabbitmqctl add_user jythons jythons<br/>
+./rabbitmqctl set_permissions -p / jythons &quot;.<em>&quot; &quot;.</em>&quot; &quot;.*&quot;<br/>
+./rabbitmqctl set_user_tags jythons administrator</p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RabbitMQ]]></title>
+    <link href="jythons.github.io/16115835473812.html"/>
+    <updated>2021-01-25T22:05:47+08:00</updated>
+    <id>jythons.github.io/16115835473812.html</id>
+    <content type="html"><![CDATA[
+<p>RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据，RabbitMQ是使用Erlang语言来编写的，并且RabbitMQ是基于AMQP协议的。<br/>
+<span id="more"></span><!-- more --></p>
+
+<h2 id="toc_0">1 AMQP协议</h2>
+
+<p>AMQP协议是具有现代特征的二进制协议，是一个提供统一消息服务的应用层标准高级消息队列协议，是应用成协议的一个开放标准，为面向消息值得中间件设计。</p>
+
+<h3 id="toc_1">1.1 AMQP架构图</h3>
+
+<p><img src="media/16115835473812/AMQP%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="AMQP架构图"/><br/>
+Publisher生产者，将消息投递到RabbitMQ的Exchange交换机，Exchange与MessageQueue相关联，然后Consumer消费者从Message队列中获取响应的消息。</p>
+
+<h3 id="toc_2">1.2 AMQP核心概念</h3>
+
+<p><strong>Server</strong>：又称Broker，接受客户端的连接，实现AMQP实体服务<br/>
+<strong>Connection</strong>：连接，应用程序与Broker的网络连接<br/>
+<strong>Channel</strong>：网络信道，几乎所有的操作都在Channel中进行，Channel是进行消息读写的通道。客户端可建立多个CHannel，每个Channel代表一个会话任务<br/>
+<strong>Message</strong>：消息，服务器和应用程序之间传送的数据，由Properties和Body组成。Properties可以对消息进行修饰，比如消息的优先级、延迟等高级特性；Body则就是消息体内容<br/>
+<strong>Virtual Host</strong>：虚拟地址，用于进行逻辑隔离，最上层的消息路由。一个Virtual Host里面可以有若干个Exchange和Queue，同一个Virtual Host里面不能有相同名称的Exchange或Queue<br/>
+<strong>Exchange</strong>：交换机，接受消息，根据路由键转发消息到绑定的队列<br/>
+<strong>Binding</strong>：Exchange和Queue之间的虚拟连接，binding中可以包含routing key<br/>
+<strong>Routing key</strong>: 一个路由规则，虚拟机可用它来确定如何路由一个特定消息<br/>
+<strong>Queue</strong>：也称为Message Queue，消息队列，保存消息并将它们转发给消费者</p>
+
+<h2 id="toc_3">2 如何保障消息100%投递成功</h2>
+
+<h3 id="toc_4">2.1 生产端的可靠性投递</h3>
+
+<ul>
+<li>保障消息的成功发出</li>
+<li>保障MQ节点的成功接收</li>
+<li>发送端收到MQ节点（Broker）确认应答</li>
+<li>完善的消息进行补偿机制</li>
+</ul>
+
+<h3 id="toc_5">2.2 解决方案</h3>
+
+<ul>
+<li>消息落库，对消息状态进行打标（适合流量小的系统 ）</li>
+<li>消息的延迟投递，做二次确认，回调检查</li>
+</ul>
+
+<h2 id="toc_6">3 消费端幂等性保障</h2>
+
+<ul>
+<li>唯一ID + 指纹码机制
+<ul>
+<li>唯一ID + 指纹码机制，利用数据库主键去重</li>
+<li>select count(1) from table where id=唯一ID+指纹码</li>
+<li>好处：实现简单</li>
+<li>坏处：高并发下有数据库写入的性能瓶颈</li>
+</ul></li>
+<li>利用Redis原子特性实现
+<ul>
+<li>考虑数据是否需要落库，如果落库，怎么保证Redis和db的数据原子性</li>
+<li>如果不落库，怎样设置定时同步策略</li>
+</ul></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Kafka介绍与高性能分析]]></title>
+    <link href="jythons.github.io/16115028294909.html"/>
+    <updated>2021-01-24T23:40:29+08:00</updated>
+    <id>jythons.github.io/16115028294909.html</id>
+    <content type="html"><![CDATA[
+<p>Kafka是LinkedIn开源的分布式消息系统，目前归属于Apache顶级项目，Kafka主要特点是基于Pull的模式来处理消息消费，追求高吞吐量，一开始的目的就是用于日志收集和传输。<br/>
+Kafka0.8版本开始支持复制，不支持事务，对消息的重复、丢失、错误没有严格要求，适合产生大量数据的互联网服务的数据收集业务。<br/>
+<span id="more"></span><!-- more --></p>
+
+<h2 id="toc_0">1 Kafka特点</h2>
+
+<ul>
+<li>支持分布式，支持消息分区的概念，他的生产者和消费者是一一对应的，否则会造成资源的浪费</li>
+<li>跨平台，支持多种语言</li>
+<li>实时性，数据支持实时处理和离线处理，只要存储足够，即使消息堆积上亿级别也是可以的</li>
+<li>伸缩性，支持水平扩展 </li>
+</ul>
+
+<h2 id="toc_1">2 Kafka高性能</h2>
+
+<ul>
+<li>顺序写，Page Cache空中接力，高效读写
+<ul>
+<li>顺序写可以提高磁盘的利用率，消费者可以顺序不删除消费，避免磁盘的随机写</li>
+<li>Page Cache （TODO）</li>
+</ul></li>
+<li>高性能、高吞吐</li>
+<li>后台异步、主动Flush</li>
+<li>预读策略、IO调度</li>
+</ul>
+
+<h3 id="toc_2">2.1 Page Cache</h3>
+
+<p>Page Cache是操作系统主要实现的一种磁盘缓存机制，他的目的是减少磁盘IO的操作，因为频繁的磁盘IO操作，会影响系统的性能。具体来说就是讲磁盘中的数据缓存到内存中，把对磁盘的访问变成对内存的访问。<br/>
+<img src="media/16115028294909/PageCache.png" alt="PageCache"/><br/>
+上图所示，应用程序想获取相应的数据时，首先会在内存中查询，看是否存在想要的数据，如果存在，直接返回，若不存在，则需要对磁盘发起IO请求，获取到数据之后，首先会将数据加入到缓存页中，去做一个缓存，然后在返回给应用程序进程。<br/>
+当应用程序想将数据写入到磁盘中时，同样也会先去缓存区中check是否存在，如果不存在，会先在缓存区创建一个页，将数据先写入到缓存页中，操作系统会通过自行调度将数据写入硬盘中。 <br/>
+上图流程中，对数据一共做了4次copy，通常常用的是zerocopy。</p>
+
+<h3 id="toc_3">2.2 ZeroCopy</h3>
+
+<p><img src="media/16115028294909/zerocopy.png" alt="zerocopy"/><br/>
+Kafka内部使用了大量的PageCache，ZeroCopy，这是它高性能高吞吐的重要原因。<br/>
+上图从磁盘将数据写入到内核缓冲区后，直接将数据写入到网卡接口，发送给消费者去消费，如果有多个消费者，也都是从同一个缓冲区直接写入，从而实现了0拷贝。</p>
+
+<h2 id="toc_4">3 Kafka集群模式</h2>
+
+<p><img src="media/16115028294909/kafka%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F.png" alt="kafka集群模式"/><br/>
+Kafka使用Zookeeper来协调，kafka大部分时间都是采用内存级别的存储，当生产者和消费者速率相当的时候，它很少回去向磁盘中存取数据，并且它采用内存级别的副本来实现数据的可靠性，当一个节点宕机后，会由其他节点继续提供服务。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[RabbitMQ集群架构模型和原理解析]]></title>
+    <link href="jythons.github.io/16114984325290.html"/>
+    <updated>2021-01-24T22:27:12+08:00</updated>
+    <id>jythons.github.io/16114984325290.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">1 RabbitMQ 主备模式</h2>
+
+<p>Warren，一个主/备方案（主节点如果挂了，从节点提供服务，和ActiveMQ利用Zookeeper做主/备一样）<br/>
+<img src="media/16114984325290/RabbitMQ%E4%B8%BB%E5%A4%87%E5%8E%9F%E7%90%86%E5%9B%BE.png" alt="RabbitMQ主备原理图"/><br/>
+它是由HaProxy路由到主节点，由主节点提供服务，当主节点发生故障时，HaProxy会帮我们把请求路由到备份节点，继续提供服务。当原来的主节点恢复了之后，他会成为原来备份节点的备份节点。</p>
+
+<h3 id="toc_1">1.1 主备模式 - HaProxy配置</h3>
+
+<pre><code class="language-text"># 集群名字 
+listen rabbitmq_cluster
+# 配置TCP模式
+bind 0.0.0.0:5672
+# 简单的轮询
+mode tcp
+# 主节点
+balance roundrobin
+# 主节点，5秒钟检查一次，如果连续两次失败，则切换主节点
+server bhz76 192.168.11.76:5672 check inter 5000 rise 2 fall 2
+# 备用节点
+server bhz77 192.168.11.77:5672 backup check inter 5000 rise 2 fall 2
+</code></pre>
+
+<h2 id="toc_2">2 远程模式</h2>
+
+<p>远程模式，是远距离通信和复制，可以实现双活的一种模式，简称Shovel模式。<br/>
+所谓Shovel就是我们可以把消息进行不同数据中心的复制工作，可以跨地域的让两个mq集群互联<br/>
+这种模式，目前使用比较少，因为他的可靠性有待提高，并且他的配置也比较麻烦。</p>
+
+<h3 id="toc_3">2.1 Shovel架构模型</h3>
+
+<p>当我们请求到RabbitMQ服务时，请求可以转发到下游的RabbitMQ服务去处理，他不但可以起到容灾的作用，也可以提高请求处理的效率。<br/>
+比如有一个订单系统，使用了Shovel插件后，模型变成了近端同步确认，远端异步确认的方式，大大提高了订单确认速度，并且还能保证可靠性。<br/>
+<img src="media/16114984325290/Shovel%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B.png" alt="Shovel架构模型"/></p>
+
+<h3 id="toc_4">2.2 Shovel集群配置步骤</h3>
+
+<ul>
+<li>启动RabbitMQ插件
+<ul>
+<li>rabbitmq-plugins enable amqp_client</li>
+<li>rabbitmq-plugins enable rabbitmq_shovel</li>
+</ul></li>
+<li>创建rabbitmq.config文件</li>
+<li>源与目的地服务器使用相同的配置文件</li>
+</ul>
+
+<h2 id="toc_5">3 镜像模式</h2>
+
+<p>集群模式非常经典的就是Mirror镜像模式，保证100%数据不丢失。<br/>
+这种模式在实际工作中用的最多，并且实现集群非常简单，一般的互联网大厂都会构建这种镜像集群模式。<br/>
+Mirror镜像队列是高可靠的，它是内部是使用的数据同步，RabbitMQ底层是使用Erlang去实现的，是天然的交换机的方式，和原生socket一样低的延迟，在数据同步的时候，他的性能是非常好的。<br/>
+并且我们在搭建集群的时候，一般采用奇数个节点，奇数个节点可以防止集群发生脑裂的现象。</p>
+
+<h3 id="toc_6">3.1 RabbitMQ集群架构图</h3>
+
+<p><img src="media/16114984325290/RabbitMQ%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="RabbitMQ集群架构图"/><br/>
+最底层的三个是完全相同的RabbitMQ服务，中间层是两个HaProxy代理，负责去路由请求，其中使用KeepAlived实现故障转移，高可用。<br/>
+这种部署的方式是有缺陷的，它不能支持横向的扩展，因为他的数据存储能力是有限的，当流量比较大的时候，由于消费能力不足，导致数据堆积比较大，这时即使在扩展一个服务，只会增加服务的负担，增加几个节点，就需要多同步几份数据。如果要更好的实现横向扩展，可以使用多活模式。</p>
+
+<h2 id="toc_7">4 多活模式</h2>
+
+<p>这种模式也是实现异地数据复制的主流模式，因为Shovel模式配置比较复杂，所以一般来说实现异地集群都是使用这种双活或者多活模型来实现的。<br/>
+这种模型需要依赖RabbitMQ的federation插件，可以实现持续的可靠的AMQP数据通信，多活模式实际配置与应用非常简单。<br/>
+RabbitMQ部署架构采用双中心模式（多中心），那么在两套（或多套）数据中心中各部署一套RabbitMQ集群，各中心的RabbitMQ服务除了需要为业务提供正常的消息服务外，中心之间还需要实现部分队列消息共享。 </p>
+
+<h3 id="toc_8">4.1 多活集群架构图</h3>
+
+<p><img src="media/16114984325290/%E5%A4%9A%E6%B4%BB%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="多活集群架构图"/></p>
+
+<h3 id="toc_9">4.2 多活模式 - Federation插件</h3>
+
+<p>Federation插件是一个不需要构建Cluster，而在Brokers之间传输消息的高性能插件，Federation插件可以在Brokers或者Cluster之间传输消息，连接的双方可以使用不同的users和virtual hosts，双方也可以使用版本不同的RabbitMQ和Erlang。Federation插件使用AMQP协议通讯，可以接受不连续的传输。</p>
+
+<p>Federation Exchanges，可以看成Downstream从Upstream主动拉取消息，但并不是拉取所有消息，必须是在Downstream上已经明确定义Bindings关系的Exchange，也就是有实际的物理Queue来接受消息，才会从Upstream拉取消息到Downstream。使用AMQP协议实施代理间通信，Downstream会将绑定关系组合在一起，绑定、解除绑定命令将发送到Upstream交换机。因此，Federation Exchange只接受具有订阅的消息（本处贴出官方图来说明）；<br/>
+<img src="media/16114984325290/Federation%E6%8F%92%E4%BB%B6.png" alt="Federation插件"/></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[分布式消息队列（MQ）]]></title>
+    <link href="jythons.github.io/16114877964866.html"/>
+    <updated>2021-01-24T19:29:56+08:00</updated>
+    <id>jythons.github.io/16114877964866.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">1 应用场景</h2>
+
+<ul>
+<li>服务解耦</li>
+<li>削峰填谷</li>
+<li>异步化缓冲</li>
+</ul>
+
+<h2 id="toc_1">2 应用思考点</h2>
+
+<ul>
+<li>生产端可靠性投递
+<ul>
+<li>生产端消息发布出去后，要保持和数据库的原子性</li>
+</ul></li>
+<li>消费端幂等 
+<ul>
+<li>消费端不能消费一次</li>
+</ul></li>
+<li>高可用</li>
+<li>低延迟</li>
+<li>消息可靠性</li>
+<li>消息的堆积能力
+<ul>
+<li>消息在高峰期最大能堆积的程度</li>
+</ul></li>
+<li>扩展性
+<ul>
+<li>是否能够支持无感知的扩容</li>
+</ul></li>
+</ul>
+
+<h2 id="toc_2">3 技术选型关注点</h2>
+
+<p>技术选型主要关注一下几点：</p>
+
+<ul>
+<li>各个MQ的性能、优缺点、相对的业务场景</li>
+<li>集群架构模式，分布式、可扩展、高可用、可维护性</li>
+<li>综合成本问题，集群规模，人员成本</li>
+<li>未来的方向、规划、思考</li>
+</ul>
+
+<h3 id="toc_3">3.1 ActiveMQ</h3>
+
+<p>如果系统存在大流量，高并发场景，ActiveMQ是不适合的，它适合一些中小型公司或者公司业务边缘模块的系统使用。</p>
+
+<h3 id="toc_4">3.2 RabbitMQ</h3>
+
+<p>RabbitMQ比较适合大流量，高并发等应用场景，他有镜像队列来保证数据不会丢失，对可靠性和高可用有保障。但是他的横向拓展能力不是很好。</p>
+
+<h4 id="toc_5">3.2.1 RabbitMQ四种集群架构</h4>
+
+<h5 id="toc_6">3.2.1.1 主备模式</h5>
+
+<p>主备模式可以理解为热备份，他分为master和slave，master是对外开放的，主要用于读写操作，而slave通常用于备份，当master节点挂掉之后，slave节点会被升级为master继续对外提供服务。</p>
+
+<h5 id="toc_7">3.2.1.2 远程模式</h5>
+
+<p>远程模式是RabbitMQ早期版本提供的多活的模式，主要是提供异地容灾转移的，当当前节点处理不过来请求时，可以转发到下游节点去处理（架构简单，配置复杂）</p>
+
+<h5 id="toc_8">3.2.1.3 镜像模式</h5>
+
+<p>镜像模式是业界使用较多的模式，可以保证消息的可靠性。</p>
+
+<h5 id="toc_9">3.2.1.4 多活模式</h5>
+
+<p>多活模式和远程模式差不多，主要用于异地容灾多活，数据转储和数据转发的功能</p>
+
+<h3 id="toc_10">3.3 RocketMQ</h3>
+
+<p>他的可拓展性比较好，高可用性也不错，但是可维护性相对比较麻烦</p>
+
+<h3 id="toc_11">3.4 kafka</h3>
+
+<p>kafka可以在很廉价的机器上发挥出很高的性能</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Logstatsh]]></title>
+    <link href="jythons.github.io/16114678960162.html"/>
+    <updated>2021-01-24T13:58:16+08:00</updated>
+    <id>jythons.github.io/16114678960162.html</id>
+    <content type="html"><![CDATA[
+<p>logstash主要是用于数据库的数据采集、转换、充实，然后输出到ES。<br/>
+<span id="more"></span><!-- more --></p>
+
+<h2 id="toc_0">安装</h2>
+
+<p>下载安装包，解压即可。</p>
+
+<h2 id="toc_1">数据同步</h2>
+
+<p>在logstash根目录下创建sync目录。创建配置文件：logstash-db-sync.conf。<br/>
+接下来下载mysql驱动到sync目录下。（msyql-connector-java-5.1.41.jar）<br/>
+配置文件内容如下：</p>
+
+<pre><code class="language-text">input {
+    jdbc {
+        # 设置MySQL/MariaDB数据库URL以及数据库名称
+        jdbc_connection_string =&gt; &quot;jdbc:mysql://192.168.1.6：3306/dbname?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&quot;
+        jdbc_user =&gt; &quot;root&quot;
+        jdbc_password =&gt; &quot;root&quot;
+        # 数据库驱动所在位置，可以是绝对路径或者相对路径
+        jdbc_driver_library =&gt; &quot;./msyql-connector-java-5.1.41.jar&quot;
+        # 驱动类名
+        jdbc_driver_class =&gt; &quot;com.mysql.jdbc_Driver&quot;
+        # 开启分页
+        jdbc_page_size =&gt; &quot;10000&quot;
+        # 执行的sql文件路径
+        statement_filepath =&gt; &quot;/usr/local/logstash-6.4.3/sync/example.sql&quot;
+        # 设置定时任务间隔，含义：分、时、天、月、年，全部为*默认含义为每分钟跑一次
+        schedule =&gt; &quot;* * * * *&quot;
+        # 索引类型
+        type =&gt; &quot;_doc&quot;
+        # 是否开启记录上次追踪的结果，也就是上次更新的时间，这个会记录到 last_run_meatdata_path 的文件
+        use_column_value =&gt; true
+        # 记录上一次追踪的结果值
+        last_run_metadata_path =&gt; &quot;/usr/local/logstash-6.4.3/sync/track_time&quot;
+        # 如果use_column_value为true，配置本参数，追踪的column名，可以是自增id或者时间
+        tracking_column =&gt; &quot;updated_time&quot;
+        # tracking_column对应的字段的类型
+        tracking_column_type =&gt; &quot;timestamp&quot;
+        # 是否清除 last_run_metadata_path 的记录，true则每次都从开头开始查询所有的数据库记录
+        clean_run =&gt; false
+        # 数据库字段名称大写转小写
+        lowercase_column_names =&gt; false
+    }
+}
+output {
+    elasticsearch {
+        # es地址
+        hosts =&gt; [&quot;192.168.3.214:9200&quot;]
+        # 同步的索引名
+        index =&gt; &quot;index-name&quot;
+        # 设置_docID和数据相同
+        document_id =&gt; &quot;%{id}&quot;
+        
+        # 定义模板名称
+        template_name =&gt; &quot;myik&quot;
+        # 模板所在位置
+        template =&gt; &quot;/usr/local/logstash-6.4.3/sync/logstash-ik.json&quot;
+        # 重写模板
+        template_overwrite =&gt; true
+        # 默认为true, false关闭logstash自动管理模板功能，如果自定义模板，则设置为false
+        manage_template =&gt; false
+    }
+    # 日志输出
+    stdout {
+        codec =&gt; json_lines
+    }
+}
+</code></pre>
+
+<h2 id="toc_2">启动logstash</h2>
+
+<pre><code class="language-text">./bin/logstash -f /usr/local/logstash-6.4.3/sync/logstash-db-sync.conf
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SpringBoot整合ElasticSearch]]></title>
     <link href="jythons.github.io/16114061687150.html"/>
     <updated>2021-01-23T20:49:28+08:00</updated>
     <id>jythons.github.io/16114061687150.html</id>
     <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+
+<h2 id="toc_0">添加依赖</h2>
+
+<pre><code class="language-text">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-data-elasticsearch&lt;/artifactId&gt;
+        &lt;version&gt;2.2.2.RELEASE&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+
+<blockquote>
+<p>注意SpringBoot安装的ES依赖，要保持与ES服务的版本保持一致。</p>
+</blockquote>
+
+<h2 id="toc_1">配置ES</h2>
+
+<pre><code class="language-text">spring:
+    data:
+        elasticsearch:
+            cluster-name: es6
+            cluster-nodes: 192.168.3.214:9300
+</code></pre>
+
+<blockquote>
+<p>使用ES客户端连接ES服务的时候，端口号使用的是9200，但是在java中要使用9300，这个需要注意一下。如果是ES集群的话，在nodes后面配置所有的节点地址，用逗号分隔。</p>
+</blockquote>
+
+<p><strong>Netty issue fix</strong></p>
+
+<pre><code class="language-text">@Configuration
+public class ESConfig {
+    /**
+     * 解决netty引起的issue
+     */
+    @PostConstruct
+    void init() {
+        System.setProperty(&quot;es.set.netty.runtime.available.processors&quot;, &quot;false&quot;);
+    } 
+}
+</code></pre>
+
+<blockquote>
+<p>将上面的类，放到和启动类同级目录下即可。</p>
+</blockquote>
+
+<h2 id="toc_2">使用ElasticsearchTemplate注意</h2>
+
+<blockquote>
+<p>不建议使用ElasticsearchTemplate对索引进行管理（创建索引，更新映射，删除索引）<br/>
+索引就像是数据库或者数据库中的表，我们平时是不会通过Java代码频繁的去创建修改删除数据库的<br/>
+我们只会针对数据做CURD的操作<br/>
+在ES中也是同理，我们尽量使用ElasticsearchTemplate对文档数据做CRUD的操作<br/>
+1.属性（FieldType）类型不灵活<br/>
+2.主分片与副本分片数无法设置</p>
+</blockquote>
 
 ]]></content>
   </entry>
@@ -2446,316 +2929,6 @@ public class UserTokenInterceptor implements HandlerInterceptor {
 <blockquote>
 <p>以上配置好之后，还需要将拦截器注册一下才可使用。</p>
 </blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SpringSession yml配置]]></title>
-    <link href="jythons.github.io/16073500415348.html"/>
-    <updated>2020-12-07T22:07:21+08:00</updated>
-    <id>jythons.github.io/16073500415348.html</id>
-    <content type="html"><![CDATA[
-<p>使用SpringSession，需要先引入依赖，查看Maven Dependency Spring Session, 目前都是使用分布式的方式部署，因此使用redis会好一点。</p>
-
-<h2 id="toc_0">Application配置</h2>
-
-<pre><code class="language-text">spring:
-    session:
-        store-type: redis
-</code></pre>
-
-<h2 id="toc_1">配置启动</h2>
-
-<p>在启动类里面配置启动</p>
-
-<pre><code class="language-text">// 开启使用redis作为Spring Session
-@EnableRedisHttpSession
-</code></pre>
-
-<h2 id="toc_2">使用方法</h2>
-
-<pre><code class="language-text">public Object setSession(HttpServletRequest request) {
-    HttpSession session = request.getSession();
-    session.setAttribute(&quot;userInfo&quot;, &quot;XXX&quot;);
-    session.setMaxInactiveInterval(3600);
-    session.getAttribute(&quot;userInfo);
-    session.removeAttribute(&quot;userInfo&quot;);
-}
-</code></pre>
-
-<blockquote>
-<p>因为使用Spring Session，需要安装Spring安全框架依赖，因为安装了这个依赖后，程序每次访问都需要登录，很麻烦，因此在启动类将它排除即可。排除方法见下方：</p>
-</blockquote>
-
-<pre><code class="language-text">@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Maven Dependency]]></title>
-    <link href="jythons.github.io/16073491976884.html"/>
-    <updated>2020-12-07T21:53:17+08:00</updated>
-    <id>jythons.github.io/16073491976884.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<pre><code class="language-text">&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
-    &lt;exclusions&gt;
-        &lt;exclusion&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;
-        &lt;/exclusion&gt;
-    &lt;/exclusions&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
-    &lt;!-- 打包war [2] 移除自带内置tomcat --&gt;
-    &lt;exclusions&gt;
-        &lt;exclusion&gt;
-            &lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-        &lt;/exclusion&gt;
-    &lt;/exclusions&gt;
-&lt;/dependency&gt;
-
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-aop&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-configuration-processor&lt;/artifactId&gt;
-    &lt;optional&gt;true&lt;/optional&gt;
-&lt;/dependency&gt;
-        
-&lt;!-- redis --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
-&lt;/dependency&gt;
-
-&lt;!-- SpringSession --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.session&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-session-data-redis&lt;/artifactId&gt;
-&lt;/dependency&gt;
-
-&lt;!-- Spring 安全框架 --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
-&lt;/dependency&gt;
-
-&lt;!-- apache 工具类 --&gt;
-&lt;dependency&gt;
-      &lt;groupId&gt;commons-codec&lt;/groupId&gt;
-      &lt;artifactId&gt;commons-codec&lt;/artifactId&gt;
-      &lt;version&gt;1.11&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-      &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
-      &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
-      &lt;version&gt;3.4&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-      &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
-      &lt;artifactId&gt;commons-io&lt;/artifactId&gt;
-      &lt;version&gt;1.3.2&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;!-- mysql驱动 --&gt;
-&lt;dependency&gt;
-      &lt;groupId&gt;mysql&lt;/groupId&gt;
-      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
-      &lt;version&gt;5.1.41&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;!-- mybatis --&gt;
-&lt;dependency&gt;
-      &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
-      &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
-      &lt;version&gt;2.1.0&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;!-- 通用mapper逆向工具 --&gt;
-&lt;dependency&gt;
-      &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;
-      &lt;artifactId&gt;mapper-spring-boot-starter&lt;/artifactId&gt;
-      &lt;version&gt;2.1.5&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;!--pagehelper --&gt;
-&lt;dependency&gt;
-      &lt;groupId&gt;com.github.pagehelper&lt;/groupId&gt;
-      &lt;artifactId&gt;pagehelper-spring-boot-starter&lt;/artifactId&gt;
-      &lt;version&gt;1.2.12&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;!--引入日志依赖 抽象层 与 实现层--&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
-    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
-    &lt;version&gt;1.7.21&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
-    &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
-    &lt;version&gt;1.7.21&lt;/version&gt;
-&lt;/dependency&gt;
-
-&lt;!-- 打包war [3] 添加依赖 --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
-    &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
-    &lt;scope&gt;provided&lt;/scope&gt;
-&lt;/dependency&gt;
-
-&lt;!-- html模版 --&gt;
-&lt;dependency&gt;
-      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-      &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[缓存雪崩预防]]></title>
-    <link href="jythons.github.io/16068348833531.html"/>
-    <updated>2020-12-01T23:01:23+08:00</updated>
-    <id>jythons.github.io/16068348833531.html</id>
-    <content type="html"><![CDATA[
-<p>当缓存大面积失效，请求会全部打到数据库上，这种情况就是雪崩。</p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">预防方法</h2>
-
-<ul>
-<li>设置缓存用不过期</li>
-<li>过期时间错开</li>
-<li>多级缓存</li>
-<li>采购第三方Redis</li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SpringBoot集成Redis集群]]></title>
-    <link href="jythons.github.io/16067500364861.html"/>
-    <updated>2020-11-30T23:27:16+08:00</updated>
-    <id>jythons.github.io/16067500364861.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">使用集群的配置</h2>
-
-<pre><code class="language-text">spring:
-    redis:
-        password: mima
-        cluster:
-            nodes: 192.168.1.201:6379,192.168.1.202:6379,192.168.1.203:6379,192.168.1.204:6379,192.168.1.205:6379,192.168.1.206:6379,
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Redis-Cluster集群]]></title>
-    <link href="jythons.github.io/16067481675978.html"/>
-    <updated>2020-11-30T22:56:07+08:00</updated>
-    <id>jythons.github.io/16067481675978.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">集群配置</h2>
-
-<p>打开redis配置文件，找到 REDIS CLUSTER 配置块。修改以下配置：</p>
-
-<pre><code class="language-text"># 开启redis-cluster集群配置
-cluster-enabled yes
-# 每一个节点在集群中的配置文件, 该文件有redis自己去维护 
-cluster-config-file nodes-6379.conf
-# 超时时间，超时自动切换
-cluster-node-timeout 5000
-# aof模式
-appendonly yes
-# aof日志文件名
-appendfilename &quot;appendonly.aof&quot;
-</code></pre>
-
-<blockquote>
-<p>构建集群时，需要将.rdb文件和.aof文件删除或者清空，否则会报错。</p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_1">构建集群</h2>
-
-<blockquote>
-<p>早期，构建redis集群使用的是ruby去构建的，在redis源码目录下，进入到src目录，下面有一个.rb的ruby脚本，通过这个脚本来构建集群，新版本不在使用这个方式。</p>
-</blockquote>
-
-<p>新版本构建方法</p>
-
-<pre><code class="language-text">redis-cli --cluster help 回车，可以查看命令使用方法
-
-# create 后面的地址是集群所有节点的地址，--cluster-replicas表示slave节点和master节点的比值，1就是1个master对应1个slave
-redis-cli --cluster create 192.168.1.201:6379 192.168.1.202:6379 192.168.1.203:6379 192.168.1.204:6379 192.168.1.205:6379 192.168.1.206:6379 --cluster-replicas 1
-</code></pre>
-
-<blockquote>
-<p>创建集群时，如果报错没有权限，在命令开头加上：-a 密码，即可</p>
-</blockquote>
-
-<p>检查集群是否创建成功</p>
-
-<pre><code class="language-text">redis-cli --cluster 192.168.1.201:6379 
-# 会输出集群各个节点信息
-</code></pre>
-
-<h2 id="toc_2">slot槽节点</h2>
-
-<p>槽节点是在master节点上平均分配的，slave节点是没有槽节点的，数据就是保存在这个槽位里面的。<br/>
-<img src="media/16067481675978/slot%E8%8A%82%E7%82%B9.png" alt="slot节点"/></p>
-
-<h3 id="toc_3">槽slot怎么存储</h3>
-
-<p>当我们存储一个key的时候，redis会根据这个key去hash一个值，然后取余槽节点总数，计算出来的值就是这个槽位的位置。<br/>
-<img src="media/16067481675978/slot%E5%AD%98%E5%82%A8.png" alt="slot存储"/></p>
-
-<blockquote>
-<p>查看集群信息，cluster info<br/>
-查看节点信息，cluster nodes</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SpringBoot集成Redis哨兵]]></title>
-    <link href="jythons.github.io/16067477234035.html"/>
-    <updated>2020-11-30T22:48:43+08:00</updated>
-    <id>jythons.github.io/16067477234035.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">哨兵模式配置</h2>
-
-<pre><code class="language-text">spring:
-    redis:
-        database: 1
-        password: imooc
-        sentinel:
-            master: master-redis # master节点名称
-            nodes： 192.168.1.191:26379,192.168.1.191:26379,192.168.1.191:26379 # 哨兵节点地址
-</code></pre>
 
 ]]></content>
   </entry>

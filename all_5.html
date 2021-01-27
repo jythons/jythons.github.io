@@ -98,6 +98,8 @@
 						
 						  <li id=""><a target="_self" href="ES.html">ES</a></li>
 						
+						  <li id=""><a target="_self" href="mq.html">MQ</a></li>
+						
 						</ul>
 					</nav>
 
@@ -130,6 +132,180 @@
 <div itemscope itemtype="http://schema.org/Blog">
 
 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-10-27T23:53:01+08:00" itemprop="datePublished">2020/10/27</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16038139816578.html" itemprop="url">
+		负载均衡之ip_hash</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2 id="toc_0">hash算法</h2>
+
+<blockquote>
+<p>hash(ip) % node_counts = index<br/>
+通过对客户端IP进行哈希然后根据上方公式分配到对应的服务器处理，之后的每次请求，只要客户端的IP没有变化，所有的请求都会请求到这台服务器上。<br/>
+由于nginx的ip_hash算法是根据IP的前三个数值进行的hash，所以内网使用时，只会访问同一台服务器上。如果有人进行不正当的大量请求，这时所有的请求都会转发到同一台服务器上，这时会造成这台服务器的负载升高。<br/>
+当使用ip_hash的方式进行负载均衡时，如果要临时移除一台服务器时，不能直接将这个server删除，要将这要服务器标记为down。<br/>
+该算法，在增加或减少节点时，都需要重新计算。</p>
+</blockquote>
+
+
+
+			 
+			<a href="16038139816578.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-10-27T23:50:35+08:00" itemprop="datePublished">2020/10/27</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Shell.html'>Shell</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16038138353128.html" itemprop="url">
+		shell编程</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>总结一下shell编程的语法规则以及注意事项。<br/>
+
+
+			 
+			<a href="16038138353128.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-10-27T23:32:53+08:00" itemprop="datePublished">2020/10/27</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16038127730075.html" itemprop="url">
+		一致性哈希算法</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<blockquote>
+<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
+</blockquote>
+
+
+
+			 
+			<a href="16038127730075.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-10-20T23:06:36+08:00" itemprop="datePublished">2020/10/20</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16032063964658.html" itemprop="url">
+		Nginx Tomcat集群搭建</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			
+
+			 
+			<a href="16032063964658.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-10-20T21:15:21+08:00" itemprop="datePublished">2020/10/20</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16031997211070.html" itemprop="url">
+		Nginx的集群负载均衡解析</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			
+
+			 
+			<a href="16031997211070.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-08-27T23:36:14+08:00" itemprop="datePublished">2020/08/27</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="15985425740195.html" itemprop="url">
+		Nginx的模块化体系</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<ul>
+<li>event module 事件模块，操作系统层面的事件处理机制</li>
+<li>phase handle 用于处理客户端的请求，以及相应内容的响应</li>
+<li>output filter 返回响应时，需要通过该模块，相当于过滤器，例如：gzip，将大的文件过滤成小的文件</li>
+<li>upstream 反向代理模块，会把服务器请求转发到真实的服务器地址</li>
+<li>load balancer 负载均衡器，实现集群和负载均衡的配置</li>
+<li>extend module 继承模块，使用第三方模块时需要用到</li>
+</ul>
+
+
+
+			 
+			<a href="15985425740195.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
@@ -245,150 +421,12 @@
 		</div>
 
 	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-08-26T00:12:54+08:00" itemprop="datePublished">2020/08/26</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15983719742857.html" itemprop="url">
-		nginx常用命令解析</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ol>
-<li>启动: <code>nginx</code></li>
-<li>关闭
-<ol>
-<li>nginx -s stop 这种方式是比较暴力的方式，直接停止nginx，正在请求的进程会直接停止</li>
-<li>nginx -s quit 优雅的停止，当没有用户请求时，会关闭（只针对http请求）</li>
-</ol></li>
-<li>检查语法：nginx -t</li>
-<li>查看版本：nginx -v</li>
-<li>查看版本以及配置信息：nginx -V</li>
-<li>手动置顶nginx核心配置文件：nginx -c filename(nginx.conf的路径)</li>
-</ol>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-08-25T23:58:04+08:00" itemprop="datePublished">2020/08/25</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15983710849309.html" itemprop="url">
-		Q:nginx.pid打开失败以及失效的解决办法</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2 id="toc_0">问题背景</h2>
-
-<p>当我们执行<code>./nginx</code>或<code>./nginx -s reload</code>命令时，显示：<code>open() &quot;/var/run/nginx/nginx.pid&quot;</code>没有那个问价或目录<br/>
-
-
-			 
-			<a href="15983710849309.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-08-19T23:32:42+08:00" itemprop="datePublished">2020/08/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15978511625761.html" itemprop="url">
-		nginx处理web请求机制解析</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="15978511625761.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-08-19T23:21:07+08:00" itemprop="datePublished">2020/08/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15978504673218.html" itemprop="url">
-		nginx进程模型</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="15978504673218.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-08-19T22:35:39+08:00" itemprop="datePublished">2020/08/19</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="15978477399142.html" itemprop="url">
-		nginx安装</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="15978477399142.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
   
 
 </div>
 <nav id="pagenavi">
 	 <a class="prev" href="all_4.html">Prev</a>  
-	
+	 <a class="next" href="all_6.html">Next</a> 
 	<div class="center"><a href="archives.html">Blog Archives</a></div>
 
 </nav>
