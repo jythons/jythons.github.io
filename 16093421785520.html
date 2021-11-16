@@ -1,162 +1,193 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	ES数据类型 - Jythons小站
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  ES数据类型 - Jythons小站
   
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-					
-					<h1><a href="index.html">Jythons小站</a></h1>
-					<p class="subtitle">工作学习中的点点滴滴。</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="_self" href="index.html">主页</a></li>
-						
-						  <li id=""><a target="_self" href="Java.html">Java</a></li>
-						
-						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
-						
-						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
-						
-						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
-						
-						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
-						
-						  <li id=""><a target="_self" href="ES.html">ES</a></li>
-						
-						  <li id=""><a target="_self" href="mq.html">MQ</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:jythons.github.io ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
 
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">主页</a></li>
+        
+        <li id=""><a target="_self" href="Java.html">Java</a></li>
+        
+        <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li id=""><a target="_self" href="ES.html">ES</a></li>
+        
+        <li id=""><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; Jythons小站</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="_self" href="index.html">主页</a></li>
+        
+        <li><a target="_self" href="Java.html">Java</a></li>
+        
+        <li><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li><a target="_self" href="ES.html">ES</a></li>
+        
+        <li><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="nginx.html">nginx</a></li>
+        
+            <li><a href="Java.html">Java</a></li>
+        
+            <li><a href="Shell.html">Shell</a></li>
+        
+            <li><a href="LVS.html">LVS</a></li>
+        
+            <li><a href="Redis.html">Redis</a></li>
+        
+            <li><a href="ES.html">ES</a></li>
+        
+            <li><a href="MQ.html">MQ</a></li>
+        
+            <li><a href="Docker.html">Docker</a></li>
+        
+            <li><a href="Mysql.html">Mysql</a></li>
+        
+            <li><a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html">每日总结</a></li>
+        
+            <li><a href="Postman.html">Postman</a></li>
+        
+            <li><a href="Sublime.html">Sublime</a></li>
+        
+            <li><a href="PhpStorm.html">PhpStorm</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
 
 
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
 
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>ES数据类型</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2020/12/30</span>
 
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='ES.html'>ES</a></span>
+           
+         
+          <span class="comments">
+            
 
+            
+          </span>
 
-<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+        </div>
+      </div><!-- article -->
 
-								
-
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">ES数据类型</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">核心数据类型</h2>
-
-<h3 id="toc_1">字符串类型 - string（不在支持）</h3>
-
-<h4 id="toc_2">使用示例</h4>
-
-<pre><code class="language-text">PUT website
+      <div class="article-content">
+      <span id="more"></span><!-- more -->
+<h2><a id="%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B" class="anchor" aria-hidden="true" href="#%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="octicon octicon-link"></span></a>核心数据类型</h2>
+<h3><a id="%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8Bstring%EF%BC%88%E4%B8%8D%E5%9C%A8%E6%94%AF%E6%8C%81%EF%BC%89" class="anchor" aria-hidden="true" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8Bstring%EF%BC%88%E4%B8%8D%E5%9C%A8%E6%94%AF%E6%8C%81%EF%BC%89"><span class="octicon octicon-link"></span></a>字符串类型 - string（不在支持）</h3>
+<h4><a id="%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>使用示例</h4>
+<pre><code>PUT website
 {
     &quot;mappings&quot;: {
         &quot;blog&quot;: {
             &quot;properties&quot;: {
-                &quot;title&quot;: {&quot;type&quot;: &quot;string&quot;},    // 全文本
-                &quot;tags&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;index&quot;: &quot;not_analyzed&quot;} // 关键字, 不分词
+                &quot;title&quot;: {&quot;type&quot;: &quot;string&quot;}, 	// 全文本
+                &quot;tags&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;index&quot;: &quot;not_analyzed&quot;}	// 关键字, 不分词
             }
         }
     }
 }
 </code></pre>
-
-<h4 id="toc_3">ES 5.6.10中的响应信息</h4>
-
-<pre><code class="language-text">#! Deprecation: The [string] field is deprecated, please use [text] or [keyword] instead on [tags]
+<h4><a id="es-5-6-10%E4%B8%AD%E7%9A%84%E5%93%8D%E5%BA%94%E4%BF%A1%E6%81%AF" class="anchor" aria-hidden="true" href="#es-5-6-10%E4%B8%AD%E7%9A%84%E5%93%8D%E5%BA%94%E4%BF%A1%E6%81%AF"><span class="octicon octicon-link"></span></a>ES 5.6.10中的响应信息</h4>
+<pre><code>#! Deprecation: The [string] field is deprecated, please use [text] or [keyword] instead on [tags]
 #! Deprecation: The [string] field is deprecated, please use [text] or [keyword] instead on [title]
 {
   &quot;acknowledged&quot;: true,
@@ -164,10 +195,8 @@
   &quot;index&quot;: &quot;website&quot;
 }
 </code></pre>
-
-<h4 id="toc_4">ES 6.6.0中的响应信息</h4>
-
-<pre><code class="language-text">{
+<h4><a id="es-6-6-0%E4%B8%AD%E7%9A%84%E5%93%8D%E5%BA%94%E4%BF%A1%E6%81%AF" class="anchor" aria-hidden="true" href="#es-6-6-0%E4%B8%AD%E7%9A%84%E5%93%8D%E5%BA%94%E4%BF%A1%E6%81%AF"><span class="octicon octicon-link"></span></a>ES 6.6.0中的响应信息</h4>
+<pre><code>{
   &quot;error&quot;: {
     &quot;root_cause&quot;: [
       {
@@ -185,60 +214,47 @@
   &quot;status&quot;: 400
 }
 </code></pre>
-
 <blockquote>
 <p>string类型的field已经被移除了，我们需要使用text或keyword类型来代替string。</p>
 </blockquote>
-
-<h3 id="toc_5">文本类型 - text</h3>
-
-<p>在ES5.4版本开始，text取代了需要分词的string。<br/>
+<h3><a id="%E6%96%87%E6%9C%AC%E7%B1%BB%E5%9E%8Btext" class="anchor" aria-hidden="true" href="#%E6%96%87%E6%9C%AC%E7%B1%BB%E5%9E%8Btext"><span class="octicon octicon-link"></span></a>文本类型 - text</h3>
+<p>在ES5.4版本开始，text取代了需要分词的string。
 当一个字段需要使用与全文搜索（会被分词），比如产品名称、产品描述信息，就应该使用text类型。</p>
-
 <blockquote>
-<p>text的内容会被分词，可以设置是否需要存储：<code>&quot;index&quot;: &quot;true|false&quot;</code>.<br/>
+<p>text的内容会被分词，可以设置是否需要存储：<code>&quot;index&quot;: &quot;true|false&quot;</code>.
 text类型的字段不能用于排序，也很少用于聚合。</p>
 </blockquote>
-
-<h4 id="toc_6">使用示例</h4>
-
-<pre><code class="language-text">PUT website
+<h4><a id="%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>使用示例</h4>
+<pre><code>PUT website
 {
-    &quot;mappings&quot;: {
+	&quot;mappings&quot;: {
         &quot;blog&quot;: {
             &quot;properties&quot;: {
-                &quot;summary&quot;: {&quot;type&quot;: &quot;text&quot;, &quot;index&quot;: &quot;true&quot;}
+        		&quot;summary&quot;: {&quot;type&quot;: &quot;text&quot;, &quot;index&quot;: &quot;true&quot;}
             }
         }
     }
 }
 </code></pre>
-
-<h3 id="toc_7">关键字类型 - keyword</h3>
-
-<p>在ES5.4版本开始，keyword取代了不需要分词的string。<br/>
+<h3><a id="%E5%85%B3%E9%94%AE%E5%AD%97%E7%B1%BB%E5%9E%8Bkeyword" class="anchor" aria-hidden="true" href="#%E5%85%B3%E9%94%AE%E5%AD%97%E7%B1%BB%E5%9E%8Bkeyword"><span class="octicon octicon-link"></span></a>关键字类型 - keyword</h3>
+<p>在ES5.4版本开始，keyword取代了不需要分词的string。
 当一个字段需要按照精确值进行过滤、排序、聚合等操作时，就应该使用keyword类型。</p>
-
 <blockquote>
 <p>keyword的内容不会被分词，可以设置是否需要存储：<code>&quot;index&quot;: &quot;true|false&quot;</code></p>
 </blockquote>
-
-<h4 id="toc_8">使用示例</h4>
-
-<pre><code class="language-text">PUT website
+<h4><a id="%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>使用示例</h4>
+<pre><code>PUT website
 {
-    &quot;mappings&quot;: {
+	&quot;mappings&quot;: {
         &quot;blog&quot;: {
             &quot;properties&quot;: {
-                &quot;tags&quot;: {&quot;type&quot;: &quot;keyword&quot;, &quot;index&quot;: &quot;true&quot;}
+        		&quot;tags&quot;: {&quot;type&quot;: &quot;keyword&quot;, &quot;index&quot;: &quot;true&quot;}
             }
         }
     }
 }
 </code></pre>
-
-<h3 id="toc_9">数字类型 - 8种</h3>
-
+<h3><a id="%E6%95%B0%E5%AD%97%E7%B1%BB%E5%9E%8B8%E7%A7%8D" class="anchor" aria-hidden="true" href="#%E6%95%B0%E5%AD%97%E7%B1%BB%E5%9E%8B8%E7%A7%8D"><span class="octicon octicon-link"></span></a>数字类型 - 8种</h3>
 <table>
 <thead>
 <tr>
@@ -246,7 +262,6 @@ text类型的字段不能用于排序，也很少用于聚合。</p>
 <th>说明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>byte</td>
@@ -258,11 +273,11 @@ text类型的字段不能用于排序，也很少用于聚合。</p>
 </tr>
 <tr>
 <td>integer</td>
-<td>有符号的32位整数，范围：[-2<sup>31</sup> ~ 2<sup>31-1]</sup></td>
+<td>有符号的32位整数，范围：[-2^31 ~ 2^31-1]</td>
 </tr>
 <tr>
 <td>long</td>
-<td>有符号的64位整数，范围：[-2<sup>63</sup> ~ 2<sup>63-1]</sup></td>
+<td>有符号的64位整数，范围：[-2^63 ~ 2^63-1]</td>
 </tr>
 <tr>
 <td>float</td>
@@ -282,16 +297,13 @@ text类型的字段不能用于排序，也很少用于聚合。</p>
 </tr>
 </tbody>
 </table>
-
 <blockquote>
-<p>使用注意事项：<br/>
-尽可能选择范围小的数据类型，字段的长度越短，索引和搜索的效率越高；<br/>
+<p>使用注意事项：
+尽可能选择范围小的数据类型，字段的长度越短，索引和搜索的效率越高；
 优先考虑使用带缩放因子的浮点类型。</p>
 </blockquote>
-
-<h4 id="toc_10">使用示例</h4>
-
-<pre><code class="language-text">PUT shop
+<h4><a id="%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>使用示例</h4>
+<pre><code>PUT shop
 {
     &quot;mappings&quot;: {
         &quot;book&quot;: {
@@ -307,25 +319,19 @@ text类型的字段不能用于排序，也很少用于聚合。</p>
     }
 }
 </code></pre>
-
-<h3 id="toc_11">日期类型 - date</h3>
-
+<h3><a id="%E6%97%A5%E6%9C%9F%E7%B1%BB%E5%9E%8Bdate" class="anchor" aria-hidden="true" href="#%E6%97%A5%E6%9C%9F%E7%B1%BB%E5%9E%8Bdate"><span class="octicon octicon-link"></span></a>日期类型 - date</h3>
 <p>JSON没有日期数据类型，所以在ES中，日期可以是：</p>
-
 <ul>
 <li>包含格式化日期的字符串，&quot;2020-12-30&quot;，或&quot;2020-12-30 12:00:00&quot;</li>
 <li>代表时间毫秒数的长整型数字</li>
 <li>代表时间秒数的整数</li>
 </ul>
-
 <blockquote>
-<p>如果时区未指定，日期将被转换为UTC格式，单存储的却是长整型的毫秒值<br/>
+<p>如果时区未指定，日期将被转换为UTC格式，单存储的却是长整型的毫秒值
 可以自定义日期格式，若未指定，则使用默认格式：<code>strict_date_optional_time|epoch_millis</code></p>
 </blockquote>
-
-<h4 id="toc_12">使用日期格式示例</h4>
-
-<pre><code class="language-text">// 添加映射
+<h4><a id="%E4%BD%BF%E7%94%A8%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>使用日期格式示例</h4>
+<pre><code>// 添加映射
 PUT website
 {
     &quot;mappings&quot;: {
@@ -342,22 +348,18 @@ PUT website/blog/11
 { &quot;pub_date&quot;: &quot;2018-10-10&quot; }
 
 PUT website/blog/12
-{ &quot;pub_date&quot;: &quot;2018-10-10T12:00:00Z&quot; }  // Solr中默认使用的日期格式
+{ &quot;pub_date&quot;: &quot;2018-10-10T12:00:00Z&quot; }	// Solr中默认使用的日期格式
 
 PUT website/blog/13
-{ &quot;pub_date&quot;: &quot;1589584930103&quot; }         // 时间的毫秒值
+{ &quot;pub_date&quot;: &quot;1589584930103&quot; }			// 时间的毫秒值
 </code></pre>
-
-<h4 id="toc_13">多种日期格式</h4>
-
+<h4><a id="%E5%A4%9A%E7%A7%8D%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F" class="anchor" aria-hidden="true" href="#%E5%A4%9A%E7%A7%8D%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F"><span class="octicon octicon-link"></span></a>多种日期格式</h4>
 <blockquote>
-<p>多个格式使用双竖线<code>||</code>分隔，每个格式都会被依次尝试，直到找到匹配的<br/>
+<p>多个格式使用双竖线<code>||</code>分隔，每个格式都会被依次尝试，直到找到匹配的
 第一个格式用于将时间毫秒值转换为对应格式的字符串。</p>
 </blockquote>
-
-<h5 id="toc_14">使用示例</h5>
-
-<pre><code class="language-text">// 添加映射
+<h5><a id="%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>使用示例</h5>
+<pre><code>// 添加映射
 PUT website
 {
     &quot;mappings&quot;: {
@@ -372,28 +374,20 @@ PUT website
     }
 }
 </code></pre>
-
-<h3 id="toc_15">布尔类型 - boolean</h3>
-
+<h3><a id="%E5%B8%83%E5%B0%94%E7%B1%BB%E5%9E%8Bboolean" class="anchor" aria-hidden="true" href="#%E5%B8%83%E5%B0%94%E7%B1%BB%E5%9E%8Bboolean"><span class="octicon octicon-link"></span></a>布尔类型 - boolean</h3>
 <p>可以接受表示真、假的字符串或数字：</p>
-
 <ul>
 <li>真值：true, &quot;true&quot;, &quot;on&quot;, &quot;yes&quot;, &quot;1&quot; ...</li>
 <li>假值: false, &quot;false&quot;, &quot;off&quot;, &quot;no&quot;, &quot;0&quot;, &quot;&quot;(空字符串), 0.0, 0</li>
 </ul>
-
-<h3 id="toc_16">二进制型 - binary</h3>
-
+<h3><a id="%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%9E%8Bbinary" class="anchor" aria-hidden="true" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%9E%8Bbinary"><span class="octicon octicon-link"></span></a>二进制型 - binary</h3>
 <p>二进制类型是Base64编码字符串的二进制值, 不以默认的方式存储, 且不能被搜索. 有2个设置项:</p>
-
 <blockquote>
-<p>doc_values: 该字段是否需要存储到磁盘上, 方便以后用来排序、聚合或脚本查询. 接受true和false(默认);<br/>
+<p>doc_values: 该字段是否需要存储到磁盘上, 方便以后用来排序、聚合或脚本查询. 接受true和false(默认);
 store: 该字段的值是否要和_source分开存储、检索, 意思是除了_source中, 是否要单独再存储一份. 接受true或false(默认).</p>
 </blockquote>
-
-<h4 id="toc_17">使用示例</h4>
-
-<pre><code class="language-text">// 添加映射
+<h4><a id="%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>使用示例</h4>
+<pre><code>// 添加映射
 PUT website
 {
     &quot;mappings&quot;: {
@@ -411,15 +405,11 @@ PUT website/blog/1
     &quot;blob&quot;: &quot;hED903KSrA084fRiD5JLgY==&quot;
 }
 </code></pre>
-
 <blockquote>
 <p>注意: Base64编码的二进制值不能嵌入换行符\n, 逗号(0x2c)等符号.</p>
 </blockquote>
-
-<h3 id="toc_18">范围类型 - range</h3>
-
+<h3><a id="%E8%8C%83%E5%9B%B4%E7%B1%BB%E5%9E%8Brange" class="anchor" aria-hidden="true" href="#%E8%8C%83%E5%9B%B4%E7%B1%BB%E5%9E%8Brange"><span class="octicon octicon-link"></span></a>范围类型 - range</h3>
 <p>range类型支持一下几种：</p>
-
 <table>
 <thead>
 <tr>
@@ -427,15 +417,14 @@ PUT website/blog/1
 <th style="text-align: left">范围</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td style="text-align: left">integer_range</td>
-<td style="text-align: left">−2<sup>31</sup> ~ 2<sup>31−1</sup></td>
+<td style="text-align: left">−2^31 ~ 2^31−1</td>
 </tr>
 <tr>
 <td style="text-align: left">long_range</td>
-<td style="text-align: left">−2<sup>63</sup> ~ 2<sup>63−1</sup></td>
+<td style="text-align: left">−2^63 ~ 2^63−1</td>
 </tr>
 <tr>
 <td style="text-align: left">float_range</td>
@@ -455,10 +444,8 @@ PUT website/blog/1
 </tr>
 </tbody>
 </table>
-
-<h4 id="toc_19">添加映射</h4>
-
-<pre><code class="language-text">PUT company
+<h4><a id="%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84"><span class="octicon octicon-link"></span></a>添加映射</h4>
+<pre><code>PUT company
 {
     &quot;mappings&quot;: {
         &quot;department&quot;: {
@@ -478,10 +465,8 @@ PUT website/blog/1
     }
 }
 </code></pre>
-
-<h4 id="toc_20">添加数据</h4>
-
-<pre><code class="language-text">PUT company/department/1
+<h4><a id="%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE"><span class="octicon octicon-link"></span></a>添加数据</h4>
+<pre><code>PUT company/department/1
 {
     &quot;expected_number&quot; : {
         &quot;gte&quot; : 10,
@@ -494,10 +479,8 @@ PUT website/blog/1
     &quot;ip_whitelist&quot;: &quot;192.168.0.0/16&quot;
 }
 </code></pre>
-
 <p>查询数据</p>
-
-<pre><code class="language-text">GET company/department/_search
+<pre><code>GET company/department/_search
 {
     &quot;query&quot;: {
         &quot;term&quot;: {
@@ -520,10 +503,8 @@ GET company/department/_search
     }
 }
 </code></pre>
-
-<h4 id="toc_21">查询结果</h4>
-
-<pre><code class="language-text">{
+<h4><a id="%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E8%AF%A2%E7%BB%93%E6%9E%9C"><span class="octicon octicon-link"></span></a>查询结果</h4>
+<pre><code>{
   &quot;took&quot;: 26,
   &quot;timed_out&quot;: false,
   &quot;_shards&quot;: {
@@ -557,36 +538,26 @@ GET company/department/_search
   }
 }
 </code></pre>
-
-<h2 id="toc_22">复杂数据类型</h2>
-
-<h3 id="toc_23">数组类型 - array</h3>
-
-<p>ES中没有专门的数组类型，直接使用[]定义即可；<br/>
+<h2><a id="%E5%A4%8D%E6%9D%82%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B" class="anchor" aria-hidden="true" href="#%E5%A4%8D%E6%9D%82%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="octicon octicon-link"></span></a>复杂数据类型</h2>
+<h3><a id="%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8Barray" class="anchor" aria-hidden="true" href="#%E6%95%B0%E7%BB%84%E7%B1%BB%E5%9E%8Barray"><span class="octicon octicon-link"></span></a>数组类型 - array</h3>
+<p>ES中没有专门的数组类型，直接使用[]定义即可；
 数组中所有的值必须是同一种数据类型, 不支持混合数据类型的数组</p>
-
 <blockquote>
-<p>字符串数组: [&quot;one&quot;, &quot;two&quot;];<br/>
-整数数组: [1, 2];<br/>
-由数组组成的数组: [1, [2, 3]], 等价于[1, 2, 3];<br/>
+<p>字符串数组: [&quot;one&quot;, &quot;two&quot;];
+整数数组: [1, 2];
+由数组组成的数组: [1, [2, 3]], 等价于[1, 2, 3];
 对象数组: [{&quot;name&quot;: &quot;Tom&quot;, &quot;age&quot;: 20}, {&quot;name&quot;: &quot;Jerry&quot;, &quot;age&quot;: 18}].</p>
 </blockquote>
-
 <p>注意</p>
-
 <blockquote>
-<p>动态添加数据时, 数组中第一个值的类型决定整个数组的类型;<br/>
-不支持混合数组类型, 比如[1, &quot;abc&quot;];<br/>
+<p>动态添加数据时, 数组中第一个值的类型决定整个数组的类型;
+不支持混合数组类型, 比如[1, &quot;abc&quot;];
 数组可以包含null值, 空数组[]会被当做missing field —— 没有值的字段.</p>
 </blockquote>
-
-<h3 id="toc_24">对象类型 - object</h3>
-
+<h3><a id="%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8Bobject" class="anchor" aria-hidden="true" href="#%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8Bobject"><span class="octicon octicon-link"></span></a>对象类型 - object</h3>
 <p>JSON文档是分层的: 文档可以包含内部对象, 内部对象也可以包含内部对象。</p>
-
-<h4 id="toc_25">使用示例</h4>
-
-<pre><code class="language-text">PUT employee/developer/1
+<h4><a id="%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>使用示例</h4>
+<pre><code>PUT employee/developer/1
 {
     &quot;name&quot;: &quot;ma_shoufeng&quot;,
     &quot;address&quot;: {
@@ -595,20 +566,16 @@ GET company/department/_search
     }
 }
 </code></pre>
-
-<h4 id="toc_26">存储方式</h4>
-
-<pre><code class="language-text">{
+<h4><a id="%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F" class="anchor" aria-hidden="true" href="#%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="octicon octicon-link"></span></a>存储方式</h4>
+<pre><code>{
     &quot;name&quot;:                       &quot;ma_shoufeng&quot;,
     &quot;address.region&quot;:             &quot;China&quot;,
     &quot;address.location.province&quot;:  &quot;GuangDong&quot;, 
     &quot;address.location.city&quot;:      &quot;GuangZhou&quot;
 }
 </code></pre>
-
-<h4 id="toc_27">文档的映射结构类似为</h4>
-
-<pre><code class="language-text">PUT employee
+<h4><a id="%E6%96%87%E6%A1%A3%E7%9A%84%E6%98%A0%E5%B0%84%E7%BB%93%E6%9E%84%E7%B1%BB%E4%BC%BC%E4%B8%BA" class="anchor" aria-hidden="true" href="#%E6%96%87%E6%A1%A3%E7%9A%84%E6%98%A0%E5%B0%84%E7%BB%93%E6%9E%84%E7%B1%BB%E4%BC%BC%E4%B8%BA"><span class="octicon octicon-link"></span></a>文档的映射结构类似为</h4>
+<pre><code>PUT employee
 {
     &quot;mappings&quot;: {
         &quot;developer&quot;: {
@@ -630,47 +597,34 @@ GET company/department/_search
     }
 }
 </code></pre>
-
-<h3 id="toc_28">嵌套类型 - nested</h3>
-
+<h3><a id="%E5%B5%8C%E5%A5%97%E7%B1%BB%E5%9E%8Bnested" class="anchor" aria-hidden="true" href="#%E5%B5%8C%E5%A5%97%E7%B1%BB%E5%9E%8Bnested"><span class="octicon octicon-link"></span></a>嵌套类型 - nested</h3>
 <p>嵌套类型是对象数据类型的一个特例, 可以让array类型的对象被独立索引和搜索.</p>
-
-<h4 id="toc_29">对象数组是如何存储的</h4>
-
-<h5 id="toc_30">添加数据</h5>
-
-<pre><code class="language-text">PUT game_of_thrones/role/1
+<h4><a id="%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84%E6%98%AF%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E7%9A%84" class="anchor" aria-hidden="true" href="#%E5%AF%B9%E8%B1%A1%E6%95%B0%E7%BB%84%E6%98%AF%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E7%9A%84"><span class="octicon octicon-link"></span></a>对象数组是如何存储的</h4>
+<h5><a id="%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE"><span class="octicon octicon-link"></span></a>添加数据</h5>
+<pre><code>PUT game_of_thrones/role/1
 {
     &quot;group&quot;: &quot;stark&quot;,
-    &quot;performer&quot;: [
+	&quot;performer&quot;: [
         {&quot;first&quot;: &quot;John&quot;, &quot;last&quot;: &quot;Snow&quot;},
         {&quot;first&quot;: &quot;Sansa&quot;, &quot;last&quot;: &quot;Stark&quot;}
     ]
 }
 </code></pre>
-
-<h5 id="toc_31">内部存储结构</h5>
-
-<pre><code class="language-text">{
-    &quot;group&quot;:             &quot;stark&quot;,
+<h5><a id="%E5%86%85%E9%83%A8%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84" class="anchor" aria-hidden="true" href="#%E5%86%85%E9%83%A8%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="octicon octicon-link"></span></a>内部存储结构</h5>
+<pre><code>{
+    &quot;group&quot;: 	         &quot;stark&quot;,
     &quot;performer.first&quot;: [ &quot;john&quot;, &quot;sansa&quot; ],
     &quot;performer.last&quot;:  [ &quot;snow&quot;, &quot;stark&quot; ]
 }
 </code></pre>
-
-<h5 id="toc_32">存储分析</h5>
-
-<p>可以看出, user.first和user.last会被平铺为多值字段, 这样一来, John和Snow之间的关联性就丢失了.<br/>
+<h5><a id="%E5%AD%98%E5%82%A8%E5%88%86%E6%9E%90" class="anchor" aria-hidden="true" href="#%E5%AD%98%E5%82%A8%E5%88%86%E6%9E%90"><span class="octicon octicon-link"></span></a>存储分析</h5>
+<p>可以看出, user.first和user.last会被平铺为多值字段, 这样一来, John和Snow之间的关联性就丢失了.
 在查询时, 可能出现John Stark的结果.</p>
-
-<h4 id="toc_33">用nested类型解决object类型的不足</h4>
-
-<p>如果需要对以最对象进行索引, 且保留数组中每个对象的独立性, 就应该使用嵌套数据类型.<br/>
+<h4><a id="%E7%94%A8nested%E7%B1%BB%E5%9E%8B%E8%A7%A3%E5%86%B3object%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%B8%8D%E8%B6%B3" class="anchor" aria-hidden="true" href="#%E7%94%A8nested%E7%B1%BB%E5%9E%8B%E8%A7%A3%E5%86%B3object%E7%B1%BB%E5%9E%8B%E7%9A%84%E4%B8%8D%E8%B6%B3"><span class="octicon octicon-link"></span></a>用nested类型解决object类型的不足</h4>
+<p>如果需要对以最对象进行索引, 且保留数组中每个对象的独立性, 就应该使用嵌套数据类型.
 嵌套对象实质是将每个对象分离出来, 作为隐藏文档进行索引.</p>
-
-<h5 id="toc_34">创建映射</h5>
-
-<pre><code class="language-text">PUT game_of_thrones
+<h5><a id="%E5%88%9B%E5%BB%BA%E6%98%A0%E5%B0%84" class="anchor" aria-hidden="true" href="#%E5%88%9B%E5%BB%BA%E6%98%A0%E5%B0%84"><span class="octicon octicon-link"></span></a>创建映射</h5>
+<pre><code>PUT game_of_thrones
 {
     &quot;mappings&quot;: {
         &quot;role&quot;: {
@@ -681,10 +635,8 @@ GET company/department/_search
     }
 }
 </code></pre>
-
-<h5 id="toc_35">添加映射</h5>
-
-<pre><code class="language-text">PUT game_of_thrones/role/1
+<h5><a id="%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84"><span class="octicon octicon-link"></span></a>添加映射</h5>
+<pre><code>PUT game_of_thrones/role/1
 {
     &quot;group&quot; : &quot;stark&quot;,
     &quot;performer&quot; : [
@@ -693,10 +645,8 @@ GET company/department/_search
     ]
 }
 </code></pre>
-
-<h5 id="toc_36">检索数据</h5>
-
-<pre><code class="language-text">GET game_of_thrones/_search
+<h5><a id="%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE" class="anchor" aria-hidden="true" href="#%E6%A3%80%E7%B4%A2%E6%95%B0%E6%8D%AE"><span class="octicon octicon-link"></span></a>检索数据</h5>
+<pre><code>GET game_of_thrones/_search
 {
     &quot;query&quot;: {
         &quot;nested&quot;: {
@@ -718,23 +668,17 @@ GET company/department/_search
     }
 }
 </code></pre>
-
-<h2 id="toc_37">地理数据类型</h2>
-
-<h3 id="toc_38">地理点类型 - geo point</h3>
-
+<h2><a id="%E5%9C%B0%E7%90%86%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B" class="anchor" aria-hidden="true" href="#%E5%9C%B0%E7%90%86%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="octicon octicon-link"></span></a>地理数据类型</h2>
+<h3><a id="%E5%9C%B0%E7%90%86%E7%82%B9%E7%B1%BB%E5%9E%8Bgeo-point" class="anchor" aria-hidden="true" href="#%E5%9C%B0%E7%90%86%E7%82%B9%E7%B1%BB%E5%9E%8Bgeo-point"><span class="octicon octicon-link"></span></a>地理点类型 - geo point</h3>
 <p>地理点类型用于存储地理位置的经纬度对, 可用于:</p>
-
 <ul>
 <li>查找一定范围内的地理点;</li>
 <li>通过地理位置或相对某个中心点的距离聚合文档;</li>
 <li>将距离整合到文档的相关性评分中;</li>
 <li>通过距离对文档进行排序.</li>
 </ul>
-
-<h4 id="toc_39">添加映射</h4>
-
-<pre><code class="language-text">PUT employee
+<h4><a id="%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84"><span class="octicon octicon-link"></span></a>添加映射</h4>
+<pre><code>PUT employee
 {
     &quot;mappings&quot;: {
         &quot;developer&quot;: {
@@ -745,15 +689,13 @@ GET company/department/_search
     }
 }
 </code></pre>
-
-<h4 id="toc_40">存储地理位置</h4>
-
-<pre><code class="language-text">// 方式一: 纬度 + 经度键值对
+<h4><a id="%E5%AD%98%E5%82%A8%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#%E5%AD%98%E5%82%A8%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>存储地理位置</h4>
+<pre><code>// 方式一: 纬度 + 经度键值对
 PUT employee/developer/1
 {
     &quot;text&quot;: &quot;小蛮腰-键值对地理点参数&quot;, 
     &quot;location&quot;: {
-        &quot;lat&quot;: 23.11, &quot;lon&quot;: 113.33     // 纬度: latitude, 经度: longitude
+        &quot;lat&quot;: 23.11, &quot;lon&quot;: 113.33		// 纬度: latitude, 经度: longitude
     }
 }
 
@@ -761,46 +703,37 @@ PUT employee/developer/1
 PUT employee/developer/2
 {
   &quot;text&quot;: &quot;小蛮腰-字符串地理点参数&quot;,
-  &quot;location&quot;: &quot;23.11, 113.33&quot;           // 纬度, 经度
+  &quot;location&quot;: &quot;23.11, 113.33&quot; 			// 纬度, 经度
 }
 
 // 方式三: [&quot;经度, 纬度&quot;] 数组地理点参数
 PUT employee/developer/3
 {
   &quot;text&quot;: &quot;小蛮腰-数组参数&quot;,
-  &quot;location&quot;: [ 113.33, 23.11 ]         // 经度, 纬度
+  &quot;location&quot;: [ 113.33, 23.11 ] 		// 经度, 纬度
 }
 </code></pre>
-
-<h4 id="toc_41">查询示例</h4>
-
-<pre><code class="language-text">GET employee/_search
+<h4><a id="%E6%9F%A5%E8%AF%A2%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E8%AF%A2%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>查询示例</h4>
+<pre><code>GET employee/_search
 {
     &quot;query&quot;: { 
         &quot;geo_bounding_box&quot;: { 
             &quot;location&quot;: {
-                &quot;top_left&quot;: { &quot;lat&quot;: 24, &quot;lon&quot;: 113 },      // 地理盒子模型的上-左边
-                &quot;bottom_right&quot;: { &quot;lat&quot;: 22, &quot;lon&quot;: 114 }   // 地理盒子模型的下-右边
+                &quot;top_left&quot;: { &quot;lat&quot;: 24, &quot;lon&quot;: 113 },		// 地理盒子模型的上-左边
+                &quot;bottom_right&quot;: { &quot;lat&quot;: 22, &quot;lon&quot;: 114 }	// 地理盒子模型的下-右边
             }
         }
     }
 }
 </code></pre>
-
-<h3 id="toc_42">地理形状类型 - geo_shape</h3>
-
-<p>是多边形的复杂形状. 使用较少, 这里省略.<br/>
+<h3><a id="%E5%9C%B0%E7%90%86%E5%BD%A2%E7%8A%B6%E7%B1%BB%E5%9E%8Bgeo-shape" class="anchor" aria-hidden="true" href="#%E5%9C%B0%E7%90%86%E5%BD%A2%E7%8A%B6%E7%B1%BB%E5%9E%8Bgeo-shape"><span class="octicon octicon-link"></span></a>地理形状类型 - geo_shape</h3>
+<p>是多边形的复杂形状. 使用较少, 这里省略.
 可以参考这篇文章: <a href="https://blog.csdn.net/u012332735/article/details/54971638">Elasticsearch地理位置总结</a></p>
-
-<h2 id="toc_43">专门数据类型</h2>
-
-<h3 id="toc_44">IP类型</h3>
-
+<h2><a id="%E4%B8%93%E9%97%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B" class="anchor" aria-hidden="true" href="#%E4%B8%93%E9%97%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="octicon octicon-link"></span></a>专门数据类型</h2>
+<h3><a id="ip%E7%B1%BB%E5%9E%8B" class="anchor" aria-hidden="true" href="#ip%E7%B1%BB%E5%9E%8B"><span class="octicon octicon-link"></span></a>IP类型</h3>
 <p>IP类型的字段用于存储IPv4或IPv6的地址, 本质上是一个长整型字段.</p>
-
-<h4 id="toc_45">添加映射</h4>
-
-<pre><code class="language-text">PUT employee
+<h4><a id="%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84"><span class="octicon octicon-link"></span></a>添加映射</h4>
+<pre><code>PUT employee
 {
     &quot;mappings&quot;: {
         &quot;customer&quot;: {
@@ -811,31 +744,23 @@ PUT employee/developer/3
     }
 }
 </code></pre>
-
-<h4 id="toc_46">添加数据</h4>
-
-<pre><code class="language-text">PUT employee/customer/1
+<h4><a id="%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE"><span class="octicon octicon-link"></span></a>添加数据</h4>
+<pre><code>PUT employee/customer/1
 { &quot;ip_addr&quot;: &quot;192.168.1.1&quot; }
 </code></pre>
-
-<h4 id="toc_47">查询数据</h4>
-
-<pre><code class="language-text">GET employee/customer/_search
+<h4><a id="%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE"><span class="octicon octicon-link"></span></a>查询数据</h4>
+<pre><code>GET employee/customer/_search
 {
     &quot;query&quot;: {
         &quot;term&quot;: { &quot;ip_addr&quot;: &quot;192.168.0.0/16&quot; }
     }
 }
 </code></pre>
-
-<h3 id="toc_48">计数数据类型 - token_count</h3>
-
-<p>token_count类型用于统计字符串中的单词数量.<br/>
+<h3><a id="%E8%AE%A1%E6%95%B0%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8Btoken-count" class="anchor" aria-hidden="true" href="#%E8%AE%A1%E6%95%B0%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8Btoken-count"><span class="octicon octicon-link"></span></a>计数数据类型 - token_count</h3>
+<p>token_count类型用于统计字符串中的单词数量.
 本质上是一个整数型字段, 接受并分析字符串值, 然后索引字符串中单词的个数.</p>
-
-<h4 id="toc_49">添加映射</h4>
-
-<pre><code class="language-text">PUT employee
+<h4><a id="%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%98%A0%E5%B0%84"><span class="octicon octicon-link"></span></a>添加映射</h4>
+<pre><code>PUT employee
 {
     &quot;mappings&quot;: {
         &quot;customer&quot;: {
@@ -854,51 +779,445 @@ PUT employee/developer/3
     }
 }
 </code></pre>
-
-<h4 id="toc_50">添加数据</h4>
-
-<pre><code class="language-text">PUT employee/customer/1
+<h4><a id="%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE"><span class="octicon octicon-link"></span></a>添加数据</h4>
+<pre><code>PUT employee/customer/1
 { &quot;name&quot;: &quot;John Snow&quot; }
 PUT employee/customer/2
 { &quot;name&quot;: &quot;Tyrion Lannister&quot; }
 </code></pre>
-
-<h4 id="toc_51">查询数据</h4>
-
-<pre><code class="language-text">GET employee/customer/_search
+<h4><a id="%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE"><span class="octicon octicon-link"></span></a>查询数据</h4>
+<pre><code>GET employee/customer/_search
 {
     &quot;query&quot;: {
         &quot;term&quot;: { &quot;name.length&quot;: 2 }
     }
 }
 </code></pre>
-
-<h2 id="toc_52">参考</h2>
-
+<h2><a id="%E5%8F%82%E8%80%83" class="anchor" aria-hidden="true" href="#%E5%8F%82%E8%80%83"><span class="octicon octicon-link"></span></a>参考</h2>
 <p><a href="https://www.cnblogs.com/shoufeng/p/10692113.html">ES 15 - Elasticsearch的数据类型 (text、keyword、date、object、geo等)</a></p>
 
-		</div>
-	</article>
-	<div class="share-comment">
-	 
 
-	  
+    
 
-	  
+      </div>
 
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2020
-Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="16103778537691.html" 
+          title="Previous Post: ES文档的乐观锁控制">&laquo; ES文档的乐观锁控制</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="16093414600296.html" 
+          title="Next Post: ES基本操作">ES基本操作 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>Jythons小站</h1>
+                <div class="site-des">工作学习中的点点滴滴。</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="nginx.html"><strong>nginx</strong></a>
+        
+            <a href="Java.html"><strong>Java</strong></a>
+        
+            <a href="Shell.html"><strong>Shell</strong></a>
+        
+            <a href="LVS.html"><strong>LVS</strong></a>
+        
+            <a href="Redis.html"><strong>Redis</strong></a>
+        
+            <a href="ES.html"><strong>ES</strong></a>
+        
+            <a href="MQ.html"><strong>MQ</strong></a>
+        
+            <a href="Docker.html"><strong>Docker</strong></a>
+        
+            <a href="Mysql.html"><strong>Mysql</strong></a>
+        
+            <a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html"><strong>每日总结</strong></a>
+        
+            <a href="Postman.html"><strong>Postman</strong></a>
+        
+            <a href="Sublime.html"><strong>Sublime</strong></a>
+        
+            <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="16370681631438.html">Xdebug配置</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16369427253226.html">Sublime插件之ctags</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
 
 
-</body>
+
+  </body>
 </html>

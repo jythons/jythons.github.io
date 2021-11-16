@@ -1,143 +1,178 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	Nginx Tomcat集群搭建 - Jythons小站
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  Nginx Tomcat集群搭建 - Jythons小站
   
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-					
-					<h1><a href="index.html">Jythons小站</a></h1>
-					<p class="subtitle">工作学习中的点点滴滴。</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="_self" href="index.html">主页</a></li>
-						
-						  <li id=""><a target="_self" href="Java.html">Java</a></li>
-						
-						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
-						
-						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
-						
-						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
-						
-						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
-						
-						  <li id=""><a target="_self" href="ES.html">ES</a></li>
-						
-						  <li id=""><a target="_self" href="mq.html">MQ</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:jythons.github.io ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
 
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">主页</a></li>
+        
+        <li id=""><a target="_self" href="Java.html">Java</a></li>
+        
+        <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li id=""><a target="_self" href="ES.html">ES</a></li>
+        
+        <li id=""><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; Jythons小站</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="_self" href="index.html">主页</a></li>
+        
+        <li><a target="_self" href="Java.html">Java</a></li>
+        
+        <li><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li><a target="_self" href="ES.html">ES</a></li>
+        
+        <li><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="nginx.html">nginx</a></li>
+        
+            <li><a href="Java.html">Java</a></li>
+        
+            <li><a href="Shell.html">Shell</a></li>
+        
+            <li><a href="LVS.html">LVS</a></li>
+        
+            <li><a href="Redis.html">Redis</a></li>
+        
+            <li><a href="ES.html">ES</a></li>
+        
+            <li><a href="MQ.html">MQ</a></li>
+        
+            <li><a href="Docker.html">Docker</a></li>
+        
+            <li><a href="Mysql.html">Mysql</a></li>
+        
+            <li><a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html">每日总结</a></li>
+        
+            <li><a href="Postman.html">Postman</a></li>
+        
+            <li><a href="Sublime.html">Sublime</a></li>
+        
+            <li><a href="PhpStorm.html">PhpStorm</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
 
 
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
 
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>Nginx Tomcat集群搭建</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2020/10/20</span>
 
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='nginx.html'>nginx</a></span>
+           
+         
+          <span class="comments">
+            
 
+            
+          </span>
 
-<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+        </div>
+      </div><!-- article -->
 
-								
-
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">Nginx Tomcat集群搭建</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">Nginx配置</h2>
-
-<pre><code class="language-text">#配置上游服务器
+      <div class="article-content">
+      <span id="more"></span><!-- more -->
+<h2><a id="nginx%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#nginx%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>Nginx配置</h2>
+<pre><code>#配置上游服务器
 upstream tomcats {
         server 192.168.3.26:8080;
         server 192.168.3.27:8080;
@@ -153,105 +188,77 @@ server {
         }
 }
 </code></pre>
-
-<h2 id="toc_1">使用JMeter测试但节点与集群并发异常率</h2>
-
-<p>JMeter是apache的一个基于java的测试工具<br/>
-下载地址：<a href="https://jmeter.apache.org/download_jmeter.cgi">https://jmeter.apache.org/download_jmeter.cgi</a></p>
-
-<h2 id="toc_2">负载均衡之轮询</h2>
-
-<p>nginx负载均衡默认的策略是轮询</p>
-
-<h2 id="toc_3">负载均衡之加权轮询</h2>
-
-<p>通过配置权重，来实现轮训，权重越大，被分配流量越多。</p>
-
-<pre><code class="language-text">upstream tomcats {
+<p>##使用JMeter测试但节点与集群并发异常率
+JMeter是apache的一个基于java的测试工具
+下载地址：<a href="https://jmeter.apache.org/download_jmeter.cgi">https://jmeter.apache.org/download_jmeter.cgi</a>
+##负载均衡之轮询
+nginx负载均衡默认的策略是轮询
+##负载均衡之加权轮询
+通过配置权重，来实现轮训，权重越大，被分配流量越多。</p>
+<pre><code>upstream tomcats {
         server 192.168.3.26:8080 weight=1;
         server 192.168.3.27:8080 weight=2;
         server 192.168.3.28:8080 weight=5;
 }
 </code></pre>
-
-<h2 id="toc_4">upstream指令参数</h2>
-
-<h3 id="toc_5">max_conns</h3>
-
+<p>##upstream指令参数
+###max_conns</p>
 <blockquote>
 <p>指配置到上游的每个服务器的最大链接数，根据每个服务器能够承受的最大流量，起到保险丝的作用。默认值是0，代表不做任何限制。1.11.5版本之前只有商业版才能使用。如果是在共享内存使用的话，nginx每个work工作进程都可以使用。</p>
 </blockquote>
-
-<pre><code class="language-text">upstream tomcats {
+<pre><code>upstream tomcats {
         server 192.168.3.26:8080 max_conns=1;
         server 192.168.3.27:8080 max_conns=2;
         server 192.168.3.28:8080 max_conns=5;
 }
 </code></pre>
-
-<h3 id="toc_6">slow_start</h3>
-
+<p>###slow_start</p>
 <blockquote>
 <p>慢启动，主要用于，当某个服务器加入到集群后，不希望直接加入，需要启动一些软件之后在加入到集群，例如：启动监控服务等。如果该服务器配置的权重是10，设置了该值之后，他会慢慢的将权重加到10，对于hash和random方式的负载均衡是不支持的。对于单个服务器，这个参数是不适用的，需要至少有两个才行。 (商业版才能使用这个参数)</p>
 </blockquote>
-
-<pre><code class="language-text">upstream tomcats {
+<pre><code>upstream tomcats {
         server 192.168.3.26:8080 weight=6 slow_start=60s;
         server 192.168.3.27:8080 weight=2;
         server 192.168.3.28:8080 weight=2;
 }
 </code></pre>
-
-<h3 id="toc_7">down</h3>
-
+<p>###down</p>
 <blockquote>
 <p>标识服务器为不可用状态。</p>
 </blockquote>
-
-<pre><code class="language-text">upstream tomcats {
+<pre><code>upstream tomcats {
         server 192.168.3.26:8080 down;
         server 192.168.3.27:8080 weight=2;
         server 192.168.3.28:8080 weight=2;
 }
 </code></pre>
-
-<h3 id="toc_8">backup</h3>
-
+<p>###backup</p>
 <blockquote>
 <p>标识服务器只有在其他服务器挂掉之后才会启用，相当于备用机。</p>
 </blockquote>
-
-<pre><code class="language-text">upstream tomcats {
+<pre><code>upstream tomcats {
         server 192.168.3.26:8080 backup;
         server 192.168.3.27:8080 weight=2;
         server 192.168.3.28:8080 weight=2;
 }
 </code></pre>
-
-<h3 id="toc_9">max_fails</h3>
-
+<p>###max_fails</p>
 <blockquote>
-<p>最大失败次数，如果服务器请求失败次数，达到最大的失败次数，那么nginx就会把对应的服务器剔除，请求就不会到达该服务器。</p>
-
-<h3 id="toc_10">fail_timeout</h3>
-
-<p>配合<code>max_fails</code>参数使用，当请求失败次数达到最大时，在接下来的错误时间段内，请求不会到达这台服务器，等到<code>fail_timeout</code>时间之后，nginx会再次尝试请求这台服务器。</p>
+<p>最大失败次数，如果服务器请求失败次数，达到最大的失败次数，那么nginx就会把对应的服务器剔除，请求就不会到达该服务器。
+###fail_timeout
+配合<code>max_fails</code>参数使用，当请求失败次数达到最大时，在接下来的错误时间段内，请求不会到达这台服务器，等到<code>fail_timeout</code>时间之后，nginx会再次尝试请求这台服务器。</p>
 </blockquote>
-
-<pre><code class="language-text">upstream tomcats {
+<pre><code>upstream tomcats {
         server 192.168.3.26:8080 max_fails=2 fail_timeout=15s;
         server 192.168.3.27:8080 max_fails=2 fail_timeout=15s;
         server 192.168.3.28:8080 max_fails=2 fail_timeout=15s;
 }
 </code></pre>
-
-<h2 id="toc_11">使用Keepalived提高吞吐量</h2>
-
+<p>##使用Keepalived提高吞吐量</p>
 <blockquote>
 <p>Keepalive的作用是将链接作为长链接，大大的减少了链接创建和断开时间上的消耗。</p>
 </blockquote>
-
-<pre><code class="language-text">upstream tomcats {
+<pre><code>upstream tomcats {
         server 192.168.3.26:8080;
         server 192.168.3.27:8080;
         server 192.168.3.28:8080;
@@ -270,28 +277,428 @@ server {
 }
 </code></pre>
 
-		</div>
-	</article>
-	<div class="share-comment">
-	 
 
-	  
+    
 
-	  
+      </div>
 
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2020
-Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="16038127730075.html" 
+          title="Previous Post: 一致性哈希算法">&laquo; 一致性哈希算法</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="16031997211070.html" 
+          title="Next Post: Nginx的集群负载均衡解析">Nginx的集群负载均衡解析 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>Jythons小站</h1>
+                <div class="site-des">工作学习中的点点滴滴。</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="nginx.html"><strong>nginx</strong></a>
+        
+            <a href="Java.html"><strong>Java</strong></a>
+        
+            <a href="Shell.html"><strong>Shell</strong></a>
+        
+            <a href="LVS.html"><strong>LVS</strong></a>
+        
+            <a href="Redis.html"><strong>Redis</strong></a>
+        
+            <a href="ES.html"><strong>ES</strong></a>
+        
+            <a href="MQ.html"><strong>MQ</strong></a>
+        
+            <a href="Docker.html"><strong>Docker</strong></a>
+        
+            <a href="Mysql.html"><strong>Mysql</strong></a>
+        
+            <a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html"><strong>每日总结</strong></a>
+        
+            <a href="Postman.html"><strong>Postman</strong></a>
+        
+            <a href="Sublime.html"><strong>Sublime</strong></a>
+        
+            <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="16370681631438.html">Xdebug配置</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16369427253226.html">Sublime插件之ctags</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
 
 
-</body>
+
+  </body>
 </html>

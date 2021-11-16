@@ -1,166 +1,192 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	nginx处理web请求机制解析 - Jythons小站
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  nginx处理web请求机制解析 - Jythons小站
   
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-					
-					<h1><a href="index.html">Jythons小站</a></h1>
-					<p class="subtitle">工作学习中的点点滴滴。</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="_self" href="index.html">主页</a></li>
-						
-						  <li id=""><a target="_self" href="Java.html">Java</a></li>
-						
-						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
-						
-						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
-						
-						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
-						
-						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
-						
-						  <li id=""><a target="_self" href="ES.html">ES</a></li>
-						
-						  <li id=""><a target="_self" href="mq.html">MQ</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:jythons.github.io ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
 
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">主页</a></li>
+        
+        <li id=""><a target="_self" href="Java.html">Java</a></li>
+        
+        <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li id=""><a target="_self" href="ES.html">ES</a></li>
+        
+        <li id=""><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; Jythons小站</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="_self" href="index.html">主页</a></li>
+        
+        <li><a target="_self" href="Java.html">Java</a></li>
+        
+        <li><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li><a target="_self" href="ES.html">ES</a></li>
+        
+        <li><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="nginx.html">nginx</a></li>
+        
+            <li><a href="Java.html">Java</a></li>
+        
+            <li><a href="Shell.html">Shell</a></li>
+        
+            <li><a href="LVS.html">LVS</a></li>
+        
+            <li><a href="Redis.html">Redis</a></li>
+        
+            <li><a href="ES.html">ES</a></li>
+        
+            <li><a href="MQ.html">MQ</a></li>
+        
+            <li><a href="Docker.html">Docker</a></li>
+        
+            <li><a href="Mysql.html">Mysql</a></li>
+        
+            <li><a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html">每日总结</a></li>
+        
+            <li><a href="Postman.html">Postman</a></li>
+        
+            <li><a href="Sublime.html">Sublime</a></li>
+        
+            <li><a href="PhpStorm.html">PhpStorm</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
 
 
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
 
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>nginx处理web请求机制解析</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2020/08/19</span>
 
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='nginx.html'>nginx</a></span>
+           
+         
+          <span class="comments">
+            
 
+            
+          </span>
 
-<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+        </div>
+      </div><!-- article -->
 
-								
-
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">nginx处理web请求机制解析</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<span id="more"></span><!-- more -->
-
-<h3 id="toc_0">worker抢占机制</h3>
-
-<p>worker进程抢占accept_mutex互斥锁，谁先抢到，谁与client建立连接</p>
-
-<h3 id="toc_1">传统服务器事件处理</h3>
-
-<p>客户端与worker进程连接并阻塞时，其他的请求会等待第一个请求处理完毕才可以被执行。</p>
-
-<h3 id="toc_2">Nginx事件处理</h3>
-
-<p>nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器的模式，所以当第一个请求被阻塞时，也可以同事处理接下来的其他请求（use epoll, linux的epoll模型，可以同时处理6-8万个请求）</p>
-
-<h3 id="toc_3">配置nginx的最大连接数</h3>
-
-<p>在nginx.conf配置文件内</p>
-
-<pre><code class="language-text">events {
+      <div class="article-content">
+      <span id="more"></span><!-- more -->
+<p>###worker抢占机制
+worker进程抢占accept_mutex互斥锁，谁先抢到，谁与client建立连接
+###传统服务器事件处理
+客户端与worker进程连接并阻塞时，其他的请求会等待第一个请求处理完毕才可以被执行。
+###Nginx事件处理
+nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器的模式，所以当第一个请求被阻塞时，也可以同事处理接下来的其他请求（use epoll, linux的epoll模型，可以同时处理6-8万个请求）
+###配置nginx的最大连接数
+在nginx.conf配置文件内</p>
+<pre><code>events {
     # 默认使用epoll
     use epoll;
     # 每个worker允许连接的客户端最大连接数
     worker_connections 1024;
 }
 </code></pre>
-
-<h3 id="toc_4">nginx.conf配置结构</h3>
-
+<p>###nginx.conf配置结构</p>
 <ul>
 <li>main 全局配置</li>
 <li>event 配置工作模式以及连接数</li>
@@ -170,21 +196,21 @@
 <li>gzip on; gzip启用压缩，html/css压缩后传输更快</li>
 <li>http http模块相关配置
 <ul>
-<li>server 虚拟主机模块 
+<li>server 虚拟主机模块
 <ul>
 <li>listen 监听端口</li>
 <li>server_name localhost、IP、域名</li>
 <li>location 请求路由映射，匹配拦截</li>
 <li>root 请求位置</li>
 <li>index 首页设置</li>
-</ul></li>
+</ul>
+</li>
 <li>location 路由规则，表达式</li>
 <li>upstream 集群，内网服务器</li>
-</ul></li>
 </ul>
-
-<h3 id="toc_5">设定日志格式，main为定义的格式名称，如此access_log就可以直接使用这个变量了</h3>
-
+</li>
+</ul>
+<p>###设定日志格式，main为定义的格式名称，如此access_log就可以直接使用这个变量了</p>
 <table>
 <thead>
 <tr>
@@ -192,7 +218,6 @@
 <th>参数意义</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>$remote_addr</td>
@@ -232,13 +257,9 @@
 </tr>
 </tbody>
 </table>
-
-<h4 id="toc_6">日志配置格式</h4>
-
-<p><code>error_log [日志文件路径] [日志级别：notice|info]</code> </p>
-
-<h5 id="toc_7">日志级别（由低到高）</h5>
-
+<p>####日志配置格式
+<code>error_log [日志文件路径] [日志级别：notice|info]</code>
+#####日志级别（由低到高）</p>
 <ul>
 <li>debug</li>
 <li>info</li>
@@ -248,28 +269,428 @@
 <li>crit</li>
 </ul>
 
-		</div>
-	</article>
-	<div class="share-comment">
-	 
 
-	  
+    
 
-	  
+      </div>
 
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2020
-Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="15983710849309.html" 
+          title="Previous Post: Q:nginx.pid打开失败以及失效的解决办法">&laquo; Q:nginx.pid打开失败以及失效的解决办法</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="15978504673218.html" 
+          title="Next Post: nginx进程模型">nginx进程模型 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>Jythons小站</h1>
+                <div class="site-des">工作学习中的点点滴滴。</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="nginx.html"><strong>nginx</strong></a>
+        
+            <a href="Java.html"><strong>Java</strong></a>
+        
+            <a href="Shell.html"><strong>Shell</strong></a>
+        
+            <a href="LVS.html"><strong>LVS</strong></a>
+        
+            <a href="Redis.html"><strong>Redis</strong></a>
+        
+            <a href="ES.html"><strong>ES</strong></a>
+        
+            <a href="MQ.html"><strong>MQ</strong></a>
+        
+            <a href="Docker.html"><strong>Docker</strong></a>
+        
+            <a href="Mysql.html"><strong>Mysql</strong></a>
+        
+            <a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html"><strong>每日总结</strong></a>
+        
+            <a href="Postman.html"><strong>Postman</strong></a>
+        
+            <a href="Sublime.html"><strong>Sublime</strong></a>
+        
+            <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="16370681631438.html">Xdebug配置</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16369427253226.html">Sublime插件之ctags</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
 
 
-</body>
+
+  </body>
 </html>

@@ -1,153 +1,185 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	ES 深度分页 - Jythons小站
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  ES 深度分页 - Jythons小站
   
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-					
-					<h1><a href="index.html">Jythons小站</a></h1>
-					<p class="subtitle">工作学习中的点点滴滴。</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="_self" href="index.html">主页</a></li>
-						
-						  <li id=""><a target="_self" href="Java.html">Java</a></li>
-						
-						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
-						
-						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
-						
-						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
-						
-						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
-						
-						  <li id=""><a target="_self" href="ES.html">ES</a></li>
-						
-						  <li id=""><a target="_self" href="mq.html">MQ</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:jythons.github.io ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
 
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">主页</a></li>
+        
+        <li id=""><a target="_self" href="Java.html">Java</a></li>
+        
+        <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li id=""><a target="_self" href="ES.html">ES</a></li>
+        
+        <li id=""><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; Jythons小站</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="_self" href="index.html">主页</a></li>
+        
+        <li><a target="_self" href="Java.html">Java</a></li>
+        
+        <li><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li><a target="_self" href="ES.html">ES</a></li>
+        
+        <li><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="nginx.html">nginx</a></li>
+        
+            <li><a href="Java.html">Java</a></li>
+        
+            <li><a href="Shell.html">Shell</a></li>
+        
+            <li><a href="LVS.html">LVS</a></li>
+        
+            <li><a href="Redis.html">Redis</a></li>
+        
+            <li><a href="ES.html">ES</a></li>
+        
+            <li><a href="MQ.html">MQ</a></li>
+        
+            <li><a href="Docker.html">Docker</a></li>
+        
+            <li><a href="Mysql.html">Mysql</a></li>
+        
+            <li><a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html">每日总结</a></li>
+        
+            <li><a href="Postman.html">Postman</a></li>
+        
+            <li><a href="Sublime.html">Sublime</a></li>
+        
+            <li><a href="PhpStorm.html">PhpStorm</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
 
 
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
 
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>ES 深度分页</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2021/01/20</span>
 
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='ES.html'>ES</a></span>
+           
+         
+          <span class="comments">
+            
 
+            
+          </span>
 
-<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+        </div>
+      </div><!-- article -->
 
-								
-
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">ES 深度分页</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<p>正常的使用from和size去分页查询的时候，from+size的结果要小于10000，因为ES内部考虑到性能的因素，对此做了限制。<br/>
-ES在查询数据的时候，例如获取9999-10009的数据时，他的from=9999，size=10，假如有3个shard，每个shard有10W条数据，他会从每个shard获取10009条数据，合成一个结果集，在从这个结果集中取10条数据，剩下的30017条数据就会丢弃，这么做的缺点会造成资源和性能的浪费。<br/>
-<span id="more"></span><!-- more --><br/>
-<img src="media/16111512182369/ES%E6%B7%B1%E5%BA%A6%E5%88%86%E9%A1%B5.png" alt="ES深度分页"/></p>
-
+      <div class="article-content">
+      <p>正常的使用from和size去分页查询的时候，from+size的结果要小于10000，因为ES内部考虑到性能的因素，对此做了限制。
+ES在查询数据的时候，例如获取9999-10009的数据时，他的from=9999，size=10，假如有3个shard，每个shard有10W条数据，他会从每个shard获取10009条数据，合成一个结果集，在从这个结果集中取10条数据，剩下的30017条数据就会丢弃，这么做的缺点会造成资源和性能的浪费。</p>
+<span id="more"></span><!-- more -->
+<p><img src="media/16111512182369/ES%E6%B7%B1%E5%BA%A6%E5%88%86%E9%A1%B5.png" alt="ES深度分页" /></p>
 <blockquote>
 <p>针对上述问题，可以使用限制总页数的方式去规避，查询大于10000条数据的问题，例如，查询页数，限制在最大100页。</p>
 </blockquote>
-
-<h2 id="toc_0">突破10000条数据的限制</h2>
-
+<h2><a id="%E7%AA%81%E7%A0%B410000%E6%9D%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E9%99%90%E5%88%B6" class="anchor" aria-hidden="true" href="#%E7%AA%81%E7%A0%B410000%E6%9D%A1%E6%95%B0%E6%8D%AE%E7%9A%84%E9%99%90%E5%88%B6"><span class="octicon octicon-link"></span></a>突破10000条数据的限制</h2>
 <p>如果在某些企业内部，对查询数据有特殊的要求，对于性能没有必要的要求的话，可以通过修改配置来突破10000数据的查询限制。</p>
-
-<h3 id="toc_1">查询配置信息的方法</h3>
-
+<h3><a id="%E6%9F%A5%E8%AF%A2%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E7%9A%84%E6%96%B9%E6%B3%95" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E8%AF%A2%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E7%9A%84%E6%96%B9%E6%B3%95"><span class="octicon octicon-link"></span></a>查询配置信息的方法</h3>
 <table>
 <thead>
 <tr>
@@ -156,7 +188,6 @@ ES在查询数据的时候，例如获取9999-10009的数据时，他的from=999
 <th>备注</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>请求地址</td>
@@ -170,9 +201,7 @@ ES在查询数据的时候，例如获取9999-10009的数据时，他的from=999
 </tr>
 </tbody>
 </table>
-
-<h3 id="toc_2">修改配置</h3>
-
+<h3><a id="%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>修改配置</h3>
 <table>
 <thead>
 <tr>
@@ -181,7 +210,6 @@ ES在查询数据的时候，例如获取9999-10009的数据时，他的from=999
 <th>备注</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>请求地址</td>
@@ -215,32 +243,22 @@ ES在查询数据的时候，例如获取9999-10009的数据时，他的from=999
 </tr>
 </tbody>
 </table>
-
 <p><strong>请求参数</strong></p>
-
-<pre><code class="language-text">{
+<pre><code>{
     &quot;index.max_result_windows&quot;: 100000
 }
 </code></pre>
-
 <p><strong>响应数据</strong></p>
-
-<pre><code class="language-text">{
+<pre><code>{
     &quot;acknowledged&quot;: true
 }
 </code></pre>
-
-<h2 id="toc_3">Scroll 滚动搜索</h2>
-
+<h2><a id="scroll%E6%BB%9A%E5%8A%A8%E6%90%9C%E7%B4%A2" class="anchor" aria-hidden="true" href="#scroll%E6%BB%9A%E5%8A%A8%E6%90%9C%E7%B4%A2"><span class="octicon octicon-link"></span></a>Scroll 滚动搜索</h2>
 <p>上面通过对配置的修改来获取大数据量的搜索，对性能上是有影响，实际生产上是不推荐这么做的，我们还可以通过使用scroll滚动搜索的方式来查询大数据量的搜索工作。</p>
-
-<h3 id="toc_4">滚动搜索原理</h3>
-
-<p>可以把 scroll 理解爲关系型数据库里的 cursor，因此，scroll 并不适合用来做实时搜索，而更适用于后台批处理任务，比如群发。<br/>
+<h3><a id="%E6%BB%9A%E5%8A%A8%E6%90%9C%E7%B4%A2%E5%8E%9F%E7%90%86" class="anchor" aria-hidden="true" href="#%E6%BB%9A%E5%8A%A8%E6%90%9C%E7%B4%A2%E5%8E%9F%E7%90%86"><span class="octicon octicon-link"></span></a>滚动搜索原理</h3>
+<p>可以把 scroll 理解爲关系型数据库里的 cursor，因此，scroll 并不适合用来做实时搜索，而更适用于后台批处理任务，比如群发。
 scroll 具体分为初始化和遍历两步，初始化时将所有符合搜索条件的搜索结果缓存起来，可以想象成快照，在遍历时，从这个快照里取数据，也就是说，在初始化后对索引插入、删除、更新数据都不会影响遍历结果。游标可以增加性能的原因，是因为如果做深分页，每次搜索都必须重新排序，非常浪费，使用scroll就是一次把要用的数据都排完了，分批取出，因此比使用from+size还好。</p>
-
-<h3 id="toc_5">搜索示例</h3>
-
+<h3><a id="%E6%90%9C%E7%B4%A2%E7%A4%BA%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E6%90%9C%E7%B4%A2%E7%A4%BA%E4%BE%8B"><span class="octicon octicon-link"></span></a>搜索示例</h3>
 <table>
 <thead>
 <tr>
@@ -249,7 +267,6 @@ scroll 具体分为初始化和遍历两步，初始化时将所有符合搜索�
 <th>备注</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>请求地址</td>
@@ -268,10 +285,8 @@ scroll 具体分为初始化和遍历两步，初始化时将所有符合搜索�
 </tr>
 </tbody>
 </table>
-
 <p><strong>请求参数</strong></p>
-
-<pre><code class="language-text">{
+<pre><code>{
     &quot;query&quot;: {
         &quot;match_all&quot;: {}
     },
@@ -279,13 +294,10 @@ scroll 具体分为初始化和遍历两步，初始化时将所有符合搜索�
     &quot;size&quot;: 5   # 每次滚动的数据数量
 }
 </code></pre>
-
 <blockquote>
 <p>第一次查询会返回一个scroll_id，在第二次滚动查询时，需要带上这个scroll_id。</p>
 </blockquote>
-
 <p><strong>第二次滚动搜索</strong></p>
-
 <table>
 <thead>
 <tr>
@@ -294,7 +306,6 @@ scroll 具体分为初始化和遍历两步，初始化时将所有符合搜索�
 <th>备注</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>请求地址</td>
@@ -308,40 +319,438 @@ scroll 具体分为初始化和遍历两步，初始化时将所有符合搜索�
 </tr>
 </tbody>
 </table>
-
-<pre><code class="language-text">{
+<pre><code>{
     &quot;scroll_id&quot;: &quot;SGsguighdasdhkHSkhdashkd==&quot;,
     &quot;scroll&quot;: &quot;1m&quot;
 }
 </code></pre>
-
 <blockquote>
-<p>每一次滚动查询，都要将上一次查询的scroll_id携带过来，直到查询得结果集为空。 <br/>
+<p>每一次滚动查询，都要将上一次查询的scroll_id携带过来，直到查询得结果集为空。
 上面设置的size是作用于单个分片，所以如果有多个分片的话，每次实际返回的文档数量最大为：size * 分片数量</p>
 </blockquote>
 
-		</div>
-	</article>
-	<div class="share-comment">
-	 
 
-	  
+    
 
-	  
+      </div>
 
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2020
-Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="16111534541333.html" 
+          title="Previous Post: ES查询 - 批量操作">&laquo; ES查询 - 批量操作</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="16105497801984.html" 
+          title="Next Post: ES dsl搜索">ES dsl搜索 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>Jythons小站</h1>
+                <div class="site-des">工作学习中的点点滴滴。</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="nginx.html"><strong>nginx</strong></a>
+        
+            <a href="Java.html"><strong>Java</strong></a>
+        
+            <a href="Shell.html"><strong>Shell</strong></a>
+        
+            <a href="LVS.html"><strong>LVS</strong></a>
+        
+            <a href="Redis.html"><strong>Redis</strong></a>
+        
+            <a href="ES.html"><strong>ES</strong></a>
+        
+            <a href="MQ.html"><strong>MQ</strong></a>
+        
+            <a href="Docker.html"><strong>Docker</strong></a>
+        
+            <a href="Mysql.html"><strong>Mysql</strong></a>
+        
+            <a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html"><strong>每日总结</strong></a>
+        
+            <a href="Postman.html"><strong>Postman</strong></a>
+        
+            <a href="Sublime.html"><strong>Sublime</strong></a>
+        
+            <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="16370681631438.html">Xdebug配置</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16369427253226.html">Sublime插件之ctags</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
 
 
-</body>
+
+  </body>
 </html>

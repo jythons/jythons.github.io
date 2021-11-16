@@ -1,231 +1,251 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>  
-	  
-  	shell编程 - Jythons小站
-  	
-	</title>
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
-
-	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<script src="asset/javascripts/jquery.min.js"></script>
-	<script src="asset/highlightjs/highlight.pack.js"></script>
-	<link href="asset/highlightjs/styles/solarized_dark.css" media="screen, projection" rel="stylesheet" type="text/css">
-<script>hljs.initHighlightingOnLoad();</script>
-
-	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
-	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
-	<style type="text/css">
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-/* latin */
-@font-face {
-  font-family: 'Nunito';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-	</style>
-	
-	<style type="text/css">
-	.container .left-col{ opacity: 1;}
-	#pagenavi a{ font-size: 1.3em;}
-	#pagenavi .next:before{ top: 3px;}
-	#pagenavi .prev:before{ top: 3px;}
-	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
-	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
-	#header .subtitle {
-		line-height: 1.2em;
-		padding-top: 8px;
-	}
-	article pre{ background: none; border: none; padding: 0;}
-	article .entry-content{text-align: left;}
-	.share-comment{ padding: 25px 0px; clear: both;}
-	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
-
-	</style>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  shell编程 - Jythons小站
   
-
-</head>
-
-
-<body>
-	<div class="container">
-		<div class="left-col">
-			<div class="intrude-less">
-				<header id="header" class="inner">
-				 
-					
-					<h1><a href="index.html">Jythons小站</a></h1>
-					<p class="subtitle">工作学习中的点点滴滴。</p>
-					<nav id="main-nav">
-						<ul class="main">
-						
-						  <li id=""><a target="_self" href="index.html">主页</a></li>
-						
-						  <li id=""><a target="_self" href="Java.html">Java</a></li>
-						
-						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
-						
-						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
-						
-						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
-						
-						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
-						
-						  <li id=""><a target="_self" href="ES.html">ES</a></li>
-						
-						  <li id=""><a target="_self" href="mq.html">MQ</a></li>
-						
-						</ul>
-					</nav>
-
-					<nav id="sub-nav">
-						<div class="social">
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:jythons.github.io ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
 
 
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
 
 
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">主页</a></li>
+        
+        <li id=""><a target="_self" href="Java.html">Java</a></li>
+        
+        <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li id=""><a target="_self" href="ES.html">ES</a></li>
+        
+        <li id=""><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; Jythons小站</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="_self" href="index.html">主页</a></li>
+        
+        <li><a target="_self" href="Java.html">Java</a></li>
+        
+        <li><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li><a target="_self" href="ES.html">ES</a></li>
+        
+        <li><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="nginx.html">nginx</a></li>
+        
+            <li><a href="Java.html">Java</a></li>
+        
+            <li><a href="Shell.html">Shell</a></li>
+        
+            <li><a href="LVS.html">LVS</a></li>
+        
+            <li><a href="Redis.html">Redis</a></li>
+        
+            <li><a href="ES.html">ES</a></li>
+        
+            <li><a href="MQ.html">MQ</a></li>
+        
+            <li><a href="Docker.html">Docker</a></li>
+        
+            <li><a href="Mysql.html">Mysql</a></li>
+        
+            <li><a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html">每日总结</a></li>
+        
+            <li><a href="Postman.html">Postman</a></li>
+        
+            <li><a href="Sublime.html">Sublime</a></li>
+        
+            <li><a href="PhpStorm.html">PhpStorm</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
 
 
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
 
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>shell编程</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2020/10/27</span>
 
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='Shell.html'>Shell</a></span>
+           
+         
+          <span class="comments">
+            
 
+            
+          </span>
 
-<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
-<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+        </div>
+      </div><!-- article -->
 
-								
-
-								<a class="rss" href="atom.xml" title="RSS">RSS</a>
-							
-						</div>
-					</nav>
-				</header>				
-			</div>
-		</div>	
-		<div class="mid-col">
-			<div class="mid-col-container"> <div id="content" class="inner">
-
-	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-		<h1 class="title" itemprop="name">shell编程</h1>
-		<div class="entry-content" itemprop="articleBody">
-			<p>总结一下shell编程的语法规则以及注意事项。<br/>
-<span id="more"></span><!-- more --></p>
-
+      <div class="article-content">
+      <p>总结一下shell编程的语法规则以及注意事项。</p>
+<span id="more"></span><!-- more -->
 <ul>
-<li>定义<strong>变量</strong>时，不使用<code>$</code>，等号两边不能有空格,使用变量时使用<code>$</code>。<br/></li>
+<li>定义<strong>变量</strong>时，不使用<code>$</code>，等号两边不能有空格,使用变量时使用<code>$</code>。</li>
 </ul>
-
 <pre><code class="language-shell">例如：
-val=&#39;abc&#39;   (正确)
-val = &#39;abc&#39; (错误) 
+val='abc'   (正确)
+val = 'abc' (错误) 
 echo ${val} (使用变量)
 </code></pre>
-
 <ul>
 <li><strong>字符串：</strong></li>
 </ul>
-
 <pre><code class="language-shell">获取字符串长度:${#abc},结果返回3;截取字符串:${abc:1:2}。
 例如：
-str=&#39;abcdefg&#39;
+str='abcdefg'
 echo ${str:1:2}
 </code></pre>
-
 <blockquote>
 <p>结果返回：bc；意思是重二个字符开始，截取两个字符；这里是重0开始计算的。</p>
 </blockquote>
-
 <ul>
-<li><p><strong>数组：</strong>  </p>
+<li><strong>数组：</strong></li>
+</ul>
 <pre><code class="language-bash">定义数组：arr=(val1 val2 val3 ... valn) 或 arr[0]=val0
-使用数组元素：${arr[0]}  <br/>
-输出数组元素：${arr[*]} 或 ${arr[@]}  <br/>
+使用数组元素：${arr[0]}  
+输出数组元素：${arr[*]} 或 ${arr[@]}  
 获取数组长度：${#arr[*]} 或 ${#arr[@]}
-</code></pre></li>
-<li><p><strong>运算符</strong>  </p>
+</code></pre>
+<ul>
+<li><strong>运算符</strong></li>
+</ul>
 <blockquote>
 <p>计算数值时使用：<code>expr 表达式</code> 或 <code>$((表达式))</code>，如果使用 <code>expr</code> 时，乘法使用 <code>\*</code>，使用运算符时，使用<code>[]</code>,并且运算符两边都要有空格，例如：<code>if [ $a -eq $b ] then fi</code></p>
-</blockquote></li>
-</ul>
-
-<h6 id="toc_0">关系运算符</h6>
-
-<pre><code class="language-text">-eq 检测两个数是都相等，相等返回 true  
+</blockquote>
+<h6><a id="%E5%85%B3%E7%B3%BB%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E5%85%B3%E7%B3%BB%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>关系运算符</h6>
+<pre><code>-eq 检测两个数是都相等，相等返回 true  
 -ne 检测两个数是都相等，不相等返回true  
 -gt 大于号  
 -lt 小于号  
 -ge 大于等于
 -le 小于等于
 </code></pre>
-
-<h6 id="toc_1">布尔运算符</h6>
-
-<pre><code class="language-text">!  非  
+<h6><a id="%E5%B8%83%E5%B0%94%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E5%B8%83%E5%B0%94%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>布尔运算符</h6>
+<pre><code>!  非  
 -o 或  
 -a 与
 </code></pre>
-
-<h6 id="toc_2">逻辑运算符</h6>
-
-<pre><code class="language-text">&amp;&amp; 逻辑的AND
+<h6><a id="%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>逻辑运算符</h6>
+<pre><code>&amp;&amp; 逻辑的AND
 || 逻辑的OR
 </code></pre>
-
 <blockquote>
-<p>注意：使用逻辑运算符时，if语句需要使用<code>[[ 表达式 ]]</code>；  </p>
+<p>注意：使用逻辑运算符时，if语句需要使用<code>[[ 表达式 ]]</code>；</p>
 </blockquote>
-
 <pre><code class="language-shell">例如：
 a=10
 b=10
 if [[ $a -lt 100 &amp;&amp; $b -gt 100 ]]
 then
-    echo &quot;返回 true&quot;
+	echo &quot;返回 true&quot;
 else
-    echo &quot;返回 false&quot;
+	echo &quot;返回 false&quot;
 fi
 </code></pre>
-
-<h6 id="toc_3">字符串运算符</h6>
-
-<pre><code class="language-text">=   检测两个字符串是否相等，相等返回true    例：[ $a = $b ]  
+<h6><a id="%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>字符串运算符</h6>
+<pre><code>=   检测两个字符串是否相等，相等返回true    例：[ $a = $b ]  
 !=  检测两个字符串是否相等，不相等返回true  例：[ $a != $b ]  
 -z  检测字符串长度是否为0，为0返回true　　　例：[ -z $a ]  
 -n  检测字符串长度是否为0，不为0返回true    例：[ -n $a ]  
 str 检测字符串是否为空，不为空返回true      例：[ $a ]  
 </code></pre>
-
-<h6 id="toc_4">文件测试运算符</h6>
-
+<h6><a id="%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>文件测试运算符</h6>
 <blockquote>
 <p>$file 为文件路径</p>
 </blockquote>
-
 <pre><code class="language-shell">[ -b $file ] 检测文件是否是块设备文件，是返回true  
 [ -c $file ] 检测文件是否是字符设备文件，如果是，则返回 true  
 [ -d $file ] 检测文件是否是目录，如果是，则返回 true  
@@ -240,187 +260,568 @@ str 检测字符串是否为空，不为空返回true      例：[ $a ]
 [ -s $file ] 检测文件是否为空（文件大小是否大于0），不为空返回 true
 [ -e $file ] 检测文件（包括目录）是否存在，如果是，则返回 true
 </code></pre>
-
 <ul>
-<li><p><strong>test命令</strong><br/><br/>
-<code>[]</code>作为基本运算符使用时，内部不能有空格  </p>
-<pre><code class="language-shell">例如：  
-a=5<br/>
-b=5<br/>
-res=$[a+b]<br/>
-echo $res # 结果为10
-</code></pre></li>
-<li><p><strong>read</strong><br/><br/>
-<code>read</code> 等待用户输入。  </p></li>
+<li><strong>test命令</strong><br />
+<code>[]</code>作为基本运算符使用时，内部不能有空格</li>
 </ul>
-
+<pre><code class="language-shell">例如：  
+a=5
+b=5
+res=$[a+b]
+echo $res # 结果为10
+</code></pre>
+<ul>
+<li><strong>read</strong><br />
+<code>read</code> 等待用户输入。</li>
+</ul>
 <pre><code class="language-shell">例：
 #!/bin/sh
 read name
 echo &quot;输入的值name等于 ${name}&quot;
 </code></pre>
-
 <ul>
-<li><strong>流程控制</strong><br/>
-###### if语句：<br/></li>
+<li><strong>流程控制</strong></li>
 </ul>
-
+<h6><a id="if%E8%AF%AD%E5%8F%A5%EF%BC%9A" class="anchor" aria-hidden="true" href="#if%E8%AF%AD%E5%8F%A5%EF%BC%9A"><span class="octicon octicon-link"></span></a>if语句：</h6>
 <pre><code class="language-shell">if condition
 then
-    command
+	command
 fi
 写成一行：if [ $(ps -ef | grep -c &quot;ssh&quot;) -gt 1 ]; then echo &quot;true&quot;; fi
 
 if else:
 if condition
 then
-    command1
+	command1
 else
-    command2
+	command2
 fi
 
 if else-if else:
 if condition1
 then
-    command1
+	command1
 elif condition2
 then
-    command2
+	command2
 else
-    command3
+	command3
 fi
 </code></pre>
-
-<h6 id="toc_5">for循环</h6>
-
+<h6><a id="for%E5%BE%AA%E7%8E%AF" class="anchor" aria-hidden="true" href="#for%E5%BE%AA%E7%8E%AF"><span class="octicon octicon-link"></span></a>for循环</h6>
 <pre><code class="language-shell">for var in item1 item2 ... itemN
 do
-    command1
-    ...
-    commandN
+	command1
+	...
+	commandN
 done
 
 写成一行：for var in item1 ... itemN; do cmooand1;command2... done;
 </code></pre>
-
-<h6 id="toc_6">while循环，与until循环用法相同（结果为真时退出循环）</h6>
-
+<h6><a id="while%E5%BE%AA%E7%8E%AF%EF%BC%8C%E4%B8%8Euntil%E5%BE%AA%E7%8E%AF%E7%94%A8%E6%B3%95%E7%9B%B8%E5%90%8C%EF%BC%88%E7%BB%93%E6%9E%9C%E4%B8%BA%E7%9C%9F%E6%97%B6%E9%80%80%E5%87%BA%E5%BE%AA%E7%8E%AF%EF%BC%89" class="anchor" aria-hidden="true" href="#while%E5%BE%AA%E7%8E%AF%EF%BC%8C%E4%B8%8Euntil%E5%BE%AA%E7%8E%AF%E7%94%A8%E6%B3%95%E7%9B%B8%E5%90%8C%EF%BC%88%E7%BB%93%E6%9E%9C%E4%B8%BA%E7%9C%9F%E6%97%B6%E9%80%80%E5%87%BA%E5%BE%AA%E7%8E%AF%EF%BC%89"><span class="octicon octicon-link"></span></a>while循环，与until循环用法相同（结果为真时退出循环）</h6>
 <pre><code class="language-shell">例：
 #!/bin/sh
 int=1
 while(( $int&lt;=5 ))
 do
-    echo $int
-    let &quot;int++&quot;
+	echo $int
+	let &quot;int++&quot;
 done
 </code></pre>
-
 <blockquote>
 <p>使用了 <code>let</code> 命令，用于执行一个或多个表达式，变量计算中不需要加上 <code>$</code> 来表示变量。</p>
 </blockquote>
-
-<h6 id="toc_7">case</h6>
-
+<h6><a id="case" class="anchor" aria-hidden="true" href="#case"><span class="octicon octicon-link"></span></a>case</h6>
 <pre><code class="language-shell">例：
 read aNum
 case $aNum in
-    1) echo &#39;1&#39;
-    ;;  # 两个；表示break，跳出
-    2|3) echo &#39;2&#39;
-    ;;
-    *) echo &#39;none&#39;
-        break # 跳出所有循环，continue跳出当前循环
-    ;;
+	1) echo '1'
+	;;  # 两个；表示break，跳出
+	2|3) echo '2'
+	;;
+	*) echo 'none'
+		break # 跳出所有循环，continue跳出当前循环
+	;;
 esac
 </code></pre>
-
 <ul>
-<li><strong>函数</strong><br/>
-###### 定义函数</li>
+<li><strong>函数</strong></li>
 </ul>
-
+<h6><a id="%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0" class="anchor" aria-hidden="true" href="#%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="octicon octicon-link"></span></a>定义函数</h6>
 <pre><code class="language-shell">[function] funcName[()]{
-    command
-    [return n] # n为0-255之间的数字
+	command
+	[return n] # n为0-255之间的数字
 }
 
 funcName  # 调用函数funcName
 </code></pre>
-
 <blockquote>
-<p>1.可以带function fun()定义，也可以直接fun()定义，不到任何参数<br/><br/>
+<p>1.可以带function fun()定义，也可以直接fun()定义，不到任何参数<br />
 2.参数返回，可以显示的加：return返回，如果不加，将以最后一条命令运行结果，作为返回值。</p>
 </blockquote>
-
 <pre><code class="language-shell">例：
 #!/bin/sh
 function funcName(){
-    echo &#39;this is a function!&#39;
+	echo 'this is a function!'
 }
 # 开始执行函数
 funcName
 # 函数执行结束
 </code></pre>
-
-<h6 id="toc_8">函数参数</h6>
-
+<h6><a id="%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0" class="anchor" aria-hidden="true" href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0"><span class="octicon octicon-link"></span></a>函数参数</h6>
 <pre><code class="language-shell">例：
 funWithParam(){
-    echo &quot;第一个参数：$1&quot;
-    echo &quot;第二个参数：$2&quot;
-    echo &quot;第五个参数：${5}&quot;
-    echo &quot;参数总个数：$#&quot;
-    echo &quot;作为字符串输出所有参数：$* !&quot;
+	echo &quot;第一个参数：$1&quot;
+	echo &quot;第二个参数：$2&quot;
+	echo &quot;第五个参数：${5}&quot;
+	echo &quot;参数总个数：$#&quot;
+	echo &quot;作为字符串输出所有参数：$* !&quot;
 }
 funWidthParam 1 2 3 4 5 6 7  #调用函数传参
 </code></pre>
-
 <blockquote>
-<p>备注：<code>$#</code> 传递到脚本的参数个数<br/><br/>
-<code>$*</code> 以一个单字符串显示所有向脚本传递的参数；<br/><br/>
-<code>$$</code> 脚本运行的当前进程ID号；<br/><br/>
-<code>$!</code> 后台运行的最优一个进程的ID号<br/><br/>
-<code>$@</code> 与<code>$*</code>相同，但是使用时加引号，并在引号中返回每个参数；<br/><br/>
-<code>$-</code> 显示<code>Shell</code>使用的当前选项，与<code>set</code>命令功能相同<br/><br/>
+<p>备注：<code>$#</code> 传递到脚本的参数个数<br />
+<code>$*</code> 以一个单字符串显示所有向脚本传递的参数；<br />
+<code>$$</code> 脚本运行的当前进程ID号；<br />
+<code>$!</code> 后台运行的最优一个进程的ID号<br />
+<code>$@</code> 与<code>$*</code>相同，但是使用时加引号，并在引号中返回每个参数；<br />
+<code>$-</code> 显示<code>Shell</code>使用的当前选项，与<code>set</code>命令功能相同<br />
 <code>$?</code> 显示最后命令的退出状态。<code>0</code>表示没有错误，其他任何值表明有错误。</p>
 </blockquote>
-
 <ul>
-<li><strong>Shell文件包含</strong><br/>
+<li><strong>Shell文件包含</strong><br />
 Shell包含外部脚本语法合适如下：</li>
 </ul>
-
 <pre><code class="language-shell">. filename    # 注意点号（.）和文件名中间有一个空格
 或
 source filename
 </code></pre>
-
 <blockquote>
-<p><strong>注：</strong>被包含的文件不需要可执行权限</p>
+<p>**注：**被包含的文件不需要可执行权限</p>
 </blockquote>
 
-		</div>
-	</article>
-	<div class="share-comment">
-	 
 
-	  
+    
 
-	  
+      </div>
 
-	</div>
-</div>        </div>
-			<footer id="footer" class="inner">Copyright &copy; 2020
-Powered by <a target="_blank" href="http://jythons.github.io">Jythons</a> &nbsp;&nbsp; 
-Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
-      </footer>
-		</div>
-	</div>
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+          <a href="16038139816578.html" 
+          title="Previous Post: 负载均衡之ip_hash">&laquo; 负载均衡之ip_hash</a>
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="16038127730075.html" 
+          title="Next Post: 一致性哈希算法">一致性哈希算法 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>Jythons小站</h1>
+                <div class="site-des">工作学习中的点点滴滴。</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="nginx.html"><strong>nginx</strong></a>
+        
+            <a href="Java.html"><strong>Java</strong></a>
+        
+            <a href="Shell.html"><strong>Shell</strong></a>
+        
+            <a href="LVS.html"><strong>LVS</strong></a>
+        
+            <a href="Redis.html"><strong>Redis</strong></a>
+        
+            <a href="ES.html"><strong>ES</strong></a>
+        
+            <a href="MQ.html"><strong>MQ</strong></a>
+        
+            <a href="Docker.html"><strong>Docker</strong></a>
+        
+            <a href="Mysql.html"><strong>Mysql</strong></a>
+        
+            <a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html"><strong>每日总结</strong></a>
+        
+            <a href="Postman.html"><strong>Postman</strong></a>
+        
+            <a href="Sublime.html"><strong>Sublime</strong></a>
+        
+            <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="16370681631438.html">Xdebug配置</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16369427253226.html">Sublime插件之ctags</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
 
   
     
 
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
 
 
-</body>
+
+  </body>
 </html>

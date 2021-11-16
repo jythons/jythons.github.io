@@ -4,14 +4,778 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2021-01-27T08:31:38+08:00</updated>
+  <updated>2021-11-16T22:17:25+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
-  <generator uri="http://www.coderforart.com/">CoderForArt</generator>
+  <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[Xdebug配置]]></title>
+    <link href="jythons.github.io/16370681631438.html"/>
+    <updated>2021-11-16T21:09:23+08:00</updated>
+    <id>jythons.github.io/16370681631438.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="1%E8%83%8C%E6%99%AF" class="anchor" aria-hidden="true" href="#1%E8%83%8C%E6%99%AF"><span class="octicon octicon-link"></span></a>1.背景</h2>
+<p>在不使用xdebug调试代码时，遇到报错，有时需要在代码内主动打印，来定位问题。这样做效率慢，并且在调试完很容易漏删测试代码。为了提高排查问题效率，使用xdebug来调试代码问题，像idea调试java代码一样。下面介绍一下如何配置xdebug，实现远程调试php代码。<br />
+我的环境是使用的docker来部署的代码。在宿主机远程调试docker内的代码。</p>
+<span id="more"></span><!-- more -->
+<h2><a id="2%E7%8E%AF%E5%A2%83" class="anchor" aria-hidden="true" href="#2%E7%8E%AF%E5%A2%83"><span class="octicon octicon-link"></span></a>2.环境</h2>
+<p>1.代码在docker环境部署<br />
+2.框架：laravel<br />
+3.php版本：7.4<br />
+4.xdebug版本：3.1+</p>
+<h2><a id="3%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#3%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>3.安装</h2>
+<p>需要在本地和docker内先安装php的xdebug拓展，安装方法如下：<br />
+<strong>本地安装：</strong></p>
+<pre><code>pecl install xdebug
+</code></pre>
+<blockquote>
+<p>安装成功后，会自动配置带php.ini内，pecl在安装php环境的时候，会自动安装，如果没有添加到环境变量，可以去php的安装目录下：<code>/bin</code>文件夹下查找</p>
+</blockquote>
+<p><strong>docker安装：</strong></p>
+<pre><code>1.安装xdebug拓展
+pecl install xdebug
 
+2.为php开启xdebug插件
+docker-php-ext-enable xdebug
+</code></pre>
+<blockquote>
+<p>docker下使用pecl安装完拓展，需要使用<code>docker-php-ext-enable</code>命令开启一下，该命令是docker容器下自带，可直接使用。</p>
+</blockquote>
+<h2><a id="4%E9%85%8D%E7%BD%AE-xdebug" class="anchor" aria-hidden="true" href="#4%E9%85%8D%E7%BD%AE-xdebug"><span class="octicon octicon-link"></span></a>4.配置xdebug</h2>
+<p>docker环境下得php.ini文件是不存在得，他的配置都是根据拓展插件分开存放的，所以docker下配置xdebug的文件只需要在这个文件下配置即可：<br />
+<code>/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini</code>。</p>
+<p><strong>配置信息：</strong></p>
+<pre><code>xdebug.profiler_enable=on
+xdebug.auto_trace=on
+xdebug.collect_params=on
+xdebug.collect_return=on
+xdebug.show_exception_trace = On
+xdebug.remote_autostart = Off
+xdebug.client_enable = On
+// 客户端监听端口（这里需要在phpstorm配置）
+xdebug.client_port = 9001
+// ide监听使用的标识
+xdebug.idekey=PHPSTORM
+xdebug.client_log=/tmp/xdebug_remote.log
+// 宿主机的地址，为了防止变化
+xdebug.client_host=docker.for.mac.localhost
+xdebug.mode=debug
+</code></pre>
+<blockquote>
+<p>这里需要注意，xdebug3.0以上版本，修改了配置key写法，3.0版本将2.0版本的remote_host等key换成了client_host，相对于2.0版本，把remote修改成client即可。
+本地环境配置同上，客户端配置，根据实际情况修改即可。</p>
+</blockquote>
+<h2><a id="5-phpstorm%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#5-phpstorm%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>5.phpstorm配置</h2>
+<p>配置好了xdebug配置后，下面开始配置phpstorm。</p>
+<h3><a id="5-1%E9%85%8D%E7%BD%AE-debug" class="anchor" aria-hidden="true" href="#5-1%E9%85%8D%E7%BD%AE-debug"><span class="octicon octicon-link"></span></a>5.1 配置debug</h3>
+<p>打开phpstorm的设置菜单，选择php -&gt; debug(调试)：<br />
+将xdebug的调试端口设置成9001（刚才在xdebug配置的客户端端口），配置好后点击<code>apply</code>。</p>
+<p><img src="media/16370681631438/phpstorm1.png" alt="phpstorm1" /></p>
+<h3><a id="5-2%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8" class="anchor" aria-hidden="true" href="#5-2%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="octicon octicon-link"></span></a>5.2 配置服务器</h3>
+<p>同样在上图所示的页面内，点击上面的服务器（server）。点击“+”号，添加一个服务器。<br />
+输入名称、主机（远程项目域名）、端口，调试器选择：<code>xdebug</code> 。<br />
+如果是远程服务器，需要将下面的复选框勾选，并且在项目文件上配置上本地项目和远程项目所在的绝对路径（到项目根目录即可）。点击：<code>apply</code>保存后，点击：<code>确定</code>。</p>
+<p><img src="media/16370681631438/phpstorm2.jpg" alt="phpstorm2" /></p>
+<h3><a id="5-3%E6%B7%BB%E5%8A%A0%E8%B0%83%E8%AF%95%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#5-3%E6%B7%BB%E5%8A%A0%E8%B0%83%E8%AF%95%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>5.3 添加调试配置</h3>
+<p>配置好上面的内容后，选择ide上面的调试配置，选择：<code>编辑配置</code>，添加远程调试配置。</p>
+<p><img src="media/16370681631438/phpstorm3.png" alt="phpstorm3" /></p>
+<p>点击：<code>+</code>，选择：<code>php远程调试</code>，输入名称，服务器选择刚才添加的服务器，IDE键选项填写：<code>PHPSTORM</code> (这里需要与xdebug配置的idekey配置保持一致)。配置好后，点击：<code>确定</code>，即可。下面就可以测试了。</p>
+<p><img src="media/16370681631438/phpstorm4.png" alt="phpstorm4" /></p>
+<h3><a id="5-4%E8%B0%83%E8%AF%95" class="anchor" aria-hidden="true" href="#5-4%E8%B0%83%E8%AF%95"><span class="octicon octicon-link"></span></a>5.4 调试</h3>
+<p>点击ide最上面像电话一样的按钮，然后点击debug按钮，即可监听debug。
+在调试接口的时候，在接口地址后面拼接：<code>XDEBUG_SESSION_START=PHPSTORM</code>参数，phpstorm的debug即可监听到请求，并且会在设置的断点处停止，下面就可以进行debug调试了。</p>
+<h2><a id="%E5%90%90%E6%A7%BD" class="anchor" aria-hidden="true" href="#%E5%90%90%E6%A7%BD"><span class="octicon octicon-link"></span></a>吐槽</h2>
+<p>网上搜索的一堆，都是在xdebug 2.0版本的配置，没有走通，后来是在启动项目时，检测php环境的xdebug出现了报错，根据报错发现的xdebug的参数修改了。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sublime插件之ctags]]></title>
+    <link href="jythons.github.io/16369427253226.html"/>
+    <updated>2021-11-15T10:18:45+08:00</updated>
+    <id>jythons.github.io/16369427253226.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E7%AE%80%E4%BB%8B" class="anchor" aria-hidden="true" href="#%E7%AE%80%E4%BB%8B"><span class="octicon octicon-link"></span></a>简介</h2>
+<p>ctags插件用于实现代码跳转跟踪，用来调试代码。</p>
+<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
+<p><strong>第一步：</strong><br />
+mac下安装：<code>brew install ctags</code></p>
+<p><strong>第二步：</strong><br />
+打开菜单在Preferences菜单中打开Package settings-&gt;ctags-&gt;settings-user和settings-default把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径,即ctags路径</p>
+<p><strong>第三步：</strong><br />
+配置快捷键：配置在sublime中使用Ctrl+左键单击函数跳转、Ctrl+右键单击跳回函数调用位置
+复制以下代码到 Preferences-&gt;Package Settings-&gt;Ctags-&gt;Mouse Bindings-User</p>
+<pre><code class="language-json">[
+    {
+        &quot;button&quot;: &quot;button1&quot;,
+        &quot;count&quot;: 1,
+        &quot;press_command&quot;: &quot;drag_select&quot;,
+        &quot;modifiers&quot;: [&quot;ctrl&quot;],
+        &quot;command&quot;: &quot;navigate_to_definition&quot;
+    },
+    {
+        &quot;button&quot;: &quot;button2&quot;,
+        &quot;count&quot;: 1,
+        &quot;modifiers&quot;: [&quot;ctrl&quot;],
+        &quot;command&quot;: &quot;jump_prev&quot;
+    }
+]
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[POSTMAN自动获取laravel csrf]]></title>
+    <link href="jythons.github.io/16353903707629.html"/>
+    <updated>2021-10-28T11:06:10+08:00</updated>
+    <id>jythons.github.io/16353903707629.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3" class="anchor" aria-hidden="true" href="#%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3"><span class="octicon octicon-link"></span></a>后端接口</h2>
+<pre><code>public function store(Request $request){
+    return Formater::ajaxReturn(0, 'success',['csrf_token'=&gt;csrf_token()]);
+}
+</code></pre>
+<h2><a id="%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC" class="anchor" aria-hidden="true" href="#%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC"><span class="octicon octicon-link"></span></a>预处理脚本</h2>
+<pre><code>var host = pm.environment.get(&quot;URL&quot;);
+
+pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (err, response) {
+    if (response.code === 200) {
+        console.log(response.json());
+        var res = response.json();
+        var csrf_token = res.data.csrf_token;
+
+        pm.environment.set(&quot;csrf_token&quot;, csrf_token);
+    }
+});
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[2021-10-19 企业微信授权：redirect_uri unauthorized]]></title>
+    <link href="jythons.github.io/16346556525274.html"/>
+    <updated>2021-10-19T23:00:52+08:00</updated>
+    <id>jythons.github.io/16346556525274.html</id>
+    <content type="html"><![CDATA[
+<p>今天在调试企业微信授权的时候，在授权后获取用户信息的时候，报错:<code>Failed to get user openid:redirect_uri unauthorized</code></p>
+<p>官方显示该错误是因为回调地址域名，没有添加到可信域名当中。但是已经检查多次，已经添加了，又折腾了半天，在官网问答页面看到了相似的问题，官方回复说是获取access_token的secret不是获取用户信息的应用的，但是检查数据库内的secret，发现是正确的。</p>
+<p>后来猜测可能是缓存的数据没有变，改代码，临时关闭缓存，测试通过。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[POSTMAN自动生成签名]]></title>
+    <link href="jythons.github.io/16342012831501.html"/>
+    <updated>2021-10-14T16:48:03+08:00</updated>
+    <id>jythons.github.io/16342012831501.html</id>
+    <content type="html"><![CDATA[
+<pre><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
+var token = &quot;lBZXpB5uRw5M&quot;;
+var timestamps = pm.environment.get(&quot;timestamps&quot;);
+
+var data = request.data; //获取请求参数，转为json
+console.log(&quot;data:&quot;, data)
+var newdata = [];
+newdata.push({
+            name: 'timestamp',
+            value: timestamps
+        })
+for (var a in data) {
+    if (a !== 'sign' &amp;&amp; a !== 'timestamp') { //过滤掉sign参数，生成键值对象{name,value}
+        newdata.push({
+            name: a,
+            value: data[a]
+        })
+    }
+}
+//排序
+newdata.sort(function (a, b) {
+    return a.name === b.name ? 0 : a.name &gt; b.name ? 1 : -1
+});
+//拼接字符串
+for (var ar = [], i = 0; newdata.length &gt; i; i++) {
+    var key = newdata[i].name;
+    var val = newdata[i].value;
+    if(key == 'name'){
+        val = encodeURIComponent(newdata[i].value);
+    }
+    
+    key &amp;&amp; val &amp;&amp; ar.push(key + &quot;=&quot; + val)
+}
+
+str = ar.join(&quot;&amp;&quot;); //拼接字符串
+str = str+token
+// str = encodeURIComponent(str);
+console.log(str);
+
+str = CryptoJS.MD5(str).toString().toLowerCase(); //md5加密后转大写
+pm.environment.set(&quot;sign&quot;, str);  //把sign设置为环境变量
+console.log(str);
+
+
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[MYSQL表设计规范]]></title>
+    <link href="jythons.github.io/16279600005409.html"/>
+    <updated>2021-08-03T11:06:40+08:00</updated>
+    <id>jythons.github.io/16279600005409.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E4%B8%80%E3%80%81%E8%A1%A8%E8%AE%BE%E8%AE%A1" class="anchor" aria-hidden="true" href="#%E4%B8%80%E3%80%81%E8%A1%A8%E8%AE%BE%E8%AE%A1"><span class="octicon octicon-link"></span></a>一、 表设计</h2>
+<ol>
+<li>
+<p>库名、表名、字段名必须使用小写字母，“_”分割。</p>
+</li>
+<li>
+<p>库名、表名、字段名必须不超过12个字符。</p>
+</li>
+<li>
+<p>库名、表名、字段名见名知意,建议使用名词而不是动词。</p>
+</li>
+<li>
+<p>建议使用InnoDB存储引擎。</p>
+</li>
+<li>
+<p>存储精确浮点数必须使用DECIMAL替代FLOAT和DOUBLE。</p>
+</li>
+<li>
+<p>建议使用UNSIGNED存储非负数值。</p>
+</li>
+<li>
+<p>建议使用INT UNSIGNED存储IPV4。</p>
+</li>
+<li>
+<p>整形定义中不添加长度，比如使用INT，而不是INT(4)。</p>
+</li>
+<li>
+<p>使用短数据类型，比如取值范围为0-80时，使用TINYINT UNSIGNED。</p>
+</li>
+<li>
+<p>不建议使用ENUM类型，使用TINYINT来代替。</p>
+</li>
+<li>
+<p>尽可能不使用TEXT、BLOB类型。</p>
+</li>
+<li>
+<p>VARCHAR(N)，N表示的是字符数不是字节数，比如VARCHAR(255)，可以最大可存储255个汉字，需要根据实际的宽度来选择N。</p>
+</li>
+<li>
+<p>VARCHAR(N)，N尽可能小，因为MySQL一个表中所有的VARCHAR字段最大长度是65535个字节，进行排序和创建临时表一类的内存操作时，会使用N的长度申</p>
+</li>
+<li>
+<p>表字符集选择UTF8。</p>
+</li>
+<li>
+<p>使用VARBINARY存储变长字符串。</p>
+</li>
+<li>
+<p>存储年使用YEAR类型。</p>
+</li>
+<li>
+<p>存储日期使用DATE类型。</p>
+</li>
+<li>
+<p>存储时间(精确到秒)建议使用TIMESTAMP类型，因为TIMESTAMP使用4字节，DATETIME使用8个字节。</p>
+</li>
+<li>
+<p>建议字段定义为NOT NULL。</p>
+</li>
+<li>
+<p>将过大字段拆分到其他表中。</p>
+</li>
+<li>
+<p>禁止在数据库中使用VARBINARY、BLOB存储图片、文件等。</p>
+</li>
+<li>
+<p>表结构变更需要通知DBA审核。</p>
+</li>
+</ol>
+<h2><a id="%E4%BA%8C%E3%80%81%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#%E4%BA%8C%E3%80%81%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>二、 索引</h2>
+<ol>
+<li>非唯一索引必须按照“idx_字段名称_字段名称[_字段名]”进行命名。 2. 唯一索引必须按照“uniq_字段名称_字段名称[_字段名]”进行命名。 3. 索引名称必须使用小写。</li>
+<li>索引中的字段数建议不超过5个。</li>
+<li>单张表的索引数量控制在5个以内。</li>
+<li>唯一键由3个以下字段组成，并且字段都是整形时，使用唯一键作为主键。</li>
+<li>没有唯一键或者唯一键不符合5中的条件时，使用自增(或者通过发号器获取)id作为主键。 8. 唯一键不和主键重复。</li>
+<li>索引字段的顺序需要考虑字段值去重之后的个数，个数多的放在前面。</li>
+<li>ORDER BY，GROUP BY，DISTINCT的字段需要添加在索引的后面。</li>
+<li>使用EXPLAIN判断SQL语句是否合理使用索引，尽量避免extra列出现:Using File Sort，Using Temporary。</li>
+<li>UPDATE、DELETE语句需要根据WHERE条件添加索引。</li>
+<li>不建议使用%前缀模糊查询，例如LIKE “%weibo”。</li>
+<li>对长度过长的VARCHAR字段建立索引时，添加crc32或者MD5 Hash字段，对Hash字段建立索引。</li>
+<li>合理创建联合索引(避免冗余)，(a,b,c) 相当于 (a) 、(a,b) 、(a,b,c)。</li>
+<li>合理利用覆盖索引。</li>
+<li>SQL变更需要确认索引是否需要变更并通知DBA。</li>
+</ol>
+<h2><a id="%E4%B8%89%E3%80%81sql%E8%AF%AD%E5%8F%A5" class="anchor" aria-hidden="true" href="#%E4%B8%89%E3%80%81sql%E8%AF%AD%E5%8F%A5"><span class="octicon octicon-link"></span></a>三、 SQL语句</h2>
+<ol>
+<li>使用prepared statement，可以提供性能并且避免SQL注入。</li>
+<li>SQL语句中IN包含的值不应过多。</li>
+<li>UPDATE、DELETE语句不使用LIMIT。</li>
+<li>WHERE条件中必须使用合适的类型，避免MySQL进行隐式类型转化。</li>
+<li>SELECT语句只获取需要的字段。</li>
+<li>SELECT、INSERT语句必须显式的指明字段名称，不使用SELECT *，不使用INSERT INTO table()。</li>
+<li>使用SELECT column_name1, column_name2 FROM table WHERE [condition]而不是SELECT column_name1 FROM table WHERE
+[condition]和SELECT column_name2 FROM table WHERE [condition]。</li>
+<li>WHERE条件中的非等值条件(IN、BETWEEN、&lt;、&lt;=、&gt;、&gt;=)会导致后面的条件使用不了索引。</li>
+<li>避免在SQL语句进行数学运算或者函数运算，容易将业务逻辑和DB耦合在一起。</li>
+<li>INSERT语句使用batch提交(INSERT INTO table VALUES(),(),()......)，values的个数不应过多。</li>
+<li>避免使用存储过程、触发器、函数等，容易将业务逻辑和DB耦合在一起，并且MySQL的存储过程、触发器、函数中存在一定的bug。</li>
+<li>避免使用JOIN。</li>
+<li>使用合理的SQL语句减少与数据库的交互次数。</li>
+<li>不使用ORDER BY RAND()，使用其他方法替换。</li>
+<li>建议使用合理的分页方式以提高分页的效率。</li>
+<li>统计表中记录数时使用COUNT(*)，而不是COUNT(primary_key)和COUNT(1)。</li>
+<li>禁止在从库上执行后台管理和统计类型功能的QUERY。</li>
+</ol>
+<h2><a id="%E5%9B%9B%E3%80%81%E6%95%A3%E8%A1%A8" class="anchor" aria-hidden="true" href="#%E5%9B%9B%E3%80%81%E6%95%A3%E8%A1%A8"><span class="octicon octicon-link"></span></a>四、 散表</h2>
+<ol>
+<li>每张表数据量建议控制在5000w以下。</li>
+<li>可以结合使用hash、range、lookup table进行散表。</li>
+<li>散表如果使用md5(或者类似的hash算法)进行散表，表名后缀使用16进制，比如user_ff。</li>
+<li>推荐使用CRC32求余(或者类似的算术算法)进行散表，表名后缀使用数字，数字必须从0开始并等宽，比如散100张表，后缀从00-99。 5. 使用时间散表，表名后缀必须使用特定格式，比如按日散表user_20110209、按月散表user_201102。</li>
+</ol>
+<h2><a id="%E4%BA%94%E3%80%81%E5%85%B6%E4%BB%96" class="anchor" aria-hidden="true" href="#%E4%BA%94%E3%80%81%E5%85%B6%E4%BB%96"><span class="octicon octicon-link"></span></a>五、 其他</h2>
+<ol>
+<li>批量导入、导出数据需要DBA进行审查，并在执行过程中观察服务。</li>
+<li>批量更新数据，如update,delete 操作，需要DBA进行审查，并在执行过程中观察服务。</li>
+<li>产品出现非数据库平台运维导致的问题和故障时，如前端被抓站，请及时通知DBA，便于维护服务稳定。</li>
+<li>业务部门程序出现bug等影响数据库服务的问题,请及时通知DBA，便于维护服务稳定。</li>
+<li>业务部门推广活动，请提前通知DBA进行服务和访问评估。</li>
+<li>如果出现业务部门人为误操作导致数据丢失，需要恢复数据，请在第一时间通知DBA，并提供准确时间，误操作语句等重要线索。</li>
+</ol>
+<hr />
+<h2><a id="faq" class="anchor" aria-hidden="true" href="#faq"><span class="octicon octicon-link"></span></a>FAQ</h2>
+<p><strong>1-1.库名、表名、字段名必须使用小写字母，“_”分割。</strong>
+a)MySQL有配置参数lower_case_table_names，不可动态更改，linux系统默认为0，即库表名以实际情况存储，大小写敏感。如果是1，以小写存储，大小写不敏感。<br />
+b) 如果大小写混合用，可能存在abc,Abc,ABC等多个表共存，容易导致混乱。<br />
+c) 字段名显示区分大小写，但实际使用不区分，即不可以建立两个名字一样但大小写不一样的字段。<br />
+d) 为了统一规范， 库名、表名、字段名使用小写字母。</p>
+<p><strong>1-2.库名、表名、字段名必须不超过12个字符。 库名、表名、字段名支持最多64个字符，但为了统一规范、易于辨识以及减少传输量，必须不超过12字符。</strong></p>
+<p><strong>1-3.库名、表名、字段名见名知意,建议使用名词而不是动词。</strong>
+a) 用户评论可用表名usercomment或者comment。<br />
+b) 库表是一种客观存在的事物，一种对象，所以建议使用名词。</p>
+<p><strong>1-4.建议使用InnoDB存储引擎。</strong>
+a) 5.5以后的默认引擘，支持事务，行级锁，更好的恢复性，高并发下性能更好，对多核，大内存，ssd等硬件支持更好。 b) 具体比较可见附件的官方白皮书。</p>
+<p><strong>1-5.存储精确浮点数必须使用DECIMAL替代FLOAT和DOUBLE。</strong>
+a) mysql中的数值类型(不包括整型)
+IEEE754浮点数: float (单精度) ， double 或 real (双精度)
+定点数: decimal 或 numeric 单精度浮点数的有效数字二进制是24位，按十进制来说，是8位;双精度浮点数的有效数字二进制是53位，按十进制来说，是16 位
+一个实数的有效数字超过8位，用单精度浮点数来表示的话，就会产生误差!同样，如果一个实数的有效数字超过16位，用双精度浮点数来表示，也会产生误差<br />
+b) IEEE754标准的计算机浮点数，在内部是用二进制表示的，但在将一个十进制数转换为二进制浮点数时，也会造成误差，原因是不是所有的数都能转换成有限长度
+即一个二进制可以准确转换成十进制，但一个带小数的十进制不一定能够准确地用二进制来表示。<br />
+实例:
+drop table if exists t;
+create table t(value float(10,2));
+insert into t values(131072.67),(131072.68); select value from t;
++-----------+
+| value     |
++-----------+
+| 131072.67 |
+| 131072.69 |
++-----------+</p>
+<p><strong>1-6.建议使用UNSIGNED存储非负数值。 同样的字节数，存储的数值范围更大。如tinyint 有符号为 -128-127，无符号为0-255</strong><br />
+<strong>1-7. 如何使用INT UNSIGNED存储ip?</strong>
+使用INT UNSIGNED而不是char(15)来存储ipv4地址，通过MySQL函数inet_ntoa和inet_aton来进行转化。Ipv6地址目前没有转化函数，需要使用DECIMAL或者两个bigINT来
+SELECT INET_ATON('209.207.224.40'); 3520061480
+SELECT INET_NTOA(3520061480); 209.207.224.40</p>
+<p><strong>1-8. INT[M]，M值代表什么含义?</strong>
+注意数值类型括号后面的数字只是表示宽度而跟存储范围没有关系，比如INT(3)默认显示3位，空格补齐，超出时正常显示，python、java客户端等不具备这个功</p>
+<p><strong>1-10.不建议使用ENUM、SET类型，使用TINYINT来代替。</strong>
+a) ENUM，有三个问题:添加新的值要做DDL，默认值问题(将一个非法值插入ENUM(也就是说，允许的值列之外的字符串)，将插入空字符串以作为特殊错误值)，索引
+实例:
+drop table if exists t;
+create table t(sex enum('0','1'));
+insert into t values(1);
+insert into t values('3');
+select * from t;
++------+
+| sex  |
++------+
+|0     |
++------+
+2 rows in set (0.00 sec)</p>
+<p><strong>1-11.尽可能不使用TEXT、BLOB类型。</strong>
+a) 索引排序问题，只能使用max_sort_length的长度或者手工指定ORDER BY SUBSTRING(column, length)的长度来排序<br />
+b) Memory引擘不支持text,blog类型，会在磁盘上生成临时表<br />
+c) 可能浪费更多的空间<br />
+d) 可能无法使用adaptive hash index<br />
+e) 导致使用where没有索引的语句变慢</p>
+<p><strong>1-13. VARCHAR中会产生额外存储吗? VARCHAR(M)，如果M&lt;256时会使用一个字节来存储长度，如果M&gt;=256则使用两个字节来存储长度。</strong><br />
+<strong>1-14.表字符集选择UTF8。</strong>
+a) 使用utf8字符集，如果是汉字，占3个字节，但ASCII码字符还是1个字节。<br />
+b) 统一，不会有转换产生乱码风险<br />
+c) 其他地区的用户(美国、印度、台湾)无需安装简体中文支持，就能正常看您的文字，并且不会出现乱码<br />
+d) ISO-8859-1编码(latin1)使用了单字节内的所有空间，在支持ISO-8859-1的系统中传输和存储其他任何编码的字节流都不会被抛弃。即把其他任何编码的字节流</p>
+<p><strong>1-15.使用VARBINARY存储变长字符串。</strong>
+二进制字节流，不存在编码问题</p>
+<p><strong>1-18. 为什么建议使用TIMESTAMP来存储时间而不是DATETIME?</strong>
+DATETIME和TIMESTAMP都是精确到秒，优先选择TIMESTAMP，因为TIMESTAMP只有4个字节，而DATETIME8个字节。同时TIMESTAMP具有自动赋值以及自动更新的特性。 如何使用TIMESTAMP的自动赋值属性?<br />
+a) 将当前时间作为ts的默认值:ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP。<br />
+b) 当行更新时，更新ts的值:ts TIMESTAMP DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP。<br />
+c) 可以将1和2结合起来:ts TIMESTAMP DEFAULT  CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP。</p>
+<p><strong>1-19.建议字段定义为NOT NULL。</strong>
+a)如果null字段被索引，需要额外的1字节<br />
+b)使索引，索引统计，值的比较变得更复杂<br />
+c)可用0，''代替<br />
+d)如果是索引字段，一定要定义为not null</p>
+<p><strong>1-21.禁止在数据库中使用VARBINARY、BLOB存储图片、文件等。
+采用分布式文件系统更高效</strong></p>
+<p><strong>2. 为什么MySQL的性能依赖于索引?</strong>
+MySQL的查询速度依赖良好的索引设计，因此索引对于高性能至关重要。合理的索引会加快查询速度(包括UPDATE和DELETE的速度，MySQL会将包含该行的page加
+MySQL索引查找类似于新华字典的拼音和部首查找，当拼音和部首索引不存在时，只能通过一页一页的翻页来查找。当MySQL查询不能使用索引时，MySQL会进行全</p>
+<p><strong>2-5. 为什么一张表中不能存在过多的索引?</strong>
+InnoDB的secondary index使用b+tree来存储，因此在UPDATE、DELETE、INSERT的时候需要对b+tree进行调整，过多的索引会减慢更新的速度。</p>
+<p><strong>2-11. EXPLAIN语句</strong>
+EXPLAIN 语句(在MySQL客户端中执行)可以获得MySQL如何执行SELECT语句的信息。通过对SELECT语句执行EXPLAIN，可以知晓MySQL执 行该SELECT语句时是否使用了索引、全表扫描、临时表、排序等信息。尽量避免MySQL进行全表扫描、使用临时表、排序等。详见官方文档。</p>
+<p><strong>2-13.不建议使用%前缀模糊查询，例如LIKE “%weibo”。
+会导致全表扫描</strong><br />
+<strong>2-14. 如何对长度大于50的VARCHAR字段建立索引? 下面的表增加一列url_crc32，然后对url_crc32建立索引，减少索引字段的长度，提高效率。</strong>
+CREATE TABLE url(
+......
+url VARCHAR(255) NOT NULL DEFAULT 0, url_crc32 INT UNSIGNED NOT NULL DEFAULT 0,
+......
+index idx_url(url_crc32)
+)</p>
+<p><strong>2-16. 什么是覆盖索引?</strong>
+InnoDB 存储引擎中，secondary index(非主键索引)中没有直接存储行地址，存储主键值。如果用户需要查询secondary index中所不包含的数据列时，需要先通过secondary index查找到主键值，然后再通过主键查询到其他数据列，因此需要查询两次。
+覆盖索引的概念就是查询可以通过在一个索引中完成，覆盖索引效率会比较高，主键查询是天然的覆盖索引。
+合理的创建索引以及合理的使用查询语句，当使用到覆盖索引时可以获得性能提升。
+比如SELECT email,uid FROM user_email WHERE uid=xx，如果uid不是主键，适当时候可以将索引添加为index(uid,email)，以获得性能提升。</p>
+<p><strong>3-3.UPDATE、DELETE语句不使用LIMIT。</strong>
+a) 可能导致主从数据不一致<br />
+b) 会记录到错误日志，导致日志占用大量空间<br />
+<strong>3-4. 为什么需要避免MySQL进行隐式类型转化?</strong>
+因为MySQL进行隐式类型转化之后，可能会将索引字段类型转化成=号右边值的类型，导致使用不到索引，原因和避免在索引字段中使用函数是类似的。</p>
+<p>*<em>3-6. 为什么不建议使用SELECT <em>?</em></em>
+增加很多不必要的消耗(cpu、io、内存、网络带宽);增加了使用覆盖索引的可能性;当表结构发生改变时，前段也需要更新。</p>
+<p><strong>3-13. 如何减少与数据库的交互次数?</strong>
+使用下面的语句来减少和db的交互次数:
+INSERT ... ON DUPLICATE KEY UPDATE
+REPLACE
+INSERT IGNORE
+INSERT INTO values(),()如何结合使用多个纬度进行散表散库?
+例如微博message，先按照crc32(message_id)%16将message散到16个库中，然后针对每个库中的表，一天生成一张新表。</p>
+<p><strong>3-14. 为什么不能使用ORDER BY rand()?</strong>
+因为ORDER BY rand()会将数据从磁盘中读取，进行排序，会消耗大量的IO和CPU，可以在程序中获取一个rand值，然后通过在从数据库中获取对应的值。</p>
+<p><strong>3-15. MySQL中如何进行分页?</strong></p>
+<p>假如有类似下面分页语句:
+SELECT * FROM table ORDER BY TIME DESC LIMIT 10000,10;
+这种分页方式会导致大量的io，因为MySQL使用的是提前读取策略。
+推荐分页方式:
+SELECT * FROM table WHERE TIME&lt;last_TIME ORDER BY TIME DESC LIMIT 10.
+SELECT * FROM table inner JOIN(SELECT id FROM table ORDER BY TIME LIMIT 10000,10) as t USING(id)</p>
+<p><strong>3-17.为什么避免使用复杂的SQL?</strong>
+拒绝使用复杂的SQL，将大的SQL拆分成多条简单SQL分步执行。原因:简单的SQL容易使用到MySQL的query cache;减少锁表时间特别是MyISAM;可以使用多核cpu。</p>
+<p><strong>2. InnoDB存储引擎为什么避免使用COUNT(*)?</strong>
+InnoDB表避免使用COUNT(*)操作，计数统计实时要求较强可以使用memcache或者redis，非实时统计可以使用单独统计表，定时更新。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Nginx+php Docker-compose]]></title>
+    <link href="jythons.github.io/16176799000056.html"/>
+    <updated>2021-04-06T11:31:40+08:00</updated>
+    <id>jythons.github.io/16176799000056.html</id>
+    <content type="html"><![CDATA[
+<pre><code>version: &quot;2.1&quot;
+services:
+  nginx:
+    image: nginx
+    ports:
+      - &quot;80:80&quot;
+    volumes:
+      - ~/kelala/nginx/www:/usr/share/nginx/html
+      - ~/kelala/nginx/conf:/etc/nginx/conf.d
+      - ~/kelala/nginx/logs:/var/log/nginx
+    networks:
+      - lnmp-network
+  php:
+    image: php:7.3-fpm
+    volumes:
+      - ~/kelala/nginx/www:/usr/share/nginx/html
+    networks:
+      - lnmp-network
+networks:
+  lnmp-network:
+</code></pre>
+<h2><a id="nginx%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#nginx%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>nginx 配置</h2>
+<pre><code>server {
+    listen       80;
+    server_name  hdcrmlocal.kerlala.com;
+    root   /usr/share/nginx/html/hdcrm.kerlala.com/public/;
+    index  index.html index.htm index.php;
+
+    location / {
+        
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    #error_page   500 502 503 504  /50x.html;
+    #location = /50x.html {
+    #    root   /usr/share/nginx/html;
+    #}
+
+    location ~ \.php$ {
+        root           /usr/share/nginx/html/hdcrm.kerlala.com/public/;
+        fastcgi_pass   172.19.0.3:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+}
+
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Docker PHP环境搭建]]></title>
+    <link href="jythons.github.io/16176785301116.html"/>
+    <updated>2021-04-06T11:08:50+08:00</updated>
+    <id>jythons.github.io/16176785301116.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>拉取PHP镜像</h2>
+<pre><code>docker pull php:7.3-fpm
+</code></pre>
+<h2><a id="%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95"><span class="octicon octicon-link"></span></a>安装拓展</h2>
+<p>docker容器内安装php拓展使用如下命令进行安装</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>docker-php-ext-source</td>
+<td>在容器中创建一个/usr/src/php目录</td>
+</tr>
+<tr>
+<td>docker-php-ext-enable</td>
+<td>启用PHP扩展，省去我们手工编辑php.ini的过程</td>
+</tr>
+<tr>
+<td>docker-php-ext-install</td>
+<td>安装并启用PHP扩展</td>
+</tr>
+<tr>
+<td>docker-php-ext-configure</td>
+<td>经常与docker-php-ext-install搭配，在需要自定义扩展的配置时使用</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>例如：安装pdo拓展，使用如下命令即可</p>
+</blockquote>
+<pre><code>docker-php-ext-install pdo
+</code></pre>
+<blockquote>
+<p>有些拓展使用 <code>docker-php-ext-install</code> 命令不能安装，可以使用pecl工具进行安装，当装好php的容器之后，容器内已经安装好了pecl工具，所以直接拿来使用即可。使用方法如下：</p>
+</blockquote>
+<pre><code>例如安装php的memcached拓展
+1.首先更新源
+apt-get update
+2.安装所需依赖
+apt-get install -y libmemcached-dev zlib1g-dev
+3.安装memcached拓展
+pecl install memcached
+4.启用拓展
+docker-php-ext-enable memcached
+
+安装gd库拓展
+1.首先更新源
+apt-get update
+2.安装所需依赖
+apt-get install -y libwebp-dev libjpeg-dev libpng-dev libfreetype6-dev
+3.安装拓展
+docker-php-ext-install gd 
+
+docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/  \
+  &amp;&amp; docker-php-ext-install -j$(nproc) gd iconv mcrypt
+</code></pre>
+<blockquote>
+<p>安装GD库还是报错：docker-php-ext-configure gd --with-webp=/usr/include/webp --with-jpeg=/usr/include --with-freetype=/usr/include/freetype2/</p>
+</blockquote>
+<blockquote>
+<p>也可以编写一个DockerFile，加入如下命令：</p>
+</blockquote>
+<pre><code>FROM php:7.1-fpm
+RUN apt-get update \
+	# 手动安装依赖
+	&amp;&amp; apt-get install -y libmemcached-dev zlib1g-dev \
+	# 安装需要的扩展
+   &amp;&amp; pecl install memcached-2.2.0 \
+   # 启用扩展
+   &amp;&amp; docker-php-ext-enable memcached
+</code></pre>
+<pre><code>安装zip扩展所需的依赖扩展
+apt-get update &amp;&amp; apt-get install -y zlib1g-dev &amp;&amp; apt-get install -y libzip-dev
+
+安装并启动zip扩展
+docker-php-ext-install zip
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Docker网络]]></title>
+    <link href="jythons.github.io/16121029199620.html"/>
+    <updated>2021-01-31T22:21:59+08:00</updated>
+    <id>jythons.github.io/16121029199620.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+<h2><a id="none%E7%BD%91%E7%BB%9C" class="anchor" aria-hidden="true" href="#none%E7%BD%91%E7%BB%9C"><span class="octicon octicon-link"></span></a>none网络</h2>
+<p>none网络不允许外部用户直连，如果需要访问，需要使用docker命令登录到容器内访问</p>
+<h2><a id="host%E7%BD%91%E7%BB%9C" class="anchor" aria-hidden="true" href="#host%E7%BD%91%E7%BB%9C"><span class="octicon octicon-link"></span></a>host网络</h2>
+<p>host网络是宿主机与容器共享IP地址，当访问者请求服务器的时候，同时也会给容器发送请求。
+这种网路比较直接，但是在生产环境中不建议使用这种网络，因为存在大量的端口冲突，一个容器占用了端口，其他容器就不能使用这个端口了。</p>
+<h2><a id="bridge%E7%BD%91%E7%BB%9C" class="anchor" aria-hidden="true" href="#bridge%E7%BD%91%E7%BB%9C"><span class="octicon octicon-link"></span></a>bridge网络</h2>
+<p>使用网桥的方式与外网进行沟通，这样每个容器都可以使用相同的端口，通过与宿主机端口映射的方式实现。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dockerfile]]></title>
+    <link href="jythons.github.io/16121005012878.html"/>
+    <updated>2021-01-31T21:41:41+08:00</updated>
+    <id>jythons.github.io/16121005012878.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+<pre><code># 第一行一般写一些注释描述
+FROM debian
+MAINTAINER Jythons
+RUN mkdir test1 # 容器启动后，执行的命令
+RUN touch text2 # 同上
+COPY test3 .    # 复制文件到当前目录
+ADD test4.tar.gz . # 与copy相同，不同的地方是，拷贝压缩包是，会自动解压，后面如果添加的是URL，他会把这个地址对应的数据下载到目标文件夹下
+EXPOSE 80 # 将宿主机端口与docker容器的端口进行绑定，也可以在服务启动时，使用-p指定
+VALUME /data # 将宿主机的目录绑定到docker容器内，可以在容器启动时，使用-v指定
+ENTRYPOINT [&quot;/bin/sh&quot;] # 这个命令永远都会被执行，并且会和CMD的命令一起执行
+CMD [&quot;-c&quot;, &quot;ls -l&quot;] # 启动容器时，如果没有指定交互模式，则会执行，如果指定了，就不会执行
+
+</code></pre>
+<p>写好dockerfile文件后，使用下面的命令进行构建一个镜像</p>
+<pre><code>docker build -t mysh .
+</code></pre>
+<blockquote>
+<p>mysh 是镜像名称
+. 表示在当前目录</p>
+</blockquote>
+<p>接下来就是启动这个镜像</p>
+<pre><code>docker run mysh
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Docker 环境搭建]]></title>
+    <link href="jythons.github.io/16120880849201.html"/>
+    <updated>2021-01-31T18:14:44+08:00</updated>
+    <id>jythons.github.io/16120880849201.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+<p>从docker官网下载安装脚本</p>
+<pre><code>curl -fsSL get.docker.com -o get-docker.sh
+</code></pre>
+<p>执行脚本</p>
+<pre><code>使用阿里云镜像源执行脚本
+get-docker.sh --mirror Aliyun
+</code></pre>
+<p>安装完成后重载一下daemon-reload</p>
+<pre><code>systemctl daemon-reload
+</code></pre>
+<p>然后重启docker</p>
+<pre><code>systemctl restart docker
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Docker 基本使用]]></title>
+    <link href="jythons.github.io/16120805268878.html"/>
+    <updated>2021-01-31T16:08:46+08:00</updated>
+    <id>jythons.github.io/16120805268878.html</id>
+    <content type="html"><![CDATA[
+<span id="more"></span><!-- more -->
+<h2><a id="%E6%9F%A5%E7%9C%8Bdocker%E8%BF%9B%E7%A8%8B" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E7%9C%8Bdocker%E8%BF%9B%E7%A8%8B"><span class="octicon octicon-link"></span></a>查看docker进程</h2>
+<pre><code>docker ps 查看当前正在执行的进程
+docker ps -a 查看所有进程，包括曾经执行过的进程
+</code></pre>
+<h2><a id="%E6%9F%A5%E7%9C%8Bdocker%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E7%9C%8Bdocker%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>查看docker镜像</h2>
+<pre><code>docker images
+</code></pre>
+<h2><a id="%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>运行一个镜像</h2>
+<pre><code>docker run image-name # image-name是镜像名称
+</code></pre>
+<pre><code>启动nginx容器
+docker start container_id
+暂停容器
+docker pause container_id
+停止暂停
+docker unpause container_id
+停止容器
+docker stop container_id
+杀死一个容器
+docker kill container_id
+删除容器
+docker rm container_id
+</code></pre>
+<h3><a id="%E4%BB%A5server%E7%9A%84%E5%BD%A2%E5%BC%8F%EF%BC%8C%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E7%9A%84%E8%BF%9B%E7%A8%8B" class="anchor" aria-hidden="true" href="#%E4%BB%A5server%E7%9A%84%E5%BD%A2%E5%BC%8F%EF%BC%8C%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E7%9A%84%E8%BF%9B%E7%A8%8B"><span class="octicon octicon-link"></span></a>以server的形式，启动一个后台运行的进程</h3>
+<pre><code>docker run -d redis:3.2 redis-server
+</code></pre>
+<blockquote>
+<p>-d 表示后台启动
+redis:3.2 表示运行一个3.2版本的Redis服务
+redis-server 表示已服务的方式启动，不加此项，不会启动主进程</p>
+</blockquote>
+<h3><a id="%E6%9C%AC%E6%9C%BA%E7%AB%AF%E5%8F%A3%E4%B8%8E%E9%95%9C%E5%83%8F%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84%E7%9A%84%E6%96%B9%E5%BC%8F%E5%90%AF%E5%8A%A8" class="anchor" aria-hidden="true" href="#%E6%9C%AC%E6%9C%BA%E7%AB%AF%E5%8F%A3%E4%B8%8E%E9%95%9C%E5%83%8F%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84%E7%9A%84%E6%96%B9%E5%BC%8F%E5%90%AF%E5%8A%A8"><span class="octicon octicon-link"></span></a>本机端口与镜像端口映射的方式启动</h3>
+<pre><code>docker run -d -p 80:80 nginx
+</code></pre>
+<blockquote>
+<p>-p 80:80 表示把本地物理机的80端口和NGINX镜像的80端口绑定，前面是物理机的端口，后面的是镜像的端口</p>
+</blockquote>
+<h3><a id="%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%A4%B9%E6%8C%82%E8%BD%BD%E5%88%B0docker%E9%95%9C%E5%83%8F%E5%86%85" class="anchor" aria-hidden="true" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%A4%B9%E6%8C%82%E8%BD%BD%E5%88%B0docker%E9%95%9C%E5%83%8F%E5%86%85"><span class="octicon octicon-link"></span></a>本地文件夹挂载到docker镜像内</h3>
+<pre><code>docker run -d -p 80:80 -v 本地文件夹:镜像文件夹 nginx
+</code></pre>
+<blockquote>
+<p>-v 表示将本地文件夹挂载到镜像中去，实现镜像与宿主机文件共享</p>
+</blockquote>
+<h2><a id="%E4%B8%8E%E5%AE%B9%E5%99%A8%E4%BA%A4%E4%BA%92" class="anchor" aria-hidden="true" href="#%E4%B8%8E%E5%AE%B9%E5%99%A8%E4%BA%A4%E4%BA%92"><span class="octicon octicon-link"></span></a>与容器交互</h2>
+<pre><code>docker exec -it container_id redis-cli
+</code></pre>
+<blockquote>
+<p>-it 表示这个命令是和终端有交互的
+container_id 表示容器的短名称，可以使用docker ps 命令查看
+redis-cli 表示使用redis-cli的方式进行交互，如果使用bash，表示使用bash进行交互</p>
+</blockquote>
+<h2><a id="%E6%89%93%E5%8C%85%E6%88%90%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%89%93%E5%8C%85%E6%88%90%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>打包成镜像</h2>
+<pre><code>docker commit 
+</code></pre>
+<blockquote>
+<p>docker commit用来将程序打包成镜像，通常项目中使用Dockerfile的方式实现</p>
+</blockquote>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RabbitMQ安装]]></title>
@@ -20,32 +784,26 @@
     <id>jythons.github.io/16116746644581.html</id>
     <content type="html"><![CDATA[
 <span id="more"></span><!-- more -->
-
-<h2 id="toc_0">下载所需软件包：</h2>
-
+<h2><a id="%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%9A" class="anchor" aria-hidden="true" href="#%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%9A"><span class="octicon octicon-link"></span></a>下载所需软件包：</h2>
 <p>erlang、socat、rabbitmq-server的rpm包</p>
-
-<h2 id="toc_1">安装</h2>
-
-<pre><code class="language-text">rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm
+<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
+<pre><code>rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm
 rpm -ivh socat-17.3.2-5.el7.lux.x86_64.rpm
 rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
 </code></pre>
-
-<h2 id="toc_2">启动</h2>
-
-<pre><code class="language-text">sbin]$ ./rabbitmq-server -detached
+<h2><a id="%E5%90%AF%E5%8A%A8" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8"><span class="octicon octicon-link"></span></a>启动</h2>
+<pre><code>sbin]$ ./rabbitmq-server -detached
 </code></pre>
-
-<h2 id="toc_3">启动管理工具</h2>
-
-<pre><code class="language-text">sbin]$ ./rabbitmq-plugins enable rabbitmq_management
+<h2><a id="%E9%80%80%E5%87%BA" class="anchor" aria-hidden="true" href="#%E9%80%80%E5%87%BA"><span class="octicon octicon-link"></span></a>退出</h2>
+<pre><code>./rabbitmqctl stop
 </code></pre>
-
+<h2><a id="%E5%90%AF%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="octicon octicon-link"></span></a>启动管理工具</h2>
+<pre><code>sbin]$ ./rabbitmq-plugins enable rabbitmq_management
+</code></pre>
 <blockquote>
-<p>使用RabbitMQ 管理工具登录时，提示guest用户只能本地登录，解决方法如下：<br/>
-./rabbitmqctl add_user jythons jythons<br/>
-./rabbitmqctl set_permissions -p / jythons &quot;.<em>&quot; &quot;.</em>&quot; &quot;.*&quot;<br/>
+<p>使用RabbitMQ 管理工具登录时，提示guest用户只能本地登录，解决方法如下：
+./rabbitmqctl add_user jythons jythons
+./rabbitmqctl set_permissions -p / jythons &quot;.<em>&quot; &quot;.</em>&quot; &quot;.*&quot;
 ./rabbitmqctl set_user_tags jythons administrator</p>
 </blockquote>
 
@@ -58,50 +816,37 @@ rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
     <updated>2021-01-25T22:05:47+08:00</updated>
     <id>jythons.github.io/16115835473812.html</id>
     <content type="html"><![CDATA[
-<p>RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据，RabbitMQ是使用Erlang语言来编写的，并且RabbitMQ是基于AMQP协议的。<br/>
-<span id="more"></span><!-- more --></p>
-
-<h2 id="toc_0">1 AMQP协议</h2>
-
+<p>RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据，RabbitMQ是使用Erlang语言来编写的，并且RabbitMQ是基于AMQP协议的。</p>
+<span id="more"></span><!-- more -->
+<h2><a id="1-amqp%E5%8D%8F%E8%AE%AE" class="anchor" aria-hidden="true" href="#1-amqp%E5%8D%8F%E8%AE%AE"><span class="octicon octicon-link"></span></a>1 AMQP协议</h2>
 <p>AMQP协议是具有现代特征的二进制协议，是一个提供统一消息服务的应用层标准高级消息队列协议，是应用成协议的一个开放标准，为面向消息值得中间件设计。</p>
-
-<h3 id="toc_1">1.1 AMQP架构图</h3>
-
-<p><img src="media/16115835473812/AMQP%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="AMQP架构图"/><br/>
+<h3><a id="1-1-amqp%E6%9E%B6%E6%9E%84%E5%9B%BE" class="anchor" aria-hidden="true" href="#1-1-amqp%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="octicon octicon-link"></span></a>1.1 AMQP架构图</h3>
+<p><img src="media/16115835473812/AMQP%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="AMQP架构图" />
 Publisher生产者，将消息投递到RabbitMQ的Exchange交换机，Exchange与MessageQueue相关联，然后Consumer消费者从Message队列中获取响应的消息。</p>
-
-<h3 id="toc_2">1.2 AMQP核心概念</h3>
-
-<p><strong>Server</strong>：又称Broker，接受客户端的连接，实现AMQP实体服务<br/>
-<strong>Connection</strong>：连接，应用程序与Broker的网络连接<br/>
-<strong>Channel</strong>：网络信道，几乎所有的操作都在Channel中进行，Channel是进行消息读写的通道。客户端可建立多个CHannel，每个Channel代表一个会话任务<br/>
-<strong>Message</strong>：消息，服务器和应用程序之间传送的数据，由Properties和Body组成。Properties可以对消息进行修饰，比如消息的优先级、延迟等高级特性；Body则就是消息体内容<br/>
-<strong>Virtual Host</strong>：虚拟地址，用于进行逻辑隔离，最上层的消息路由。一个Virtual Host里面可以有若干个Exchange和Queue，同一个Virtual Host里面不能有相同名称的Exchange或Queue<br/>
-<strong>Exchange</strong>：交换机，接受消息，根据路由键转发消息到绑定的队列<br/>
-<strong>Binding</strong>：Exchange和Queue之间的虚拟连接，binding中可以包含routing key<br/>
-<strong>Routing key</strong>: 一个路由规则，虚拟机可用它来确定如何路由一个特定消息<br/>
+<h3><a id="1-2-amqp%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5" class="anchor" aria-hidden="true" href="#1-2-amqp%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="octicon octicon-link"></span></a>1.2 AMQP核心概念</h3>
+<p><strong>Server</strong>：又称Broker，接受客户端的连接，实现AMQP实体服务
+<strong>Connection</strong>：连接，应用程序与Broker的网络连接
+<strong>Channel</strong>：网络信道，几乎所有的操作都在Channel中进行，Channel是进行消息读写的通道。客户端可建立多个CHannel，每个Channel代表一个会话任务
+<strong>Message</strong>：消息，服务器和应用程序之间传送的数据，由Properties和Body组成。Properties可以对消息进行修饰，比如消息的优先级、延迟等高级特性；Body则就是消息体内容
+<strong>Virtual Host</strong>：虚拟地址，用于进行逻辑隔离，最上层的消息路由。一个Virtual Host里面可以有若干个Exchange和Queue，同一个Virtual Host里面不能有相同名称的Exchange或Queue
+<strong>Exchange</strong>：交换机，接受消息，根据路由键转发消息到绑定的队列
+<strong>Binding</strong>：Exchange和Queue之间的虚拟连接，binding中可以包含routing key
+<strong>Routing key</strong>: 一个路由规则，虚拟机可用它来确定如何路由一个特定消息
 <strong>Queue</strong>：也称为Message Queue，消息队列，保存消息并将它们转发给消费者</p>
-
-<h2 id="toc_3">2 如何保障消息100%投递成功</h2>
-
-<h3 id="toc_4">2.1 生产端的可靠性投递</h3>
-
+<h2><a id="2%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E6%B6%88%E6%81%AF-100%E6%8A%95%E9%80%92%E6%88%90%E5%8A%9F" class="anchor" aria-hidden="true" href="#2%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E6%B6%88%E6%81%AF-100%E6%8A%95%E9%80%92%E6%88%90%E5%8A%9F"><span class="octicon octicon-link"></span></a>2 如何保障消息100%投递成功</h2>
+<h3><a id="2-1%E7%94%9F%E4%BA%A7%E7%AB%AF%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7%E6%8A%95%E9%80%92" class="anchor" aria-hidden="true" href="#2-1%E7%94%9F%E4%BA%A7%E7%AB%AF%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7%E6%8A%95%E9%80%92"><span class="octicon octicon-link"></span></a>2.1 生产端的可靠性投递</h3>
 <ul>
 <li>保障消息的成功发出</li>
 <li>保障MQ节点的成功接收</li>
 <li>发送端收到MQ节点（Broker）确认应答</li>
 <li>完善的消息进行补偿机制</li>
 </ul>
-
-<h3 id="toc_5">2.2 解决方案</h3>
-
+<h3><a id="2-2%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88" class="anchor" aria-hidden="true" href="#2-2%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="octicon octicon-link"></span></a>2.2 解决方案</h3>
 <ul>
 <li>消息落库，对消息状态进行打标（适合流量小的系统 ）</li>
 <li>消息的延迟投递，做二次确认，回调检查</li>
 </ul>
-
-<h2 id="toc_6">3 消费端幂等性保障</h2>
-
+<h2><a id="3%E6%B6%88%E8%B4%B9%E7%AB%AF%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E9%9A%9C" class="anchor" aria-hidden="true" href="#3%E6%B6%88%E8%B4%B9%E7%AB%AF%E5%B9%82%E7%AD%89%E6%80%A7%E4%BF%9D%E9%9A%9C"><span class="octicon octicon-link"></span></a>3 消费端幂等性保障</h2>
 <ul>
 <li>唯一ID + 指纹码机制
 <ul>
@@ -109,12 +854,14 @@ Publisher生产者，将消息投递到RabbitMQ的Exchange交换机，Exchange�
 <li>select count(1) from table where id=唯一ID+指纹码</li>
 <li>好处：实现简单</li>
 <li>坏处：高并发下有数据库写入的性能瓶颈</li>
-</ul></li>
+</ul>
+</li>
 <li>利用Redis原子特性实现
 <ul>
 <li>考虑数据是否需要落库，如果落库，怎么保证Redis和db的数据原子性</li>
 <li>如果不落库，怎样设置定时同步策略</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 
 ]]></content>
@@ -126,49 +873,40 @@ Publisher生产者，将消息投递到RabbitMQ的Exchange交换机，Exchange�
     <updated>2021-01-24T23:40:29+08:00</updated>
     <id>jythons.github.io/16115028294909.html</id>
     <content type="html"><![CDATA[
-<p>Kafka是LinkedIn开源的分布式消息系统，目前归属于Apache顶级项目，Kafka主要特点是基于Pull的模式来处理消息消费，追求高吞吐量，一开始的目的就是用于日志收集和传输。<br/>
-Kafka0.8版本开始支持复制，不支持事务，对消息的重复、丢失、错误没有严格要求，适合产生大量数据的互联网服务的数据收集业务。<br/>
-<span id="more"></span><!-- more --></p>
-
-<h2 id="toc_0">1 Kafka特点</h2>
-
+<p>Kafka是LinkedIn开源的分布式消息系统，目前归属于Apache顶级项目，Kafka主要特点是基于Pull的模式来处理消息消费，追求高吞吐量，一开始的目的就是用于日志收集和传输。
+Kafka0.8版本开始支持复制，不支持事务，对消息的重复、丢失、错误没有严格要求，适合产生大量数据的互联网服务的数据收集业务。</p>
+<span id="more"></span><!-- more -->
+<h2><a id="1-kafka%E7%89%B9%E7%82%B9" class="anchor" aria-hidden="true" href="#1-kafka%E7%89%B9%E7%82%B9"><span class="octicon octicon-link"></span></a>1 Kafka特点</h2>
 <ul>
 <li>支持分布式，支持消息分区的概念，他的生产者和消费者是一一对应的，否则会造成资源的浪费</li>
 <li>跨平台，支持多种语言</li>
 <li>实时性，数据支持实时处理和离线处理，只要存储足够，即使消息堆积上亿级别也是可以的</li>
-<li>伸缩性，支持水平扩展 </li>
+<li>伸缩性，支持水平扩展</li>
 </ul>
-
-<h2 id="toc_1">2 Kafka高性能</h2>
-
+<h2><a id="2-kafka%E9%AB%98%E6%80%A7%E8%83%BD" class="anchor" aria-hidden="true" href="#2-kafka%E9%AB%98%E6%80%A7%E8%83%BD"><span class="octicon octicon-link"></span></a>2 Kafka高性能</h2>
 <ul>
 <li>顺序写，Page Cache空中接力，高效读写
 <ul>
 <li>顺序写可以提高磁盘的利用率，消费者可以顺序不删除消费，避免磁盘的随机写</li>
 <li>Page Cache （TODO）</li>
-</ul></li>
+</ul>
+</li>
 <li>高性能、高吞吐</li>
 <li>后台异步、主动Flush</li>
 <li>预读策略、IO调度</li>
 </ul>
-
-<h3 id="toc_2">2.1 Page Cache</h3>
-
-<p>Page Cache是操作系统主要实现的一种磁盘缓存机制，他的目的是减少磁盘IO的操作，因为频繁的磁盘IO操作，会影响系统的性能。具体来说就是讲磁盘中的数据缓存到内存中，把对磁盘的访问变成对内存的访问。<br/>
-<img src="media/16115028294909/PageCache.png" alt="PageCache"/><br/>
-上图所示，应用程序想获取相应的数据时，首先会在内存中查询，看是否存在想要的数据，如果存在，直接返回，若不存在，则需要对磁盘发起IO请求，获取到数据之后，首先会将数据加入到缓存页中，去做一个缓存，然后在返回给应用程序进程。<br/>
-当应用程序想将数据写入到磁盘中时，同样也会先去缓存区中check是否存在，如果不存在，会先在缓存区创建一个页，将数据先写入到缓存页中，操作系统会通过自行调度将数据写入硬盘中。 <br/>
+<h3><a id="2-1-page-cache" class="anchor" aria-hidden="true" href="#2-1-page-cache"><span class="octicon octicon-link"></span></a>2.1 Page Cache</h3>
+<p>Page Cache是操作系统主要实现的一种磁盘缓存机制，他的目的是减少磁盘IO的操作，因为频繁的磁盘IO操作，会影响系统的性能。具体来说就是讲磁盘中的数据缓存到内存中，把对磁盘的访问变成对内存的访问。
+<img src="media/16115028294909/PageCache.png" alt="PageCache" />
+上图所示，应用程序想获取相应的数据时，首先会在内存中查询，看是否存在想要的数据，如果存在，直接返回，若不存在，则需要对磁盘发起IO请求，获取到数据之后，首先会将数据加入到缓存页中，去做一个缓存，然后在返回给应用程序进程。
+当应用程序想将数据写入到磁盘中时，同样也会先去缓存区中check是否存在，如果不存在，会先在缓存区创建一个页，将数据先写入到缓存页中，操作系统会通过自行调度将数据写入硬盘中。
 上图流程中，对数据一共做了4次copy，通常常用的是zerocopy。</p>
-
-<h3 id="toc_3">2.2 ZeroCopy</h3>
-
-<p><img src="media/16115028294909/zerocopy.png" alt="zerocopy"/><br/>
-Kafka内部使用了大量的PageCache，ZeroCopy，这是它高性能高吞吐的重要原因。<br/>
+<h3><a id="2-2-zerocopy" class="anchor" aria-hidden="true" href="#2-2-zerocopy"><span class="octicon octicon-link"></span></a>2.2 ZeroCopy</h3>
+<p><img src="media/16115028294909/zerocopy.png" alt="zerocopy" />
+Kafka内部使用了大量的PageCache，ZeroCopy，这是它高性能高吞吐的重要原因。
 上图从磁盘将数据写入到内核缓冲区后，直接将数据写入到网卡接口，发送给消费者去消费，如果有多个消费者，也都是从同一个缓冲区直接写入，从而实现了0拷贝。</p>
-
-<h2 id="toc_4">3 Kafka集群模式</h2>
-
-<p><img src="media/16115028294909/kafka%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F.png" alt="kafka集群模式"/><br/>
+<h2><a id="3-kafka%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#3-kafka%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>3 Kafka集群模式</h2>
+<p><img src="media/16115028294909/kafka%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F.png" alt="kafka集群模式" />
 Kafka使用Zookeeper来协调，kafka大部分时间都是采用内存级别的存储，当生产者和消费者速率相当的时候，它很少回去向磁盘中存取数据，并且它采用内存级别的副本来实现数据的可靠性，当一个节点宕机后，会由其他节点继续提供服务。</p>
 
 ]]></content>
@@ -181,16 +919,12 @@ Kafka使用Zookeeper来协调，kafka大部分时间都是采用内存级别的�
     <id>jythons.github.io/16114984325290.html</id>
     <content type="html"><![CDATA[
 <span id="more"></span><!-- more -->
-
-<h2 id="toc_0">1 RabbitMQ 主备模式</h2>
-
-<p>Warren，一个主/备方案（主节点如果挂了，从节点提供服务，和ActiveMQ利用Zookeeper做主/备一样）<br/>
-<img src="media/16114984325290/RabbitMQ%E4%B8%BB%E5%A4%87%E5%8E%9F%E7%90%86%E5%9B%BE.png" alt="RabbitMQ主备原理图"/><br/>
+<h2><a id="1-rabbitmq%E4%B8%BB%E5%A4%87%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#1-rabbitmq%E4%B8%BB%E5%A4%87%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>1 RabbitMQ 主备模式</h2>
+<p>Warren，一个主/备方案（主节点如果挂了，从节点提供服务，和ActiveMQ利用Zookeeper做主/备一样）
+<img src="media/16114984325290/RabbitMQ%E4%B8%BB%E5%A4%87%E5%8E%9F%E7%90%86%E5%9B%BE.png" alt="RabbitMQ主备原理图" />
 它是由HaProxy路由到主节点，由主节点提供服务，当主节点发生故障时，HaProxy会帮我们把请求路由到备份节点，继续提供服务。当原来的主节点恢复了之后，他会成为原来备份节点的备份节点。</p>
-
-<h3 id="toc_1">1.1 主备模式 - HaProxy配置</h3>
-
-<pre><code class="language-text"># 集群名字 
+<h3><a id="1-1%E4%B8%BB%E5%A4%87%E6%A8%A1%E5%BC%8F-haproxy%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#1-1%E4%B8%BB%E5%A4%87%E6%A8%A1%E5%BC%8F-haproxy%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>1.1 主备模式 - HaProxy配置</h3>
+<pre><code># 集群名字 
 listen rabbitmq_cluster
 # 配置TCP模式
 bind 0.0.0.0:5672
@@ -203,60 +937,44 @@ server bhz76 192.168.11.76:5672 check inter 5000 rise 2 fall 2
 # 备用节点
 server bhz77 192.168.11.77:5672 backup check inter 5000 rise 2 fall 2
 </code></pre>
-
-<h2 id="toc_2">2 远程模式</h2>
-
-<p>远程模式，是远距离通信和复制，可以实现双活的一种模式，简称Shovel模式。<br/>
-所谓Shovel就是我们可以把消息进行不同数据中心的复制工作，可以跨地域的让两个mq集群互联<br/>
+<h2><a id="2%E8%BF%9C%E7%A8%8B%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#2%E8%BF%9C%E7%A8%8B%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>2 远程模式</h2>
+<p>远程模式，是远距离通信和复制，可以实现双活的一种模式，简称Shovel模式。
+所谓Shovel就是我们可以把消息进行不同数据中心的复制工作，可以跨地域的让两个mq集群互联
 这种模式，目前使用比较少，因为他的可靠性有待提高，并且他的配置也比较麻烦。</p>
-
-<h3 id="toc_3">2.1 Shovel架构模型</h3>
-
-<p>当我们请求到RabbitMQ服务时，请求可以转发到下游的RabbitMQ服务去处理，他不但可以起到容灾的作用，也可以提高请求处理的效率。<br/>
-比如有一个订单系统，使用了Shovel插件后，模型变成了近端同步确认，远端异步确认的方式，大大提高了订单确认速度，并且还能保证可靠性。<br/>
-<img src="media/16114984325290/Shovel%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B.png" alt="Shovel架构模型"/></p>
-
-<h3 id="toc_4">2.2 Shovel集群配置步骤</h3>
-
+<h3><a id="2-1-shovel%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B" class="anchor" aria-hidden="true" href="#2-1-shovel%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B"><span class="octicon octicon-link"></span></a>2.1 Shovel架构模型</h3>
+<p>当我们请求到RabbitMQ服务时，请求可以转发到下游的RabbitMQ服务去处理，他不但可以起到容灾的作用，也可以提高请求处理的效率。
+比如有一个订单系统，使用了Shovel插件后，模型变成了近端同步确认，远端异步确认的方式，大大提高了订单确认速度，并且还能保证可靠性。
+<img src="media/16114984325290/Shovel%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%9E%8B.png" alt="Shovel架构模型" /></p>
+<h3><a id="2-2-shovel%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4" class="anchor" aria-hidden="true" href="#2-2-shovel%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4"><span class="octicon octicon-link"></span></a>2.2 Shovel集群配置步骤</h3>
 <ul>
 <li>启动RabbitMQ插件
 <ul>
 <li>rabbitmq-plugins enable amqp_client</li>
 <li>rabbitmq-plugins enable rabbitmq_shovel</li>
-</ul></li>
+</ul>
+</li>
 <li>创建rabbitmq.config文件</li>
 <li>源与目的地服务器使用相同的配置文件</li>
 </ul>
-
-<h2 id="toc_5">3 镜像模式</h2>
-
-<p>集群模式非常经典的就是Mirror镜像模式，保证100%数据不丢失。<br/>
-这种模式在实际工作中用的最多，并且实现集群非常简单，一般的互联网大厂都会构建这种镜像集群模式。<br/>
-Mirror镜像队列是高可靠的，它是内部是使用的数据同步，RabbitMQ底层是使用Erlang去实现的，是天然的交换机的方式，和原生socket一样低的延迟，在数据同步的时候，他的性能是非常好的。<br/>
+<h2><a id="3%E9%95%9C%E5%83%8F%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#3%E9%95%9C%E5%83%8F%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>3 镜像模式</h2>
+<p>集群模式非常经典的就是Mirror镜像模式，保证100%数据不丢失。
+这种模式在实际工作中用的最多，并且实现集群非常简单，一般的互联网大厂都会构建这种镜像集群模式。
+Mirror镜像队列是高可靠的，它是内部是使用的数据同步，RabbitMQ底层是使用Erlang去实现的，是天然的交换机的方式，和原生socket一样低的延迟，在数据同步的时候，他的性能是非常好的。
 并且我们在搭建集群的时候，一般采用奇数个节点，奇数个节点可以防止集群发生脑裂的现象。</p>
-
-<h3 id="toc_6">3.1 RabbitMQ集群架构图</h3>
-
-<p><img src="media/16114984325290/RabbitMQ%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="RabbitMQ集群架构图"/><br/>
-最底层的三个是完全相同的RabbitMQ服务，中间层是两个HaProxy代理，负责去路由请求，其中使用KeepAlived实现故障转移，高可用。<br/>
+<h3><a id="3-1-rabbitmq%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE" class="anchor" aria-hidden="true" href="#3-1-rabbitmq%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="octicon octicon-link"></span></a>3.1 RabbitMQ集群架构图</h3>
+<p><img src="media/16114984325290/RabbitMQ%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="RabbitMQ集群架构图" />
+最底层的三个是完全相同的RabbitMQ服务，中间层是两个HaProxy代理，负责去路由请求，其中使用KeepAlived实现故障转移，高可用。
 这种部署的方式是有缺陷的，它不能支持横向的扩展，因为他的数据存储能力是有限的，当流量比较大的时候，由于消费能力不足，导致数据堆积比较大，这时即使在扩展一个服务，只会增加服务的负担，增加几个节点，就需要多同步几份数据。如果要更好的实现横向扩展，可以使用多活模式。</p>
-
-<h2 id="toc_7">4 多活模式</h2>
-
-<p>这种模式也是实现异地数据复制的主流模式，因为Shovel模式配置比较复杂，所以一般来说实现异地集群都是使用这种双活或者多活模型来实现的。<br/>
-这种模型需要依赖RabbitMQ的federation插件，可以实现持续的可靠的AMQP数据通信，多活模式实际配置与应用非常简单。<br/>
-RabbitMQ部署架构采用双中心模式（多中心），那么在两套（或多套）数据中心中各部署一套RabbitMQ集群，各中心的RabbitMQ服务除了需要为业务提供正常的消息服务外，中心之间还需要实现部分队列消息共享。 </p>
-
-<h3 id="toc_8">4.1 多活集群架构图</h3>
-
-<p><img src="media/16114984325290/%E5%A4%9A%E6%B4%BB%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="多活集群架构图"/></p>
-
-<h3 id="toc_9">4.2 多活模式 - Federation插件</h3>
-
+<h2><a id="4%E5%A4%9A%E6%B4%BB%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#4%E5%A4%9A%E6%B4%BB%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>4 多活模式</h2>
+<p>这种模式也是实现异地数据复制的主流模式，因为Shovel模式配置比较复杂，所以一般来说实现异地集群都是使用这种双活或者多活模型来实现的。
+这种模型需要依赖RabbitMQ的federation插件，可以实现持续的可靠的AMQP数据通信，多活模式实际配置与应用非常简单。
+RabbitMQ部署架构采用双中心模式（多中心），那么在两套（或多套）数据中心中各部署一套RabbitMQ集群，各中心的RabbitMQ服务除了需要为业务提供正常的消息服务外，中心之间还需要实现部分队列消息共享。</p>
+<h3><a id="4-1%E5%A4%9A%E6%B4%BB%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE" class="anchor" aria-hidden="true" href="#4-1%E5%A4%9A%E6%B4%BB%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="octicon octicon-link"></span></a>4.1 多活集群架构图</h3>
+<p><img src="media/16114984325290/%E5%A4%9A%E6%B4%BB%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="多活集群架构图" /></p>
+<h3><a id="4-2%E5%A4%9A%E6%B4%BB%E6%A8%A1%E5%BC%8F-federation%E6%8F%92%E4%BB%B6" class="anchor" aria-hidden="true" href="#4-2%E5%A4%9A%E6%B4%BB%E6%A8%A1%E5%BC%8F-federation%E6%8F%92%E4%BB%B6"><span class="octicon octicon-link"></span></a>4.2 多活模式 - Federation插件</h3>
 <p>Federation插件是一个不需要构建Cluster，而在Brokers之间传输消息的高性能插件，Federation插件可以在Brokers或者Cluster之间传输消息，连接的双方可以使用不同的users和virtual hosts，双方也可以使用版本不同的RabbitMQ和Erlang。Federation插件使用AMQP协议通讯，可以接受不连续的传输。</p>
-
-<p>Federation Exchanges，可以看成Downstream从Upstream主动拉取消息，但并不是拉取所有消息，必须是在Downstream上已经明确定义Bindings关系的Exchange，也就是有实际的物理Queue来接受消息，才会从Upstream拉取消息到Downstream。使用AMQP协议实施代理间通信，Downstream会将绑定关系组合在一起，绑定、解除绑定命令将发送到Upstream交换机。因此，Federation Exchange只接受具有订阅的消息（本处贴出官方图来说明）；<br/>
-<img src="media/16114984325290/Federation%E6%8F%92%E4%BB%B6.png" alt="Federation插件"/></p>
+<p>Federation Exchanges，可以看成Downstream从Upstream主动拉取消息，但并不是拉取所有消息，必须是在Downstream上已经明确定义Bindings关系的Exchange，也就是有实际的物理Queue来接受消息，才会从Upstream拉取消息到Downstream。使用AMQP协议实施代理间通信，Downstream会将绑定关系组合在一起，绑定、解除绑定命令将发送到Upstream交换机。因此，Federation Exchange只接受具有订阅的消息（本处贴出官方图来说明）；
+<img src="media/16114984325290/Federation%E6%8F%92%E4%BB%B6.png" alt="Federation插件" /></p>
 
 ]]></content>
   </entry>
@@ -268,82 +986,62 @@ RabbitMQ部署架构采用双中心模式（多中心），那么在两套（或
     <id>jythons.github.io/16114877964866.html</id>
     <content type="html"><![CDATA[
 <span id="more"></span><!-- more -->
-
-<h2 id="toc_0">1 应用场景</h2>
-
+<h2><a id="1%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF" class="anchor" aria-hidden="true" href="#1%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="octicon octicon-link"></span></a>1 应用场景</h2>
 <ul>
 <li>服务解耦</li>
 <li>削峰填谷</li>
 <li>异步化缓冲</li>
 </ul>
-
-<h2 id="toc_1">2 应用思考点</h2>
-
+<h2><a id="2%E5%BA%94%E7%94%A8%E6%80%9D%E8%80%83%E7%82%B9" class="anchor" aria-hidden="true" href="#2%E5%BA%94%E7%94%A8%E6%80%9D%E8%80%83%E7%82%B9"><span class="octicon octicon-link"></span></a>2 应用思考点</h2>
 <ul>
 <li>生产端可靠性投递
 <ul>
 <li>生产端消息发布出去后，要保持和数据库的原子性</li>
-</ul></li>
-<li>消费端幂等 
+</ul>
+</li>
+<li>消费端幂等
 <ul>
 <li>消费端不能消费一次</li>
-</ul></li>
+</ul>
+</li>
 <li>高可用</li>
 <li>低延迟</li>
 <li>消息可靠性</li>
 <li>消息的堆积能力
 <ul>
 <li>消息在高峰期最大能堆积的程度</li>
-</ul></li>
+</ul>
+</li>
 <li>扩展性
 <ul>
 <li>是否能够支持无感知的扩容</li>
-</ul></li>
 </ul>
-
-<h2 id="toc_2">3 技术选型关注点</h2>
-
+</li>
+</ul>
+<h2><a id="3%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%E5%85%B3%E6%B3%A8%E7%82%B9" class="anchor" aria-hidden="true" href="#3%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%E5%85%B3%E6%B3%A8%E7%82%B9"><span class="octicon octicon-link"></span></a>3 技术选型关注点</h2>
 <p>技术选型主要关注一下几点：</p>
-
 <ul>
 <li>各个MQ的性能、优缺点、相对的业务场景</li>
 <li>集群架构模式，分布式、可扩展、高可用、可维护性</li>
 <li>综合成本问题，集群规模，人员成本</li>
 <li>未来的方向、规划、思考</li>
 </ul>
-
-<h3 id="toc_3">3.1 ActiveMQ</h3>
-
+<h3><a id="3-1-activemq" class="anchor" aria-hidden="true" href="#3-1-activemq"><span class="octicon octicon-link"></span></a>3.1 ActiveMQ</h3>
 <p>如果系统存在大流量，高并发场景，ActiveMQ是不适合的，它适合一些中小型公司或者公司业务边缘模块的系统使用。</p>
-
-<h3 id="toc_4">3.2 RabbitMQ</h3>
-
+<h3><a id="3-2-rabbitmq" class="anchor" aria-hidden="true" href="#3-2-rabbitmq"><span class="octicon octicon-link"></span></a>3.2 RabbitMQ</h3>
 <p>RabbitMQ比较适合大流量，高并发等应用场景，他有镜像队列来保证数据不会丢失，对可靠性和高可用有保障。但是他的横向拓展能力不是很好。</p>
-
-<h4 id="toc_5">3.2.1 RabbitMQ四种集群架构</h4>
-
-<h5 id="toc_6">3.2.1.1 主备模式</h5>
-
+<h4><a id="3-2-1-rabbitmq%E5%9B%9B%E7%A7%8D%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84" class="anchor" aria-hidden="true" href="#3-2-1-rabbitmq%E5%9B%9B%E7%A7%8D%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84"><span class="octicon octicon-link"></span></a>3.2.1 RabbitMQ四种集群架构</h4>
+<h5><a id="3-2-1-1%E4%B8%BB%E5%A4%87%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#3-2-1-1%E4%B8%BB%E5%A4%87%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>3.2.1.1 主备模式</h5>
 <p>主备模式可以理解为热备份，他分为master和slave，master是对外开放的，主要用于读写操作，而slave通常用于备份，当master节点挂掉之后，slave节点会被升级为master继续对外提供服务。</p>
-
-<h5 id="toc_7">3.2.1.2 远程模式</h5>
-
+<h5><a id="3-2-1-2%E8%BF%9C%E7%A8%8B%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#3-2-1-2%E8%BF%9C%E7%A8%8B%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>3.2.1.2 远程模式</h5>
 <p>远程模式是RabbitMQ早期版本提供的多活的模式，主要是提供异地容灾转移的，当当前节点处理不过来请求时，可以转发到下游节点去处理（架构简单，配置复杂）</p>
-
-<h5 id="toc_8">3.2.1.3 镜像模式</h5>
-
+<h5><a id="3-2-1-3%E9%95%9C%E5%83%8F%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#3-2-1-3%E9%95%9C%E5%83%8F%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>3.2.1.3 镜像模式</h5>
 <p>镜像模式是业界使用较多的模式，可以保证消息的可靠性。</p>
-
-<h5 id="toc_9">3.2.1.4 多活模式</h5>
-
+<h5><a id="3-2-1-4%E5%A4%9A%E6%B4%BB%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#3-2-1-4%E5%A4%9A%E6%B4%BB%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>3.2.1.4 多活模式</h5>
 <p>多活模式和远程模式差不多，主要用于异地容灾多活，数据转储和数据转发的功能</p>
-
-<h3 id="toc_10">3.3 RocketMQ</h3>
-
+<h3><a id="3-3-rocketmq" class="anchor" aria-hidden="true" href="#3-3-rocketmq"><span class="octicon octicon-link"></span></a>3.3 RocketMQ</h3>
 <p>他的可拓展性比较好，高可用性也不错，但是可维护性相对比较麻烦</p>
-
-<h3 id="toc_11">3.4 kafka</h3>
-
+<h3><a id="3-4-kafka" class="anchor" aria-hidden="true" href="#3-4-kafka"><span class="octicon octicon-link"></span></a>3.4 kafka</h3>
 <p>kafka可以在很廉价的机器上发挥出很高的性能</p>
 
 ]]></content>
@@ -355,20 +1053,15 @@ RabbitMQ部署架构采用双中心模式（多中心），那么在两套（或
     <updated>2021-01-24T13:58:16+08:00</updated>
     <id>jythons.github.io/16114678960162.html</id>
     <content type="html"><![CDATA[
-<p>logstash主要是用于数据库的数据采集、转换、充实，然后输出到ES。<br/>
-<span id="more"></span><!-- more --></p>
-
-<h2 id="toc_0">安装</h2>
-
+<p>logstash主要是用于数据库的数据采集、转换、充实，然后输出到ES。</p>
+<span id="more"></span><!-- more -->
+<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
 <p>下载安装包，解压即可。</p>
-
-<h2 id="toc_1">数据同步</h2>
-
-<p>在logstash根目录下创建sync目录。创建配置文件：logstash-db-sync.conf。<br/>
-接下来下载mysql驱动到sync目录下。（msyql-connector-java-5.1.41.jar）<br/>
+<h2><a id="%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5" class="anchor" aria-hidden="true" href="#%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5"><span class="octicon octicon-link"></span></a>数据同步</h2>
+<p>在logstash根目录下创建sync目录。创建配置文件：logstash-db-sync.conf。
+接下来下载mysql驱动到sync目录下。（msyql-connector-java-5.1.41.jar）
 配置文件内容如下：</p>
-
-<pre><code class="language-text">input {
+<pre><code>input {
     jdbc {
         # 设置MySQL/MariaDB数据库URL以及数据库名称
         jdbc_connection_string =&gt; &quot;jdbc:mysql://192.168.1.6：3306/dbname?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&quot;
@@ -424,10 +1117,8 @@ output {
     }
 }
 </code></pre>
-
-<h2 id="toc_2">启动logstash</h2>
-
-<pre><code class="language-text">./bin/logstash -f /usr/local/logstash-6.4.3/sync/logstash-db-sync.conf
+<h2><a id="%E5%90%AF%E5%8A%A8logstash" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8logstash"><span class="octicon octicon-link"></span></a>启动logstash</h2>
+<pre><code>./bin/logstash -f /usr/local/logstash-6.4.3/sync/logstash-db-sync.conf
 </code></pre>
 
 ]]></content>
@@ -440,10 +1131,8 @@ output {
     <id>jythons.github.io/16114061687150.html</id>
     <content type="html"><![CDATA[
 <span id="more"></span><!-- more -->
-
-<h2 id="toc_0">添加依赖</h2>
-
-<pre><code class="language-text">&lt;dependencies&gt;
+<h2><a id="%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="octicon octicon-link"></span></a>添加依赖</h2>
+<pre><code>&lt;dependencies&gt;
     &lt;dependency&gt;
         &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
         &lt;artifactId&gt;spring-boot-starter-data-elasticsearch&lt;/artifactId&gt;
@@ -456,27 +1145,21 @@ output {
     &lt;/dependency&gt;
 &lt;/dependencies&gt;
 </code></pre>
-
 <blockquote>
 <p>注意SpringBoot安装的ES依赖，要保持与ES服务的版本保持一致。</p>
 </blockquote>
-
-<h2 id="toc_1">配置ES</h2>
-
-<pre><code class="language-text">spring:
+<h2><a id="%E9%85%8D%E7%BD%AEes" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AEes"><span class="octicon octicon-link"></span></a>配置ES</h2>
+<pre><code>spring:
     data:
         elasticsearch:
             cluster-name: es6
             cluster-nodes: 192.168.3.214:9300
 </code></pre>
-
 <blockquote>
 <p>使用ES客户端连接ES服务的时候，端口号使用的是9200，但是在java中要使用9300，这个需要注意一下。如果是ES集群的话，在nodes后面配置所有的节点地址，用逗号分隔。</p>
 </blockquote>
-
 <p><strong>Netty issue fix</strong></p>
-
-<pre><code class="language-text">@Configuration
+<pre><code>@Configuration
 public class ESConfig {
     /**
      * 解决netty引起的issue
@@ -487,19 +1170,16 @@ public class ESConfig {
     } 
 }
 </code></pre>
-
 <blockquote>
 <p>将上面的类，放到和启动类同级目录下即可。</p>
 </blockquote>
-
-<h2 id="toc_2">使用ElasticsearchTemplate注意</h2>
-
+<h2><a id="%E4%BD%BF%E7%94%A8elasticsearchtemplate%E6%B3%A8%E6%84%8F" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8elasticsearchtemplate%E6%B3%A8%E6%84%8F"><span class="octicon octicon-link"></span></a>使用ElasticsearchTemplate注意</h2>
 <blockquote>
-<p>不建议使用ElasticsearchTemplate对索引进行管理（创建索引，更新映射，删除索引）<br/>
-索引就像是数据库或者数据库中的表，我们平时是不会通过Java代码频繁的去创建修改删除数据库的<br/>
-我们只会针对数据做CURD的操作<br/>
-在ES中也是同理，我们尽量使用ElasticsearchTemplate对文档数据做CRUD的操作<br/>
-1.属性（FieldType）类型不灵活<br/>
+<p>不建议使用ElasticsearchTemplate对索引进行管理（创建索引，更新映射，删除索引）
+索引就像是数据库或者数据库中的表，我们平时是不会通过Java代码频繁的去创建修改删除数据库的
+我们只会针对数据做CURD的操作
+在ES中也是同理，我们尽量使用ElasticsearchTemplate对文档数据做CRUD的操作
+1.属性（FieldType）类型不灵活
 2.主分片与副本分片数无法设置</p>
 </blockquote>
 
@@ -512,2423 +1192,9 @@ public class ESConfig {
     <updated>2021-01-23T15:09:07+08:00</updated>
     <id>jythons.github.io/16113857471276.html</id>
     <content type="html"><![CDATA[
-<h2 id="toc_0">输出文件内容去除注释</h2>
-
-<pre><code class="language-text">more file.conf | grep ^[^#]
+<h2><a id="%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E5%8E%BB%E9%99%A4%E6%B3%A8%E9%87%8A" class="anchor" aria-hidden="true" href="#%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E5%8E%BB%E9%99%A4%E6%B3%A8%E9%87%8A"><span class="octicon octicon-link"></span></a>输出文件内容去除注释</h2>
+<pre><code>more file.conf | grep ^[^#]
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ES集群]]></title>
-    <link href="jythons.github.io/16113278876159.html"/>
-    <updated>2021-01-22T23:04:47+08:00</updated>
-    <id>jythons.github.io/16113278876159.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">1 集群的概念</h2>
-
-<blockquote>
-<p>ES 集群中主分片和副本分片是不能放到同一个服务器中的。这样可以保证主分片挂掉之后，数据依然可用。</p>
-</blockquote>
-
-<p><img src="media/16113278876159/ES%E9%9B%86%E7%BE%A4%E6%A6%82%E5%BF%B5.png" alt="ES集群概念"/><br/>
-<span id="more"></span><!-- more --></p>
-
-<h2 id="toc_1">2 搭建ES集群</h2>
-
-<blockquote>
-<p>搭建集群之前，如果之前有启动过，需要将节点数据删除。ES根目录下data文件夹下的node目录。</p>
-</blockquote>
-
-<p><strong>修改各个节点的配置文件</strong></p>
-
-<pre><code class="language-text"># 修改各个服务的名称, 每个服务的名称需要相同
-cluster.name: es-cluster-name
-# 修改节点名称，每个节点需要使用不同的名称
-node.name: es-node1
-# master代表它是一个主节点
-node.master: true
-# data代表它是一个数据节点
-node.data: true
-# 发现节点的host,配置上所有 节点的IP
-discovery.seed_hosts: [&quot;host1&quot;, &quot;host2&quot;]
-# 配置初始化时的master节点
-cluster.initial_master_nodes: [&quot;es-node1&quot;]
-</code></pre>
-
-<blockquote>
-<p>master设置为true的这些节点，如果当前主节点挂掉，其他的主节点就会被选举成master节点。<br/>
-主节点的作用是负责管理整个集群，负责创建和删除索引，也可以去管理非master的节点。<br/>
-数据节点主要是用于文档数据的处理，例如数据的增删改查等都是基于数据节点去处理。<br/>
-每个节点的配置除了节点名称不一样，其他的都是相同的。</p>
-</blockquote>
-
-<p><strong>启动</strong><br/>
-每个几点分别启动，启动命令<br/>
-进入到/usr/lcoal/elasticsearch/bin目录下</p>
-
-<pre><code class="language-text">切换为esuser用户
-su esuser
-启动ES
-./elasticsearch -d
-</code></pre>
-
-<blockquote>
-<p>使用时，我们连接任意节点的地址，效果都是一样的。</p>
-</blockquote>
-
-<h2 id="toc_2">3 集群脑裂</h2>
-
-<p>当发生网络中断或者网络抖动、服务器宕机等等情况，服务器集群可能会被划分为两个部分，各自有自己的master节点来进行管理，这种情况就是集群脑裂。<br/>
-<img src="media/16113278876159/ES%E9%9B%86%E7%BE%A4%E8%84%91%E8%A3%82.png" alt="ES集群脑裂"/></p>
-
-<p>当服务器1宕机后，服务器2可能会被选举为master节点，这时服务器1恢复了，并且也是master节点，这时就会出现集群割裂问题，原因是，选举master节点有一个最小投票人数的选举，服务器1本身就是一台服务器。</p>
-
-<p><strong>脑裂问题解决</strong><br/>
-需要修改最小投票人数，默认值是1，新版本的ES在ES内部已经解决了脑裂的问题，老版本需要注意一下以下配置。</p>
-
-<pre><code class="language-text"># 这里的n是指master被设置成true的节点数量
-discovery.zen.minimum_master_nodes = (n/2)+1 
-</code></pre>
-
-<h2 id="toc_3">4 集群文档读写原理</h2>
-
-<p>1.首先会在服务器集群中选择一个协调节点，这个节点用于负责用户的请求和响应，当我们要做一个写操作，协调节点会做一个路由，根据hash算法去判断将数据写入到那个主分片内。<br/>
-2.假设路由到了P1主分片，他会转发到P1主分片，数据写入到主分片内后，主分片会将数据同步到R1副本分片。<br/>
-3.当数据同步完成之后，会将请求返回到协调节点，并相应给客户端。<br/>
-<img src="media/16113278876159/%E6%96%87%E6%A1%A3%E5%86%99%E5%8E%9F%E7%90%86.png" alt="文档写原理"/></p>
-
-<h2 id="toc_4">5 文档读原理</h2>
-
-<p>1.当请求过来，请求到了第一个服务器上，这个节点将充当协调节点，协调节点根据请求参数，来计算文档存储在那个分片上，由于主分片和副本分片的数据是相同的，所以，当有下一个请求过来时，可能会请求到副本分片上，主分片和副本分片分配轮询读操作。<br/>
-<img src="media/16113278876159/ES%E6%96%87%E6%A1%A3%E8%AF%BB%E5%8E%9F%E7%90%86.png" alt="ES文档读原理"/></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ES查询 - 批量操作]]></title>
-    <link href="jythons.github.io/16111534541333.html"/>
-    <updated>2021-01-20T22:37:34+08:00</updated>
-    <id>jythons.github.io/16111534541333.html</id>
-    <content type="html"><![CDATA[
-<p>使用id查询单条记录的方式，如果要查询n次，我们就要调用n次查询接口，这样做会对资源造成浪费，因此ES提供了批量查询的方法。<br/>
-<span id="more"></span><!-- more --></p>
-
-<h2 id="toc_0">1 批量查询：mget</h2>
-
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>数值</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/shop/_mget">http://192.168.3.214:9200/shop/_mget</a></td>
-<td></td>
-</tr>
-<tr>
-<td>请求方式</td>
-<td>POST</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<p><strong>请求参数</strong></p>
-
-<pre><code class="language-text">{
-    &quot;ids&quot;:[&quot;1001&quot;, &quot;1003&quot;, &quot;1005&quot;]
-}
-</code></pre>
-
-<blockquote>
-<p>使用mget搜索不会像使用_search指定ID查询数据那样，展示源信息。<br/>
-使用mget查询数据时，如果这个数据不存在，则，这个id对应的数据行也会查询出来，不过，这行数据的found字段对应的值是：false；使用_search查询，如果数据不存在，则不会展示那行数据。</p>
-</blockquote>
-
-<h2 id="toc_1">2 批量操作：_bulk</h2>
-
-<h3 id="toc_2">2.1 基本语法</h3>
-
-<p>bulk操作和以往的普通请求格式有区别，不要格式化json，不然就不在同一行了，这个需要注意。</p>
-
-<pre><code class="language-text">{action: {metadata}}\n
-{request body      }\n
-{action: {meatdata}}\n
-{request body      }\n
-</code></pre>
-
-<blockquote>
-<p>{action: {metadata}} 代表批量操作的类型，可以是新增、删除或修改<br/>
-\n是每行结尾必须填写的一个规范，每一行包括最后一行都要写，用于es的解析<br/>
-{request body}是请求body，增加和修改操作需要，删除操作则不需要</p>
-</blockquote>
-
-<h3 id="toc_3">2.2 批量操作的类型</h3>
-
-<p>action必须是以下选项之一：</p>
-
-<ul>
-<li>create: 如果文档不存在，那么久创建他，存在会报错。发生异常报错不会影响其他操作。</li>
-<li>index: 创建一个新文档或者替换一个现有的文档。</li>
-<li>update: 部分更新一个文档。</li>
-<li>delete: 删除一个文档</li>
-</ul>
-
-<blockquote>
-<p>metadata中需要指定要操作的文档的_index、type和_id，_index、_type也可以在url中指定。</p>
-</blockquote>
-
-<h3 id="toc_4">2.3 实际操作</h3>
-
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>数值</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/_bulk">http://192.168.3.214:9200/_bulk</a></td>
-<td></td>
-</tr>
-<tr>
-<td>请求方式</td>
-<td>POST</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_5">2.3.1 批量创建：create</h4>
-
-<pre><code class="language-text">{&quot;create&quot;: {&quot;_index&quot;: &quot;shop&quot;, &quot;_type&quot;: &quot;_doc&quot;, &quot;_id&quot;: &quot;2001&quot;}}
-{&quot;id&quot;: &quot;2001&quot;, &quot;nickname&quot;: &quot;name-2001&quot;}
-{&quot;create&quot;: {&quot;_index&quot;: &quot;shop&quot;, &quot;_type&quot;: &quot;_doc&quot;, &quot;_id&quot;: &quot;2002&quot;}}
-{&quot;id&quot;: &quot;2002&quot;, &quot;nickname&quot;: &quot;name-2002&quot;}
-{&quot;create&quot;: {&quot;_index&quot;: &quot;shop&quot;, &quot;_type&quot;: &quot;_doc&quot;, &quot;_id&quot;: &quot;2003&quot;}}
-{&quot;id&quot;: &quot;2003&quot;, &quot;nickname&quot;: &quot;name-2003&quot;}
-
-</code></pre>
-
-<blockquote>
-<p>创建文档时，如果文档不存在，则他会创建，如果这个文档存在，则他会报一个异常，不过这个异常不会影响其他的批量操作。上面的参数中，索引和类型可以写到URL上面，不必再参数中每一个文档都写一遍：<a href="http://192.168.3.214:9200/shop/_doc/_bulk%E3%80%82">http://192.168.3.214:9200/shop/_doc/_bulk。</a></p>
-</blockquote>
-
-<h4 id="toc_6">2.3.2 批量创建：index</h4>
-
-<p>上面的create在创建时，如果文档存在，则会抛出异常，如果我们想在文档存在时更新这个文档的话，可以使用：index。</p>
-
-<pre><code class="language-text">{&quot;index&quot;: {&quot;_id&quot;: &quot;2001&quot;}}
-{&quot;id&quot;: &quot;2001&quot;, &quot;nickname&quot;: &quot;name-2001&quot;}
-{&quot;index&quot;: {&quot;_id&quot;: &quot;2002&quot;}}
-{&quot;id&quot;: &quot;2002&quot;, &quot;nickname&quot;: &quot;name-2002&quot;}
-{&quot;index&quot;: {&quot;_id&quot;: &quot;2003&quot;}}
-{&quot;id&quot;: &quot;2003&quot;, &quot;nickname&quot;: &quot;name-2003&quot;}
-
-</code></pre>
-
-<h4 id="toc_7">2.3.3 批量更新：update</h4>
-
-<pre><code class="language-text">{&quot;update&quot;: {&quot;_id&quot;: &quot;2001&quot;}}
-{&quot;doc&quot;: {&quot;id&quot;: &quot;2001&quot;}}
-{&quot;update&quot;: {&quot;_id&quot;: &quot;2002&quot;}}
-{&quot;doc&quot;: {&quot;nickname&quot;: &quot;name-2002&quot;}}
-
-</code></pre>
-
-<blockquote>
-<p>批量更新可以局部更新，参数中只需要填写想要更新的文档内的某个字段。</p>
-</blockquote>
-
-<h4 id="toc_8">2.3.4 批量删除：delete</h4>
-
-<pre><code class="language-text">{&quot;delete&quot;: {&quot;_id&quot;: &quot;2001&quot;}}
-{&quot;delete&quot;: {&quot;_id&quot;: &quot;2002&quot;}}
-
-</code></pre>
-
-<h2 id="toc_9">总结</h2>
-
-<p>上面的CURD的操作可以混合在一起使用，同一个请求参数可以混合所有的操作。 <br/>
-整个批量请求都需要由接收到请求的节点加载到内存中，因此该请求越大，其他请求所能获得的内存就越少。 批量请求的大小有一个最佳值，大于这个值，性能将不再提升，甚至会下降。 但是最佳值不是一个固定的值。它完全取决于硬件、文档的大小和复杂度、索引和搜索的负载的整体情况。<br/>
-幸运的是，很容易找到这个 最佳点 ：通过批量索引典型文档，并不断增加批量大小进行尝试。 当性能开始下降，那么你的批量大小就太大了。一个好的办法是开始时将 1,000 到 5,000 个文档作为一个批次, 如果你的文档非常大，那么就减少批量的文档个数。<br/>
-密切关注你的批量请求的物理大小往往非常有用，一千个 1KB 的文档是完全不同于一千个 1MB 文档所占的物理大小。 一个好的批量大小在开始处理后所占用的物理大小约为 5-15 MB。</p>
-
-<p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/bulk.html">官方文档</a></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ES 深度分页]]></title>
-    <link href="jythons.github.io/16111512182369.html"/>
-    <updated>2021-01-20T22:00:18+08:00</updated>
-    <id>jythons.github.io/16111512182369.html</id>
-    <content type="html"><![CDATA[
-<p>正常的使用from和size去分页查询的时候，from+size的结果要小于10000，因为ES内部考虑到性能的因素，对此做了限制。<br/>
-ES在查询数据的时候，例如获取9999-10009的数据时，他的from=9999，size=10，假如有3个shard，每个shard有10W条数据，他会从每个shard获取10009条数据，合成一个结果集，在从这个结果集中取10条数据，剩下的30017条数据就会丢弃，这么做的缺点会造成资源和性能的浪费。<br/>
-<span id="more"></span><!-- more --><br/>
-<img src="media/16111512182369/ES%E6%B7%B1%E5%BA%A6%E5%88%86%E9%A1%B5.png" alt="ES深度分页"/></p>
-
-<blockquote>
-<p>针对上述问题，可以使用限制总页数的方式去规避，查询大于10000条数据的问题，例如，查询页数，限制在最大100页。</p>
-</blockquote>
-
-<h2 id="toc_0">突破10000条数据的限制</h2>
-
-<p>如果在某些企业内部，对查询数据有特殊的要求，对于性能没有必要的要求的话，可以通过修改配置来突破10000数据的查询限制。</p>
-
-<h3 id="toc_1">查询配置信息的方法</h3>
-
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>数值</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/shop/_settings">http://192.168.3.214:9200/shop/_settings</a></td>
-<td></td>
-</tr>
-<tr>
-<td>请求类型</td>
-<td>GET</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<h3 id="toc_2">修改配置</h3>
-
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>数值</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/shop/_settings">http://192.168.3.214:9200/shop/_settings</a></td>
-<td>shop:索引</td>
-</tr>
-<tr>
-<td>请求方式</td>
-<td>put</td>
-<td></td>
-</tr>
-<tr>
-<td>参数类型</td>
-<td>json</td>
-<td></td>
-</tr>
-<tr>
-<td>请求参数</td>
-<td>见下方请求参数</td>
-<td></td>
-</tr>
-<tr>
-<td>响应类型</td>
-<td>json</td>
-<td></td>
-</tr>
-<tr>
-<td>响应数据</td>
-<td>见下方响应数据</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<p><strong>请求参数</strong></p>
-
-<pre><code class="language-text">{
-    &quot;index.max_result_windows&quot;: 100000
-}
-</code></pre>
-
-<p><strong>响应数据</strong></p>
-
-<pre><code class="language-text">{
-    &quot;acknowledged&quot;: true
-}
-</code></pre>
-
-<h2 id="toc_3">Scroll 滚动搜索</h2>
-
-<p>上面通过对配置的修改来获取大数据量的搜索，对性能上是有影响，实际生产上是不推荐这么做的，我们还可以通过使用scroll滚动搜索的方式来查询大数据量的搜索工作。</p>
-
-<h3 id="toc_4">滚动搜索原理</h3>
-
-<p>可以把 scroll 理解爲关系型数据库里的 cursor，因此，scroll 并不适合用来做实时搜索，而更适用于后台批处理任务，比如群发。<br/>
-scroll 具体分为初始化和遍历两步，初始化时将所有符合搜索条件的搜索结果缓存起来，可以想象成快照，在遍历时，从这个快照里取数据，也就是说，在初始化后对索引插入、删除、更新数据都不会影响遍历结果。游标可以增加性能的原因，是因为如果做深分页，每次搜索都必须重新排序，非常浪费，使用scroll就是一次把要用的数据都排完了，分批取出，因此比使用from+size还好。</p>
-
-<h3 id="toc_5">搜索示例</h3>
-
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>数值</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/shop/_search?scroll=1m">http://192.168.3.214:9200/shop/_search?scroll=1m</a></td>
-<td>scroll表示滚动时间，也就是说缓存起来的数据的有效期，这里设置的是1分钟。</td>
-</tr>
-<tr>
-<td>请求类型</td>
-<td>POST</td>
-<td></td>
-</tr>
-<tr>
-<td>请求参数</td>
-<td>见下方请求参数</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<p><strong>请求参数</strong></p>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match_all&quot;: {}
-    },
-    &quot;sort&quot;: [&quot;_doc&quot;],
-    &quot;size&quot;: 5   # 每次滚动的数据数量
-}
-</code></pre>
-
-<blockquote>
-<p>第一次查询会返回一个scroll_id，在第二次滚动查询时，需要带上这个scroll_id。</p>
-</blockquote>
-
-<p><strong>第二次滚动搜索</strong></p>
-
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>数值</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/_search/scroll">http://192.168.3.214:9200/_search/scroll</a></td>
-<td></td>
-</tr>
-<tr>
-<td>请求类型</td>
-<td>POST</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<pre><code class="language-text">{
-    &quot;scroll_id&quot;: &quot;SGsguighdasdhkHSkhdashkd==&quot;,
-    &quot;scroll&quot;: &quot;1m&quot;
-}
-</code></pre>
-
-<blockquote>
-<p>每一次滚动查询，都要将上一次查询的scroll_id携带过来，直到查询得结果集为空。 <br/>
-上面设置的size是作用于单个分片，所以如果有多个分片的话，每次实际返回的文档数量最大为：size * 分片数量</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ES dsl搜索]]></title>
-    <link href="jythons.github.io/16105497801984.html"/>
-    <updated>2021-01-13T22:56:20+08:00</updated>
-    <id>jythons.github.io/16105497801984.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">QueryString的方式查询数据</h2>
-
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>值</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求方式</td>
-<td>GET</td>
-<td></td>
-</tr>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/index/_search?q=desc:%E4%BD%A0%E5%A5%BD">http://192.168.3.214:9200/index/_search?q=desc:你好</a></td>
-<td></td>
-</tr>
-<tr>
-<td>解析</td>
-<td>index</td>
-<td>索引名称</td>
-</tr>
-<tr>
-<td></td>
-<td>_search</td>
-<td>表示搜索</td>
-</tr>
-<tr>
-<td></td>
-<td>q=desc:你好</td>
-<td>表示查询desc这个字段里面包含你好的数据</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>多个查询条件可以在q后面再加一个q=age:22.<br/>
-例如：?q=desc:你好&amp;q=age:22</p>
-</blockquote>
-
-<h2 id="toc_1">DSL的方式查询数据</h2>
-
-<blockquote>
-<p>QueryString的方式查询数据不够灵活，不适用复杂查询。<br/>
-使用DSL的方式查询更加灵活、方便、支持复杂查询。</p>
-</blockquote>
-
-<h3 id="toc_2">使用DSL查询数据方法</h3>
-
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>值</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求方式</td>
-<td>POST</td>
-<td></td>
-</tr>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/index/_doc/_search">http://192.168.3.214:9200/index/_doc/_search</a></td>
-<td></td>
-</tr>
-<tr>
-<td>参数类型</td>
-<td>JSON</td>
-<td>参数格式见下表</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_3">根据字段内容查询数据</h4>
-
-<blockquote>
-<p>根据字段查询数据，如果该字段不支持分词，例如keyword类型的字段，查询的字段内容只是一部分的话，是查不出来数据的。</p>
-</blockquote>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match&quot;: {
-            &quot;desc&quot;: &quot;你好&quot;
-        }
-    }
-}
-</code></pre>
-
-<p>如果要查询同时满足两个词汇都存在的数据，可以使用下面这种方式查询：</p>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match&quot;: {
-            &quot;desc&quot;: {
-                &quot;query&quot;: &quot;你好 学习&quot;,
-                &quot;operator&quot;:&quot;and&quot; # 表示要同时满足查询的所有词汇，默认是or，相当于上面的方式查询
-            }
-        }
-    }
-}
-</code></pre>
-
-<p>minimum_should_match, 这个属性表示查询的字符串被分词后，匹配百分之多少词汇的数据。例如查询：今天天气好晴朗，我想出去玩。假设这个句子被分成10个词汇，minimum_should_match参数设置60%（向下取整 ），表示查询的数据中，匹配上6个词汇就会被查询出来。</p>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match&quot;: {
-            &quot;desc&quot;: {
-                &quot;query&quot;: &quot;今天天气好晴朗，我想出去玩&quot;,
-                &quot;minimum_should_match&quot;: &quot;60%&quot; 
-            }
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_4">查询索引是否包含某个属性</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;exists&quot;: {
-            &quot;field&quot;: &quot;username&quot;
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_5">查询所有</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match_all&quot;: {}
-    }
-}
-</code></pre>
-
-<h4 id="toc_6">查询部分字段数据</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match_all&quot;: {}
-    },
-    &quot;_source&quot;: [
-        &quot;id&quot;,
-        &quot;nickname&quot;,
-        &quot;age&quot;
-    ]
-}
-</code></pre>
-
-<h4 id="toc_7">分页查询</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match_all&quot;: {}
-    },
-    &quot;_source&quot;: [
-        &quot;id&quot;,
-        &quot;nickname&quot;,
-        &quot;age&quot;
-    ],
-    &quot;from&quot;: 0, # 数据起始位置
-    &quot;size&quot;: 10 # 每页展示数量
-}
-</code></pre>
-
-<h4 id="toc_8">根据字段内容模糊匹配</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;term&quot;: {
-            &quot;desc&quot;: &quot;你好&quot;
-        }
-    },
-    &quot;_source&quot;: [
-        &quot;id&quot;,
-        &quot;nickname&quot;,
-        &quot;desc&quot;
-    ]
-}
-</code></pre>
-
-<blockquote>
-<p>term 是模糊搜索这个字段内容，只要这个字段内容包含搜索的字符串，就展示出来，match是分词搜索，首先会对搜索的字符串进行分词，然后会检索出所有包含这些分词的数据。</p>
-</blockquote>
-
-<p>也可以同时查询多个词汇：</p>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;terms&quot;: {
-            &quot;desc&quot;: [&quot;你好&quot;, &quot;学习&quot;]
-        }
-    },
-    &quot;_source&quot;: [
-        &quot;id&quot;,
-        &quot;nickname&quot;,
-        &quot;desc&quot;
-    ]
-}
-</code></pre>
-
-<blockquote>
-<p>使用terms是可以支持多个词汇查询，只要包含搜索词汇中的其中一个，就会被检索出来。</p>
-</blockquote>
-
-<h4 id="toc_9">根据词条去查询</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match_phrase&quot;: {
-            &quot;desc&quot;: {
-                &quot;query&quot;: &quot;大学 毕业&quot;
-            }
-        }
-    },
-    &quot;_source&quot;: [
-        &quot;id&quot;,
-        &quot;nickname&quot;,
-        &quot;desc&quot;
-    ]
-}
-
-</code></pre>
-
-<blockquote>
-<p>使用match_phrase查询，首先会对查询的词条进行分词，然后去找这些分词同时在这个字段内容下的数据。上面的例子两个词汇，需要连贯在一起才能查询出来。如果要查询非连贯的词汇，可以使用下面的方式。</p>
-</blockquote>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match_phrase&quot;: {
-            &quot;desc&quot;: {
-                &quot;query&quot;: &quot;大学 毕业&quot;,
-                &quot;slop&quot;: 3 # 这个参数表示大学和毕业中间可以跳过多少个词汇
-            }
-        }
-    },
-    &quot;_source&quot;: [
-        &quot;id&quot;,
-        &quot;nickname&quot;,
-        &quot;desc&quot;
-    ]
-}
-
-</code></pre>
-
-<h4 id="toc_10">指定多个ID查询</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;ids&quot;: {
-            &quot;type&quot;: &quot;_doc&quot;,
-            &quot;values&quot;: [&quot;1001&quot;, &quot;1002&quot;, &quot;1009&quot;]
-        }
-    },
-    &quot;_source&quot;: [
-        &quot;id&quot;,
-        &quot;nickname&quot;,
-        &quot;desc&quot;
-    ]
-}
-</code></pre>
-
-<h4 id="toc_11">在多个字段去查询</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;multi_match&quot;: {
-            &quot;desc&quot;: &quot;你好啊&quot;,
-            &quot;fields&quot;: [
-                &quot;desc&quot;, &quot;nickname^10&quot;
-            ]
-        }
-    }
-}
-</code></pre>
-
-<blockquote>
-<p>由于默认匹配的词汇越少，分数越低，搜索出来的数据排名会靠下，如果要对某个字段查询出来的数据提升排名，则可以为这个字段设置权重，设置方法见上方：&quot;nickname ^ 10&quot;</p>
-</blockquote>
-
-<h4 id="toc_12">布尔查询</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;bool&quot;: {
-            &quot;must&quot;: [
-                {
-                    &quot;multi_match&quot;: {
-                        &quot;query&quot;: &quot;你好&quot;,
-                        &quot;fields&quot;: [&quot;desc&quot;, &quot;nickname&quot;]
-                    }
-                },{
-                    &quot;term&quot;: {
-                        &quot;sex&quot;: 0
-                    }
-                }
-            ],
-            &quot;should&quot;: [
-                {
-                    &quot;match&quot;: {
-                       &quot;desc&quot;: &quot;我 &quot;
-                    }
-                }
-            ]
-        }
-    }
-}
-</code></pre>
-
-<blockquote>
-<p>must: 表示同时满足对应的词汇才会被搜索出来（相当于mysql的AND）<br/>
-must_not: 表示所有词汇都不满足才会被搜索出来 (相当于MySQL的not)<br/>
-should: 表示所有词汇只要满足一个就会被搜索出来（相当于MySQL的or）</p>
-</blockquote>
-
-<p>有时候我们想把分数较低的词汇排名靠前，可以是boost属性为这个词汇加权，使用方法见下方示例:</p>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;bool&quot;: {
-            &quot;should&quot;: [
-                {
-                    &quot;match&quot;: {
-                        &quot;query&quot;: &quot;你好&quot;,
-                        &quot;boost&quot;: 2
-                    }
-                },{
-                    &quot;match&quot;: {
-                        &quot;query&quot;: &quot;律师&quot;,
-                        &quot;boost&quot;: 10
-                    }
-                }
-            ]
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_13">过滤器</h4>
-
-<p>过滤器，顾名思义可以在数据集合中过滤出自己想要的数据，比如过滤数据中金额在50~60之间的数据。</p>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match&quot;: {
-            &quot;desc&quot;: &quot;五子棋游戏&quot;
-        }
-    },
-    &quot;post_filter&quot;: {
-        &quot;range&quot;: {
-            &quot;money&quot;: {
-                &quot;gt&quot;: 50,
-                &quot;lt&quot;: 60
-            }
-        }
-    }
-}
-</code></pre>
-
-<blockquote>
-<p>上面参数中，post_filter表示过滤的意思，与query平级；range表示范围查询，money是mapping的一个字段。<br/>
-gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
-</blockquote>
-
-<h4 id="toc_14">排序</h4>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match&quot;: {
-            &quot;desc&quot;: &quot;五子棋游戏&quot;
-        }
-    },
-    &quot;sort&quot;: [
-        {
-            &quot;age&quot;: &quot;desc&quot;
-        }
-    ]
-}
-</code></pre>
-
-<blockquote>
-<p>支持分词的字段，是不能进行排序的，比如text类型的字段，如果要对这个字段进行排序，可以为这个字段添加一个附属的属性用于排序，可以参考下面创建mapping的例子：</p>
-</blockquote>
-
-<pre><code class="language-text">{
-    &quot;properties&quot;: {
-        &quot;id&quot;: {
-            &quot;type&quot;: &quot;long&quot;
-        },
-        &quot;nickname&quot;: {
-            &quot;type&quot;: &quot;text&quot;,
-            &quot;analyzer&quot;: &quot;ik_max_word&quot;,
-            &quot;fields&quot;: {
-                &quot;keyword&quot;: { # 这里的keyword，如果下面有text类型的字段需要排序也可以取相同的名字
-                    &quot;type&quot;: &quot;keyword&quot;
-                }
-            }
-        }
-    }
-}
-</code></pre>
-
-<p>创建好可以排序的text类型的字段后，在使用这个字段排序时，需要使用如下方式去排序：</p>
-
-<pre><code class="language-text">{
-    &quot;sort&quot;: [
-        {
-            &quot;nickname.keyword&quot;: &quot;desc&quot;
-        }
-    ]
-}
-</code></pre>
-
-<blockquote>
-<p>这里的nickname是字段名称，keyword是这个字段的附属属性的名称。</p>
-</blockquote>
-
-<h4 id="toc_15">搜索出的数据中匹配的词汇高亮</h4>
-
-<p>在我们搜索出来的数据，是根据查询的字符串分词后的词汇匹配出来的，我们可以将这些词汇进行高亮显示。<br/>
-使用高亮显示的方式如下:</p>
-
-<pre><code class="language-text">{
-    &quot;query&quot;: {
-        &quot;match&quot;: {
-            &quot;desc&quot;: &quot;五子棋游戏&quot;
-        }
-    },
-    &quot;highlight&quot;: { # 高亮显示配置
-        &quot;pre_tags&quot;: [&quot;&lt;span&gt;&quot;],   # 高亮显示的词汇前置标签
-        &quot;post_tags&quot;: [&quot;&lt;/span&gt;&quot;], # 高亮显示的词汇结束标签
-        &quot;fields&quot;: {
-            &quot;desc&quot;: {}  # 高亮显示的字段
-        }
-    }
-}
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ES 分词与内置分词器]]></title>
-    <link href="jythons.github.io/16103794709126.html"/>
-    <updated>2021-01-11T23:37:50+08:00</updated>
-    <id>jythons.github.io/16103794709126.html</id>
-    <content type="html"><![CDATA[
-<blockquote>
-<p>分词就是将一段文字进行切分，将里面的词汇提取出来，这个过程就是分词。<br/>
-ES 本身不支持中文的分词</p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">分词的简单使用</h2>
-
-<table>
-<thead>
-<tr>
-<th>请求方式</th>
-<th>POST</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/_analyze">http://192.168.3.214:9200/_analyze</a></td>
-</tr>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/my_doc/_analyze">http://192.168.3.214:9200/my_doc/_analyze</a></td>
-</tr>
-<tr>
-<td>请求body</td>
-<td>见下方代码</td>
-</tr>
-</tbody>
-</table>
-
-<pre><code class="language-text">{
-    &quot;analyzer&quot; : &quot;standard&quot;,
-    &quot;text&quot;: &quot;I study ES&quot;
-}
-</code></pre>
-
-<blockquote>
-<p>默认的分词器在解析中文的时候，会将中文的每一个汉字提取出来。如果要解析中文，需要使用中文分词器。</p>
-</blockquote>
-
-<h2 id="toc_1">分词器类型</h2>
-
-<table>
-<thead>
-<tr>
-<th>分词器</th>
-<th>名称</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>standard</td>
-<td>默认分词器，单词会被拆分</td>
-<td>大写字母会被转换为小写</td>
-</tr>
-<tr>
-<td>whitespace</td>
-<td>按照空格分词，忽略大小写</td>
-<td>会保留大写字母</td>
-</tr>
-<tr>
-<td>stop</td>
-<td>去除无意义的单词</td>
-<td>例如：a、the等助词会被去除</td>
-</tr>
-<tr>
-<td>keyword</td>
-<td>不做分词，把整个文本作为一个单独的关键词</td>
-<td></td>
-</tr>
-<tr>
-<td>simple</td>
-<td>按照非字母分词，大写转为小写</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="toc_2">建立ik中文分词器</h2>
-
-<blockquote>
-<p>上面的分词器都不支持中文，如果要对中文进行分词，我们就要用到一个开源的中文分词器: ik分词器。</p>
-</blockquote>
-
-<p>源码地址：<a href="https://github.com/medcl/elasticsearch-analysis-ik">ik分词器</a></p>
-
-<h3 id="toc_3">ik分词器安装</h3>
-
-<p>将下载好的包解压到ES目录下的plugins目录下</p>
-
-<pre><code class="language-text">tar -zxvf elasticsearch-analysis-ik-7.10.1.zip -d /usr/local/es/plugins/ik
-</code></pre>
-
-<p>然后重新启动ES即可。 </p>
-
-<h3 id="toc_4">ik分词器（来自GitHub说明）</h3>
-
-<p>ik分词器有以下两种：ik_max_word和ik_smart<br/>
-ik_max_word: 会将文本做最细粒度的拆分，比如会将“中华人民共和国国歌”拆分为“中华人民共和国,中华人民,中华,华人,人民共和国,人民,人,民,共和国,共和,和,国国,国歌”，会穷尽各种可能的组合，适合 Term Query；<br/>
-ik_smart: 会做最粗粒度的拆分，比如会将“中华人民共和国国歌”拆分为“中华人民共和国,国歌”，适合 Phrase 查询。</p>
-
-<h2 id="toc_5">自定义中文分词库</h2>
-
-<blockquote>
-<p>因为有些词汇是一些网络用语，在中文分词的时候，会将其拆分开来，不能达到我们想要的效果，因此需要我们自定义分词库，来解析出这些词汇。<br/>
-ik分词器已经有了自定义分词库的方法，按照文档上描述操作即可。</p>
-</blockquote>
-
-<h3 id="toc_6">操作方法</h3>
-
-<p>找到ik插件下，config目录下的：IKAnalyzer.cfg.xml配置文件<br/>
-编辑如下配置：</p>
-
-<pre><code class="language-text">&lt;!DOCTYPE properties SYSTEM &quot;http://java.sun.com/dtd/properties.dtd&quot;&gt;
-&lt;properties&gt;
-        &lt;comment&gt;IK Analyzer 扩展配置&lt;/comment&gt;
-        &lt;!--用户可以在这里配置自己的扩展字典 --&gt;
-        &lt;entry key=&quot;ext_dict&quot;&gt;custom.dic&lt;/entry&gt;
-         &lt;!--用户可以在这里配置自己的扩展停止词字典--&gt;
-        &lt;entry key=&quot;ext_stopwords&quot;&gt;&lt;/entry&gt;
-        &lt;!--用户可以在这里配置远程扩展字典 --&gt;
-        &lt;!-- &lt;entry key=&quot;remote_ext_dict&quot;&gt;words_location&lt;/entry&gt; --&gt;
-        &lt;!--用户可以在这里配置远程扩展停止词字典--&gt;
-        &lt;!-- &lt;entry key=&quot;remote_ext_stopwords&quot;&gt;words_location&lt;/entry&gt; --&gt;
-&lt;/properties&gt;
-</code></pre>
-
-<p>然后在同级目录下创建一个：custom.dic文件，将自己需要的词汇添加到这个文件，每行一个词汇。然后保存，重启ES即可。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ES文档的乐观锁控制]]></title>
-    <link href="jythons.github.io/16103778537691.html"/>
-    <updated>2021-01-11T23:10:53+08:00</updated>
-    <id>jythons.github.io/16103778537691.html</id>
-    <content type="html"><![CDATA[
-<blockquote>
-<p>文档的乐观锁，文档数据内有很多的源数据，其中_version就是用来控制文档的乐观锁的，如果文档被删除或者修改，他的_version会累加，如果有多个线程或用户同时去更新同一个数据，ES会判断数据的版本号，如果版本号匹配，则可以更新，如果版本号不匹配，就不允许更新。</p>
-</blockquote>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">ES乐观锁的使用</h2>
-
-<p>当我们要使用乐观锁去控制ES数据的时候，可以使用下面的方法去实现。<br/>
-使用乐观锁会涉及到两个参数，分别是: _seq_no和_primary_term,<br/>
-_seq_no: 类似于版本号，会像_version一样去增长<br/>
-_primary_term: 表示数据在集群中的位置信息</p>
-
-<p>使用方式：</p>
-
-<table>
-<thead>
-<tr>
-<th>请求方式</th>
-<th>POST</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td><a href="http://192.168.3.214:9200/index/_doc/1?if_seq_no=30&amp;if_primary_term=1">http://192.168.3.214:9200/index/_doc/1?if_seq_no=30&amp;if_primary_term=1</a></td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>ES 老的版本只使用_version 去控制锁的机制，新版本中使用_seq_no和_primary_term两个字段去控制。</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ES数据类型]]></title>
-    <link href="jythons.github.io/16093421785520.html"/>
-    <updated>2020-12-30T23:29:38+08:00</updated>
-    <id>jythons.github.io/16093421785520.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">核心数据类型</h2>
-
-<h3 id="toc_1">字符串类型 - string（不在支持）</h3>
-
-<h4 id="toc_2">使用示例</h4>
-
-<pre><code class="language-text">PUT website
-{
-    &quot;mappings&quot;: {
-        &quot;blog&quot;: {
-            &quot;properties&quot;: {
-                &quot;title&quot;: {&quot;type&quot;: &quot;string&quot;},    // 全文本
-                &quot;tags&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;index&quot;: &quot;not_analyzed&quot;} // 关键字, 不分词
-            }
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_3">ES 5.6.10中的响应信息</h4>
-
-<pre><code class="language-text">#! Deprecation: The [string] field is deprecated, please use [text] or [keyword] instead on [tags]
-#! Deprecation: The [string] field is deprecated, please use [text] or [keyword] instead on [title]
-{
-  &quot;acknowledged&quot;: true,
-  &quot;shards_acknowledged&quot;: true,
-  &quot;index&quot;: &quot;website&quot;
-}
-</code></pre>
-
-<h4 id="toc_4">ES 6.6.0中的响应信息</h4>
-
-<pre><code class="language-text">{
-  &quot;error&quot;: {
-    &quot;root_cause&quot;: [
-      {
-        &quot;type&quot;: &quot;mapper_parsing_exception&quot;,
-        &quot;reason&quot;: &quot;No handler for type [string] declared on field [title]&quot;
-      }
-    ],
-    &quot;type&quot;: &quot;mapper_parsing_exception&quot;,
-    &quot;reason&quot;: &quot;Failed to parse mapping [blog]: No handler for type [string] declared on field [title]&quot;,
-    &quot;caused_by&quot;: {
-      &quot;type&quot;: &quot;mapper_parsing_exception&quot;,
-      &quot;reason&quot;: &quot;No handler for type [string] declared on field [title]&quot;
-    }
-  },
-  &quot;status&quot;: 400
-}
-</code></pre>
-
-<blockquote>
-<p>string类型的field已经被移除了，我们需要使用text或keyword类型来代替string。</p>
-</blockquote>
-
-<h3 id="toc_5">文本类型 - text</h3>
-
-<p>在ES5.4版本开始，text取代了需要分词的string。<br/>
-当一个字段需要使用与全文搜索（会被分词），比如产品名称、产品描述信息，就应该使用text类型。</p>
-
-<blockquote>
-<p>text的内容会被分词，可以设置是否需要存储：<code>&quot;index&quot;: &quot;true|false&quot;</code>.<br/>
-text类型的字段不能用于排序，也很少用于聚合。</p>
-</blockquote>
-
-<h4 id="toc_6">使用示例</h4>
-
-<pre><code class="language-text">PUT website
-{
-    &quot;mappings&quot;: {
-        &quot;blog&quot;: {
-            &quot;properties&quot;: {
-                &quot;summary&quot;: {&quot;type&quot;: &quot;text&quot;, &quot;index&quot;: &quot;true&quot;}
-            }
-        }
-    }
-}
-</code></pre>
-
-<h3 id="toc_7">关键字类型 - keyword</h3>
-
-<p>在ES5.4版本开始，keyword取代了不需要分词的string。<br/>
-当一个字段需要按照精确值进行过滤、排序、聚合等操作时，就应该使用keyword类型。</p>
-
-<blockquote>
-<p>keyword的内容不会被分词，可以设置是否需要存储：<code>&quot;index&quot;: &quot;true|false&quot;</code></p>
-</blockquote>
-
-<h4 id="toc_8">使用示例</h4>
-
-<pre><code class="language-text">PUT website
-{
-    &quot;mappings&quot;: {
-        &quot;blog&quot;: {
-            &quot;properties&quot;: {
-                &quot;tags&quot;: {&quot;type&quot;: &quot;keyword&quot;, &quot;index&quot;: &quot;true&quot;}
-            }
-        }
-    }
-}
-</code></pre>
-
-<h3 id="toc_9">数字类型 - 8种</h3>
-
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>说明</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>byte</td>
-<td>有符号的8位整数，范围：[-128 ~ 127]</td>
-</tr>
-<tr>
-<td>short</td>
-<td>有符号的16位整数，范围：[-32768 ~ 32767]</td>
-</tr>
-<tr>
-<td>integer</td>
-<td>有符号的32位整数，范围：[-2<sup>31</sup> ~ 2<sup>31-1]</sup></td>
-</tr>
-<tr>
-<td>long</td>
-<td>有符号的64位整数，范围：[-2<sup>63</sup> ~ 2<sup>63-1]</sup></td>
-</tr>
-<tr>
-<td>float</td>
-<td>32位单精度浮点数</td>
-</tr>
-<tr>
-<td>double</td>
-<td>64位双精度浮点数</td>
-</tr>
-<tr>
-<td>half_float</td>
-<td>16位半精度IEEE 754浮点类型</td>
-</tr>
-<tr>
-<td>scaled_float</td>
-<td>缩放类型的浮点数，比如price字段只需要精确到分，57.34缩放因子为100，存储结果为5734</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>使用注意事项：<br/>
-尽可能选择范围小的数据类型，字段的长度越短，索引和搜索的效率越高；<br/>
-优先考虑使用带缩放因子的浮点类型。</p>
-</blockquote>
-
-<h4 id="toc_10">使用示例</h4>
-
-<pre><code class="language-text">PUT shop
-{
-    &quot;mappings&quot;: {
-        &quot;book&quot;: {
-            &quot;properties&quot;: {
-                &quot;name&quot;: {&quot;type&quot;: &quot;text&quot;},
-                &quot;quantity&quot;: {&quot;type&quot;: &quot;integer&quot;},  // integer类型
-                &quot;price&quot;: {
-                    &quot;type&quot;: &quot;scaled_float&quot;,       // scaled_float类型
-                    &quot;scaling_factor&quot;: 100
-                }
-            }
-        }
-    }
-}
-</code></pre>
-
-<h3 id="toc_11">日期类型 - date</h3>
-
-<p>JSON没有日期数据类型，所以在ES中，日期可以是：</p>
-
-<ul>
-<li>包含格式化日期的字符串，&quot;2020-12-30&quot;，或&quot;2020-12-30 12:00:00&quot;</li>
-<li>代表时间毫秒数的长整型数字</li>
-<li>代表时间秒数的整数</li>
-</ul>
-
-<blockquote>
-<p>如果时区未指定，日期将被转换为UTC格式，单存储的却是长整型的毫秒值<br/>
-可以自定义日期格式，若未指定，则使用默认格式：<code>strict_date_optional_time|epoch_millis</code></p>
-</blockquote>
-
-<h4 id="toc_12">使用日期格式示例</h4>
-
-<pre><code class="language-text">// 添加映射
-PUT website
-{
-    &quot;mappings&quot;: {
-        &quot;blog&quot;: {
-            &quot;properties&quot;: {
-                &quot;pub_date&quot;: {&quot;type&quot;: &quot;date&quot;}   // 日期类型
-            }
-        }
-    }
-}
-
-// 添加数据
-PUT website/blog/11
-{ &quot;pub_date&quot;: &quot;2018-10-10&quot; }
-
-PUT website/blog/12
-{ &quot;pub_date&quot;: &quot;2018-10-10T12:00:00Z&quot; }  // Solr中默认使用的日期格式
-
-PUT website/blog/13
-{ &quot;pub_date&quot;: &quot;1589584930103&quot; }         // 时间的毫秒值
-</code></pre>
-
-<h4 id="toc_13">多种日期格式</h4>
-
-<blockquote>
-<p>多个格式使用双竖线<code>||</code>分隔，每个格式都会被依次尝试，直到找到匹配的<br/>
-第一个格式用于将时间毫秒值转换为对应格式的字符串。</p>
-</blockquote>
-
-<h5 id="toc_14">使用示例</h5>
-
-<pre><code class="language-text">// 添加映射
-PUT website
-{
-    &quot;mappings&quot;: {
-        &quot;blog&quot;: {
-            &quot;properties&quot;: {
-                &quot;date&quot;: {
-                    &quot;type&quot;: &quot;date&quot;,  // 可以接受如下类型的格式
-                    &quot;format&quot;: &quot;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&quot;
-                }
-            }
-        }
-    }
-}
-</code></pre>
-
-<h3 id="toc_15">布尔类型 - boolean</h3>
-
-<p>可以接受表示真、假的字符串或数字：</p>
-
-<ul>
-<li>真值：true, &quot;true&quot;, &quot;on&quot;, &quot;yes&quot;, &quot;1&quot; ...</li>
-<li>假值: false, &quot;false&quot;, &quot;off&quot;, &quot;no&quot;, &quot;0&quot;, &quot;&quot;(空字符串), 0.0, 0</li>
-</ul>
-
-<h3 id="toc_16">二进制型 - binary</h3>
-
-<p>二进制类型是Base64编码字符串的二进制值, 不以默认的方式存储, 且不能被搜索. 有2个设置项:</p>
-
-<blockquote>
-<p>doc_values: 该字段是否需要存储到磁盘上, 方便以后用来排序、聚合或脚本查询. 接受true和false(默认);<br/>
-store: 该字段的值是否要和_source分开存储、检索, 意思是除了_source中, 是否要单独再存储一份. 接受true或false(默认).</p>
-</blockquote>
-
-<h4 id="toc_17">使用示例</h4>
-
-<pre><code class="language-text">// 添加映射
-PUT website
-{
-    &quot;mappings&quot;: {
-        &quot;blog&quot;: {
-            &quot;properties&quot;: {
-                &quot;blob&quot;: {&quot;type&quot;: &quot;binary&quot;}   // 二进制
-            }
-        }
-    }
-}
-// 添加数据
-PUT website/blog/1
-{
-    &quot;title&quot;: &quot;Some binary blog&quot;,
-    &quot;blob&quot;: &quot;hED903KSrA084fRiD5JLgY==&quot;
-}
-</code></pre>
-
-<blockquote>
-<p>注意: Base64编码的二进制值不能嵌入换行符\n, 逗号(0x2c)等符号.</p>
-</blockquote>
-
-<h3 id="toc_18">范围类型 - range</h3>
-
-<p>range类型支持一下几种：</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align: left">类型</th>
-<th style="text-align: left">范围</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td style="text-align: left">integer_range</td>
-<td style="text-align: left">−2<sup>31</sup> ~ 2<sup>31−1</sup></td>
-</tr>
-<tr>
-<td style="text-align: left">long_range</td>
-<td style="text-align: left">−2<sup>63</sup> ~ 2<sup>63−1</sup></td>
-</tr>
-<tr>
-<td style="text-align: left">float_range</td>
-<td style="text-align: left">32位单精度浮点型</td>
-</tr>
-<tr>
-<td style="text-align: left">double_range</td>
-<td style="text-align: left">64位双精度浮点型</td>
-</tr>
-<tr>
-<td style="text-align: left">date_range</td>
-<td style="text-align: left">64位整数, 毫秒计时</td>
-</tr>
-<tr>
-<td style="text-align: left">ip_range</td>
-<td style="text-align: left">IP值的范围, 支持IPV4和IPV6, 或者这两种同时存在</td>
-</tr>
-</tbody>
-</table>
-
-<h4 id="toc_19">添加映射</h4>
-
-<pre><code class="language-text">PUT company
-{
-    &quot;mappings&quot;: {
-        &quot;department&quot;: {
-            &quot;properties&quot;: {
-                &quot;expected_number&quot;: {  // 预期员工数
-                    &quot;type&quot;: &quot;integer_range&quot;
-                },
-                &quot;time_frame&quot;: {       // 发展时间线
-                    &quot;type&quot;: &quot;date_range&quot;, 
-                    &quot;format&quot;: &quot;yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis&quot;
-                },
-                &quot;ip_whitelist&quot;: {     // ip白名单
-                    &quot;type&quot;: &quot;ip_range&quot;
-                }
-            }
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_20">添加数据</h4>
-
-<pre><code class="language-text">PUT company/department/1
-{
-    &quot;expected_number&quot; : {
-        &quot;gte&quot; : 10,
-        &quot;lte&quot; : 20
-    },
-    &quot;time_frame&quot; : { 
-        &quot;gte&quot; : &quot;2018-10-01 12:00:00&quot;, 
-        &quot;lte&quot; : &quot;2018-11-01&quot;
-    }, 
-    &quot;ip_whitelist&quot;: &quot;192.168.0.0/16&quot;
-}
-</code></pre>
-
-<p>查询数据</p>
-
-<pre><code class="language-text">GET company/department/_search
-{
-    &quot;query&quot;: {
-        &quot;term&quot;: {
-            &quot;expected_number&quot;: {
-                &quot;value&quot;: 12
-            }
-        }
-    }
-}
-GET company/department/_search
-{
-    &quot;query&quot;: {
-        &quot;range&quot;: {
-            &quot;time_frame&quot;: {
-                &quot;gte&quot;: &quot;208-08-01&quot;,
-                &quot;lte&quot;: &quot;2018-12-01&quot;,
-                &quot;relation&quot;: &quot;within&quot; 
-            }
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_21">查询结果</h4>
-
-<pre><code class="language-text">{
-  &quot;took&quot;: 26,
-  &quot;timed_out&quot;: false,
-  &quot;_shards&quot;: {
-    &quot;total&quot;: 5,
-    &quot;successful&quot;: 5,
-    &quot;skipped&quot;: 0,
-    &quot;failed&quot;: 0
-  },
-  &quot;hits&quot;: {
-    &quot;total&quot;: 1,
-    &quot;max_score&quot;: 1.0,
-    &quot;hits&quot;: [
-      {
-        &quot;_index&quot;: &quot;company&quot;,
-        &quot;_type&quot;: &quot;department&quot;,
-        &quot;_id&quot;: &quot;1&quot;,
-        &quot;_score&quot;: 1.0,
-        &quot;_source&quot;: {
-          &quot;expected_number&quot;: {
-            &quot;gte&quot;: 10,
-            &quot;lte&quot;: 20
-          },
-          &quot;time_frame&quot;: {
-            &quot;gte&quot;: &quot;2018-10-01 12:00:00&quot;,
-            &quot;lte&quot;: &quot;2018-11-01&quot;
-          },
-          &quot;ip_whitelist&quot; : &quot;192.168.0.0/16&quot;
-        }
-      }
-    ]
-  }
-}
-</code></pre>
-
-<h2 id="toc_22">复杂数据类型</h2>
-
-<h3 id="toc_23">数组类型 - array</h3>
-
-<p>ES中没有专门的数组类型，直接使用[]定义即可；<br/>
-数组中所有的值必须是同一种数据类型, 不支持混合数据类型的数组</p>
-
-<blockquote>
-<p>字符串数组: [&quot;one&quot;, &quot;two&quot;];<br/>
-整数数组: [1, 2];<br/>
-由数组组成的数组: [1, [2, 3]], 等价于[1, 2, 3];<br/>
-对象数组: [{&quot;name&quot;: &quot;Tom&quot;, &quot;age&quot;: 20}, {&quot;name&quot;: &quot;Jerry&quot;, &quot;age&quot;: 18}].</p>
-</blockquote>
-
-<p>注意</p>
-
-<blockquote>
-<p>动态添加数据时, 数组中第一个值的类型决定整个数组的类型;<br/>
-不支持混合数组类型, 比如[1, &quot;abc&quot;];<br/>
-数组可以包含null值, 空数组[]会被当做missing field —— 没有值的字段.</p>
-</blockquote>
-
-<h3 id="toc_24">对象类型 - object</h3>
-
-<p>JSON文档是分层的: 文档可以包含内部对象, 内部对象也可以包含内部对象。</p>
-
-<h4 id="toc_25">使用示例</h4>
-
-<pre><code class="language-text">PUT employee/developer/1
-{
-    &quot;name&quot;: &quot;ma_shoufeng&quot;,
-    &quot;address&quot;: {
-        &quot;region&quot;: &quot;China&quot;,
-        &quot;location&quot;: {&quot;province&quot;: &quot;GuangDong&quot;, &quot;city&quot;: &quot;GuangZhou&quot;}
-    }
-}
-</code></pre>
-
-<h4 id="toc_26">存储方式</h4>
-
-<pre><code class="language-text">{
-    &quot;name&quot;:                       &quot;ma_shoufeng&quot;,
-    &quot;address.region&quot;:             &quot;China&quot;,
-    &quot;address.location.province&quot;:  &quot;GuangDong&quot;, 
-    &quot;address.location.city&quot;:      &quot;GuangZhou&quot;
-}
-</code></pre>
-
-<h4 id="toc_27">文档的映射结构类似为</h4>
-
-<pre><code class="language-text">PUT employee
-{
-    &quot;mappings&quot;: {
-        &quot;developer&quot;: {
-            &quot;properties&quot;: {
-                &quot;name&quot;: { &quot;type&quot;: &quot;text&quot;, &quot;index&quot;: &quot;true&quot; }, 
-                &quot;address&quot;: {
-                    &quot;properties&quot;: {
-                        &quot;region&quot;: { &quot;type&quot;: &quot;keyword&quot;, &quot;index&quot;: &quot;true&quot; },
-                        &quot;location&quot;: {
-                            &quot;properties&quot;: {
-                                &quot;province&quot;: { &quot;type&quot;: &quot;keyword&quot;, &quot;index&quot;: &quot;true&quot; },
-                                &quot;city&quot;: { &quot;type&quot;: &quot;keyword&quot;, &quot;index&quot;: &quot;true&quot; }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-</code></pre>
-
-<h3 id="toc_28">嵌套类型 - nested</h3>
-
-<p>嵌套类型是对象数据类型的一个特例, 可以让array类型的对象被独立索引和搜索.</p>
-
-<h4 id="toc_29">对象数组是如何存储的</h4>
-
-<h5 id="toc_30">添加数据</h5>
-
-<pre><code class="language-text">PUT game_of_thrones/role/1
-{
-    &quot;group&quot;: &quot;stark&quot;,
-    &quot;performer&quot;: [
-        {&quot;first&quot;: &quot;John&quot;, &quot;last&quot;: &quot;Snow&quot;},
-        {&quot;first&quot;: &quot;Sansa&quot;, &quot;last&quot;: &quot;Stark&quot;}
-    ]
-}
-</code></pre>
-
-<h5 id="toc_31">内部存储结构</h5>
-
-<pre><code class="language-text">{
-    &quot;group&quot;:             &quot;stark&quot;,
-    &quot;performer.first&quot;: [ &quot;john&quot;, &quot;sansa&quot; ],
-    &quot;performer.last&quot;:  [ &quot;snow&quot;, &quot;stark&quot; ]
-}
-</code></pre>
-
-<h5 id="toc_32">存储分析</h5>
-
-<p>可以看出, user.first和user.last会被平铺为多值字段, 这样一来, John和Snow之间的关联性就丢失了.<br/>
-在查询时, 可能出现John Stark的结果.</p>
-
-<h4 id="toc_33">用nested类型解决object类型的不足</h4>
-
-<p>如果需要对以最对象进行索引, 且保留数组中每个对象的独立性, 就应该使用嵌套数据类型.<br/>
-嵌套对象实质是将每个对象分离出来, 作为隐藏文档进行索引.</p>
-
-<h5 id="toc_34">创建映射</h5>
-
-<pre><code class="language-text">PUT game_of_thrones
-{
-    &quot;mappings&quot;: {
-        &quot;role&quot;: {
-            &quot;properties&quot;: {
-                &quot;performer&quot;: {&quot;type&quot;: &quot;nested&quot; }
-            }
-        }
-    }
-}
-</code></pre>
-
-<h5 id="toc_35">添加映射</h5>
-
-<pre><code class="language-text">PUT game_of_thrones/role/1
-{
-    &quot;group&quot; : &quot;stark&quot;,
-    &quot;performer&quot; : [
-        {&quot;first&quot;: &quot;John&quot;, &quot;last&quot;: &quot;Snow&quot;},
-        {&quot;first&quot;: &quot;Sansa&quot;, &quot;last&quot;: &quot;Stark&quot;}
-    ]
-}
-</code></pre>
-
-<h5 id="toc_36">检索数据</h5>
-
-<pre><code class="language-text">GET game_of_thrones/_search
-{
-    &quot;query&quot;: {
-        &quot;nested&quot;: {
-            &quot;path&quot;: &quot;performer&quot;,
-            &quot;query&quot;: {
-                &quot;bool&quot;: {
-                    &quot;must&quot;: [
-                        { &quot;match&quot;: { &quot;performer.first&quot;: &quot;John&quot; }},
-                        { &quot;match&quot;: { &quot;performer.last&quot;:  &quot;Snow&quot; }} 
-                    ]
-                }
-            }, 
-            &quot;inner_hits&quot;: {
-                &quot;highlight&quot;: {
-                    &quot;fields&quot;: {&quot;performer.first&quot;: {}}
-                }
-            }
-        }
-    }
-}
-</code></pre>
-
-<h2 id="toc_37">地理数据类型</h2>
-
-<h3 id="toc_38">地理点类型 - geo point</h3>
-
-<p>地理点类型用于存储地理位置的经纬度对, 可用于:</p>
-
-<ul>
-<li>查找一定范围内的地理点;</li>
-<li>通过地理位置或相对某个中心点的距离聚合文档;</li>
-<li>将距离整合到文档的相关性评分中;</li>
-<li>通过距离对文档进行排序.</li>
-</ul>
-
-<h4 id="toc_39">添加映射</h4>
-
-<pre><code class="language-text">PUT employee
-{
-    &quot;mappings&quot;: {
-        &quot;developer&quot;: {
-            &quot;properties&quot;: {
-                &quot;location&quot;: {&quot;type&quot;: &quot;geo_point&quot;}
-            }
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_40">存储地理位置</h4>
-
-<pre><code class="language-text">// 方式一: 纬度 + 经度键值对
-PUT employee/developer/1
-{
-    &quot;text&quot;: &quot;小蛮腰-键值对地理点参数&quot;, 
-    &quot;location&quot;: {
-        &quot;lat&quot;: 23.11, &quot;lon&quot;: 113.33     // 纬度: latitude, 经度: longitude
-    }
-}
-
-// 方式二: &quot;纬度, 经度&quot;的字符串参数
-PUT employee/developer/2
-{
-  &quot;text&quot;: &quot;小蛮腰-字符串地理点参数&quot;,
-  &quot;location&quot;: &quot;23.11, 113.33&quot;           // 纬度, 经度
-}
-
-// 方式三: [&quot;经度, 纬度&quot;] 数组地理点参数
-PUT employee/developer/3
-{
-  &quot;text&quot;: &quot;小蛮腰-数组参数&quot;,
-  &quot;location&quot;: [ 113.33, 23.11 ]         // 经度, 纬度
-}
-</code></pre>
-
-<h4 id="toc_41">查询示例</h4>
-
-<pre><code class="language-text">GET employee/_search
-{
-    &quot;query&quot;: { 
-        &quot;geo_bounding_box&quot;: { 
-            &quot;location&quot;: {
-                &quot;top_left&quot;: { &quot;lat&quot;: 24, &quot;lon&quot;: 113 },      // 地理盒子模型的上-左边
-                &quot;bottom_right&quot;: { &quot;lat&quot;: 22, &quot;lon&quot;: 114 }   // 地理盒子模型的下-右边
-            }
-        }
-    }
-}
-</code></pre>
-
-<h3 id="toc_42">地理形状类型 - geo_shape</h3>
-
-<p>是多边形的复杂形状. 使用较少, 这里省略.<br/>
-可以参考这篇文章: <a href="https://blog.csdn.net/u012332735/article/details/54971638">Elasticsearch地理位置总结</a></p>
-
-<h2 id="toc_43">专门数据类型</h2>
-
-<h3 id="toc_44">IP类型</h3>
-
-<p>IP类型的字段用于存储IPv4或IPv6的地址, 本质上是一个长整型字段.</p>
-
-<h4 id="toc_45">添加映射</h4>
-
-<pre><code class="language-text">PUT employee
-{
-    &quot;mappings&quot;: {
-        &quot;customer&quot;: {
-            &quot;properties&quot;: {
-                &quot;ip_addr&quot;: { &quot;type&quot;: &quot;ip&quot; }
-            }
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_46">添加数据</h4>
-
-<pre><code class="language-text">PUT employee/customer/1
-{ &quot;ip_addr&quot;: &quot;192.168.1.1&quot; }
-</code></pre>
-
-<h4 id="toc_47">查询数据</h4>
-
-<pre><code class="language-text">GET employee/customer/_search
-{
-    &quot;query&quot;: {
-        &quot;term&quot;: { &quot;ip_addr&quot;: &quot;192.168.0.0/16&quot; }
-    }
-}
-</code></pre>
-
-<h3 id="toc_48">计数数据类型 - token_count</h3>
-
-<p>token_count类型用于统计字符串中的单词数量.<br/>
-本质上是一个整数型字段, 接受并分析字符串值, 然后索引字符串中单词的个数.</p>
-
-<h4 id="toc_49">添加映射</h4>
-
-<pre><code class="language-text">PUT employee
-{
-    &quot;mappings&quot;: {
-        &quot;customer&quot;: {
-            &quot;properties&quot;: {
-                &quot;name&quot;: { 
-                    &quot;type&quot;: &quot;text&quot;,
-                    &quot;fields&quot;: {
-                        &quot;length&quot;: {
-                            &quot;type&quot;: &quot;token_count&quot;, 
-                            &quot;analyzer&quot;: &quot;standard&quot;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-</code></pre>
-
-<h4 id="toc_50">添加数据</h4>
-
-<pre><code class="language-text">PUT employee/customer/1
-{ &quot;name&quot;: &quot;John Snow&quot; }
-PUT employee/customer/2
-{ &quot;name&quot;: &quot;Tyrion Lannister&quot; }
-</code></pre>
-
-<h4 id="toc_51">查询数据</h4>
-
-<pre><code class="language-text">GET employee/customer/_search
-{
-    &quot;query&quot;: {
-        &quot;term&quot;: { &quot;name.length&quot;: 2 }
-    }
-}
-</code></pre>
-
-<h2 id="toc_52">参考</h2>
-
-<p><a href="https://www.cnblogs.com/shoufeng/p/10692113.html">ES 15 - Elasticsearch的数据类型 (text、keyword、date、object、geo等)</a></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ES基本操作]]></title>
-    <link href="jythons.github.io/16093414600296.html"/>
-    <updated>2020-12-30T23:17:40+08:00</updated>
-    <id>jythons.github.io/16093414600296.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">Mappings自定义创建映射</h2>
-
-<h3 id="toc_1">创建mapping</h3>
-
-<pre><code class="language-text">接口地址：http://es_service_addr/索引名称
-请求方式：put
-body: 
-    {
-        &quot;mappings&quot;: {
-           # 属性
-            &quot;properties&quot;: {
-               # 字段
-                &quot;realname&quot;: {
-                    &quot;type&quot;: &quot;text&quot;,
-                    &quot;index&quot;: true  # index表示是否需要索引，true表示需要（默认），false表示不需要索引，需要索引就表示会被分词
-                }
-            }
-        }
-    }
-</code></pre>
-
-<blockquote>
-<p>mapping一旦创建，就不能够在修改。如果需要修改，要把现有的索引删除，重新添加。<br/>
-如果需要添加，可以post访问：http://es_service_addr/索引名称/_mapping, 参数格式同上面相同，注意增加需要去掉mappings，直接写properties。</p>
-
-<h3 id="toc_2">响应</h3>
-</blockquote>
-
-<pre><code class="language-text">{
-    &quot;acknowledged&quot;: true,
-    &quot;shards_acknowledged&quot;: true,
-    &quot;index&quot;: &quot;index_mapping&quot;
-}
-</code></pre>
-
-<h3 id="toc_3">分析是否分词</h3>
-
-<pre><code class="language-text">接口地址：http://es_service_addr/索引名称/_analyze
-请求方式：GET
-body:
-{
-    &quot;field&quot;: &quot;realname&quot;, # 分析的字段
-    &quot;text&quot;: &quot;我爱我的祖国&quot; # 分析字段对应的值
-}
-</code></pre>
-
-<p>响应：</p>
-
-<pre><code class="language-text">{
-    &quot;tokens&quot;: [
-        {
-            &quot;token&quot;: &quot;我&quot;,
-            &quot;start_offset&quot;: 0,
-            &quot;end_offset&quot;: 1,
-            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
-            &quot;position&quot;: 0
-        },
-        {
-            &quot;token&quot;: &quot;爱&quot;,
-            &quot;start_offset&quot;: 1,
-            &quot;end_offset&quot;: 2,
-            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
-            &quot;position&quot;: 1
-        },
-        {
-            &quot;token&quot;: &quot;我&quot;,
-            &quot;start_offset&quot;: 2,
-            &quot;end_offset&quot;: 3,
-            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
-            &quot;position&quot;: 2
-        },
-        {
-            &quot;token&quot;: &quot;的&quot;,
-            &quot;start_offset&quot;: 3,
-            &quot;end_offset&quot;: 4,
-            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
-            &quot;position&quot;: 3
-        },
-        {
-            &quot;token&quot;: &quot;祖&quot;,
-            &quot;start_offset&quot;: 4,
-            &quot;end_offset&quot;: 5,
-            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
-            &quot;position&quot;: 4
-        },
-        {
-            &quot;token&quot;: &quot;国&quot;,
-            &quot;start_offset&quot;: 5,
-            &quot;end_offset&quot;: 6,
-            &quot;type&quot;: &quot;&lt;IDEOGRAPHIC&gt;&quot;,
-            &quot;position&quot;: 5
-        }
-    ]
-}
-</code></pre>
-
-<blockquote>
-<p>默认是支持英文的分词，所以上面的返回值把中文拆解成了单独的汉字，如果要使用英文可以去做拓展。</p>
-</blockquote>
-
-<h2 id="toc_4">文档的基本操作</h2>
-
-<h3 id="toc_5">添加文档与自动映射</h3>
-
-<pre><code class="language-text">创建文档
-接口地址：http://es_service_addr/my_doc/_doc/1
-    my_doc：索引名称
-    _doc: 操作类型
-    1：ES主键
-body:
-{
-    &quot;id&quot;: 1001,
-    &quot;name&quot;: &quot;no-1&quot;,
-    &quot;desc&quot;: &quot;we are number one&quot;,
-    &quot;create_date&quot;: &quot;2021-01-05&quot;
-}
-
-响应：
-{
-    &quot;_index&quot;: &quot;my_doc&quot;,
-    &quot;_type&quot;: &quot;_doc&quot;,
-    &quot;_id&quot;: &quot;ulVN03YBVWKanGeCxsTB&quot;,
-    &quot;_version&quot;: 1,
-    &quot;result&quot;: &quot;created&quot;,
-    &quot;_shards&quot;: {
-        &quot;total&quot;: 1,
-        &quot;successful&quot;: 1,
-        &quot;failed&quot;: 0
-    },
-    &quot;_seq_no&quot;: 0,
-    &quot;_primary_term&quot;: 1
-}
-</code></pre>
-
-<h3 id="toc_6">删除文档内的数据</h3>
-
-<pre><code class="language-text">接口地址: http://es_service_addr/my_doc/_doc/1
-访求方式：delete
-解析: 表示删除索引my_doc下的_id=1的文档数据
-</code></pre>
-
-<blockquote>
-<p>删除操作其实不是物理删除，实际上是逻辑删除，通过添加逻辑标识符来判断是否删除，当磁盘数据过载后，才会去删除被标记为删除的数据</p>
-</blockquote>
-
-<h3 id="toc_7">修改文档数据</h3>
-
-<pre><code class="language-text">接口地址: http://es_service_addr/my_doc/_doc/1/_update
-请求方式：post
-解析: 修改索引为my_doc数据_id=1的文档数据内容
-
-body:
-{
-    &quot;doc&quot;: {
-        &quot;name&quot;:&quot;abc&quot;
-    }
-}
-</code></pre>
-
-<blockquote>
-<p>这种对某个字段数据进行局部的修改，实际上在ES底层是将数据重新写了一次，并不是对这个字段修改了一下。我们自己也可以添加一个全字段的数据，ID与原来的相同，这样也可以做到更新数据的作用。</p>
-</blockquote>
-
-<h3 id="toc_8">查询文档数据</h3>
-
-<pre><code class="language-text">请求方式：GET
-请求地址：http://es_service_addr/my_doc/_doc/1?_source=id,name
-解析：查询文档_doc下索引my_doc，索引_id=1的数据，并且只查询id和name这两个字段的数据
-
-查询所有数据的id和name
-http://es_service_addr/my_doc/_doc/_search?_source=id,name
-</code></pre>
-
-<h4 id="toc_9">判断查询数据是否存在</h4>
-
-<table>
-<thead>
-<tr>
-<th>请求方式</th>
-<th>HEAD</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>请求地址</td>
-<td>http://es_service_addr/my_doc/_doc/1</td>
-</tr>
-</tbody>
-</table>
-
-<blockquote>
-<p>如果请求状态码返回200，表示数据存在，请求状态码返回404，表示数据不存在</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Elasticsearch安装]]></title>
-    <link href="jythons.github.io/16090525942611.html"/>
-    <updated>2020-12-27T15:03:14+08:00</updated>
-    <id>jythons.github.io/16090525942611.html</id>
-    <content type="html"><![CDATA[
-<h2 id="toc_0">下载地址</h2>
-
-<p><a href="https://www.elastic.co/cn/elasticsearch/">官方下载</a></p>
-
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_1">安装方法</h2>
-
-<p>1.下载安装包解压</p>
-
-<pre><code class="language-text">tar -zxvf elasticsearch.tar.gz
-</code></pre>
-
-<p>2.将解压出来的文件夹转移到/user/lcoal文件夹下</p>
-
-<pre><code class="language-text">mv elasticsearch /usr/local/
-</code></pre>
-
-<p>3.创建一个用于存放数据的目录</p>
-
-<pre><code class="language-text">cd /usr/lcoal/elasticsearch/
-mkdir data
-</code></pre>
-
-<p>4.修改核心配置文件</p>
-
-<pre><code class="language-text">vim ./config/elasticsearch.yml
-
-# 配置文件解析
-cluster.name: my-application                # 集群名称
-node.name: node-name                        # 节点名称
-# paths相关配置
-path.data: /usr/lcoal/elasticsearch/data    # 存放数据的目录
-path.logs: /usr/lcoal/elasticsearch/logs    # 存放日志的目录
-# 网络相关的配置
-network.host: 0.0.0.0
-http.port: 9200 
-# 配置跨域访问
-http.cors.enabled: true
-http.core.allow-origin: &quot;*&quot;
-# 节点相关的配置
-# 这里的节点名称要与上面配置的node.name的名称相同
-cluster.initial_master_nodes: [&quot;node-1&quot;, &quot;node-2&quot;]
-</code></pre>
-
-<pre><code class="language-text">vim ./config/jvm.options
-
-修改内存大小
--Xms1g # 初始化内存空间，默认1G，虚拟机建议修改为128m
--Xmx1g # 最大使用内存空间，默认1G，虚拟机建议修改为128m
-</code></pre>
-
-<blockquote>
-<p>ES是不允许使用root用户启动的，启动ES需要使用非root用户启动。<br/>
-创建一个新用户：useradd esuser<br/>
-为esuser用户授权：chown -R esuser:esuser /usr/lcoal/elasticsearch</p>
-</blockquote>
-
-<p>5.启动ES<br/>
-进入到/usr/lcoal/elasticsearch/bin目录下</p>
-
-<pre><code class="language-text">切换为esuser用户
-su esuser
-启动ES
-./elasticsearch
-</code></pre>
-
-<blockquote>
-<p>启动时可能会遇到的错误<br/>
-1.max file descriptors [4096] for elasticsearch process is too low, increase to at least [65535]<br/>
-2.max number of threads [3756] for user [esuser] is too low, increase to at least [4096]<br/>
-3.max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]<br/>
-问题1：能够打开的文件数过少<br/>
-问题2：支持的最大线程数过少<br/>
-问题3：支持最大虚拟内存vm.max_map_count数太低<br/>
-解决以上问题，需要修改配置文件: /etc/security/limits.conf<br/>
-添加如下配置：</p>
-
-<pre><code class="language-text">* soft nofile 65536
-* hard nofile 131072
-* soft nproc 4096
-* hard nproc 4096
-</code></pre>
-
-<p>然后在/etc/sysctl.d文件内添加如下配置：</p>
-
-<pre><code class="language-text">vm.max_map_count=262145
-</code></pre>
-
-<p>修改/etc/sysctl.d文件需要刷新：<code>sysctl -p</code><br/>
-如果还是不能启动，重启服务器即可</p>
-</blockquote>
-
-<p>6.后台启动ES</p>
-
-<pre><code class="language-text">./elasticsearch -d
-</code></pre>
-
-<h2 id="toc_2">文件解析</h2>
-
-<table>
-<thead>
-<tr>
-<th>文件夹</th>
-<th>子文件</th>
-<th>作用</th>
-<th>备注</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>bin</td>
-<td></td>
-<td>可执行文件等</td>
-<td></td>
-</tr>
-<tr>
-<td>config</td>
-<td></td>
-<td>配置</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>elasticsearch.yml</td>
-<td>核心配置文件</td>
-<td></td>
-</tr>
-<tr>
-<td>jdk</td>
-<td></td>
-<td>java依赖</td>
-<td></td>
-</tr>
-<tr>
-<td>lib</td>
-<td></td>
-<td>工具类</td>
-<td></td>
-</tr>
-<tr>
-<td>logs</td>
-<td></td>
-<td>日志</td>
-<td></td>
-</tr>
-<tr>
-<td>modules</td>
-<td></td>
-<td>ES模块</td>
-<td></td>
-</tr>
-<tr>
-<td>plugins</td>
-<td></td>
-<td>ES拓展</td>
-<td></td>
-</tr>
-<tr>
-<td>data</td>
-<td></td>
-<td>用于存放数据</td>
-<td>自己创建</td>
-</tr>
-</tbody>
-</table>
-
-<h2 id="toc_3">安装ES可视化插件（elasticsearch-head）</h2>
-
-<p><a href="https://github.com/mobz/elasticsearch-head">elasticsearch-head</a>插件可以去上去下载，具体安装方法可以参考GitHub的README.md说明。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Elasticsearch原理]]></title>
-    <link href="jythons.github.io/16076110407363.html"/>
-    <updated>2020-12-10T22:37:20+08:00</updated>
-    <id>jythons.github.io/16076110407363.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-
-<h2 id="toc_0">Lucene</h2>
-
-<p>Lucene是一个代码库，使用Java开发的搜索引擎，不利于分布式拓展。</p>
-
-<h2 id="toc_1">Solr</h2>
-
-<p>Slor是基于Lucene开发的搜索引擎，是apache开源的搜索引擎，只支持Java。</p>
-
-<h2 id="toc_2">Elasticsearch</h2>
-
-<p>ES也是基于Lucene开发，支持分布式，以及多种语言，拓展性比较好。支持TB级别的搜索（TB级别是1024T容量查询）。<br/>
-ES是基于文档去检索的。</p>
-
-<h3 id="toc_3">ES核心术语</h3>
-
-<ul>
-<li>索引 Index
-<ul>
-<li>相当于数据库的表</li>
-</ul></li>
-<li>类型 type
-<ul>
-<li>相当于表的逻辑类型，用于区分索引，ES 7.x已经不在使用了，老得版本还在使用</li>
-</ul></li>
-<li>文档 document
-<ul>
-<li>相当于行，是json的形式去存在的</li>
-</ul></li>
-<li>字段 fields
-<ul>
-<li>列 </li>
-</ul></li>
-<li>映射 mapping
-<ul>
-<li>相当于表结构定义</li>
-</ul></li>
-<li>近实时 NRT
-<ul>
-<li>Near real time 接近真实的时间，当新建一个文档之后，一般会有1秒左右的时间的延时</li>
-</ul></li>
-<li>节点 node
-<ul>
-<li>每一个服务器，就是一个节点</li>
-</ul></li>
-<li>shard replica
-<ul>
-<li>数据分片与备份</li>
-</ul></li>
-</ul>
-
-<h4 id="toc_4">集群相关</h4>
-
-<p><img src="media/16076110407363/ES%E6%9E%B6%E6%9E%84%E7%89%B9%E7%82%B9.png" alt="ES架构特点"/></p>
-
-<p>分片（shard）：把索引库拆分为多份，分别放在不同的节点上，比如有3个节点，3个节点的所有数据内容加在一起是一个完整的索引库，分别保存到三个节点上，目的为了水平拓展，提高吞吐量。<br/>
-备份（replica）：每个shard的备份。</p>
-
-<h4 id="toc_5">简称</h4>
-
-<p>shard = primary shard（主分片）<br/>
-replica = replica shard（备份节点）</p>
-
-<h4 id="toc_6">倒排索引</h4>
-
-<p>倒排索引就是将正排索引的文档内容进行分词，然后记录这个词在每个文档出现的文档ID。<br/>
-<img src="media/16076110407363/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95.png" alt="倒排索引"/><br/>
-词频TF：位置POS<br/>
-词频是记录这个词在那个文档下出现的次数和位置，记录方法：1:1:<1>，表示文档ID1下，出现过1次，在下标为1的位置。<br/>
-<img src="media/16076110407363/%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95%E8%AF%8D%E9%A2%91.png" alt="倒排索引词频"/></p>
-
-<blockquote>
-<p>倒排索引源于实际应用中需要根据属性的值来查找记录。这种索引表中的每一项都包括u一个属性值和包含该属性的各个记录地址。由于不是根据记录来确定属性，而是根据属性来确定记录的位置，所以称之为倒排索引。</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SpringBoot使用模版]]></title>
-    <link href="jythons.github.io/16073547198404.html"/>
-    <updated>2020-12-07T23:25:19+08:00</updated>
-    <id>jythons.github.io/16073547198404.html</id>
-    <content type="html"><![CDATA[
-<p>SpringBoot使用html模版，Controller需要使用注解：@Controller</p>
-
-<h2 id="toc_0">pom配置</h2>
-
-<pre><code class="language-text">&lt;dependency&gt;
-      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-      &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
-
-<h2 id="toc_1">yml配置</h2>
-
-<pre><code class="language-text">spring:
-    thymeleaf:
-    mode: HTML
-    encoding: UTF-8
-    prefix: classpath:/templates/
-    suffix: .html
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SpringBoot会话拦截器]]></title>
-    <link href="jythons.github.io/16073519255991.html"/>
-    <updated>2020-12-07T22:38:45+08:00</updated>
-    <id>jythons.github.io/16073519255991.html</id>
-    <content type="html"><![CDATA[
-<p>会话拦截器，用于在请求一些接口之前，统一去拦截请求，进行验证等操作。</p>
-
-<span id="more"></span><!-- more -->
-
-<pre><code class="language-text">package com.sample.controller.interceptor;
-import org.springframework.web.servlet.HandlerInterceptor;
-
-public class UserTokenInterceptor implements HandlerInterceptor {
-    
-    /**
-     * 拦截请求，在访问controller调用之前
-     * @param request
-     * @param response
-     * @param handler
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public boolean preHandle(HttpServletRequest request, 
-                             HttpServletResponse response,
-                             Object handler){
-         
-    }
-    
-    /**
-     * 请求访问controller之后，渲染视图之前
-     * @param request
-     * @param response
-     * @param handler
-     * @param modelAndView
-     * @throws Exception
-     */
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
-    }
-
-    /**
-     * 请求访问controller之后，渲染视图之后
-     * @param request
-     * @param response
-     * @param handler
-     * @param ex
-     * @throws Exception
-     */
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
-    }
-}
-</code></pre>
-
-<blockquote>
-<p>以上配置好之后，还需要将拦截器注册一下才可使用。</p>
-</blockquote>
 
 ]]></content>
   </entry>
