@@ -1,0 +1,971 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+    
+  MySQL索引原理以及查询优化 - Jythons小站
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="Jythons小站" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+ 
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site:jythons.github.io ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="_self" href="index.html">主页</a></li>
+        
+        <li id=""><a target="_self" href="Java.html">Java</a></li>
+        
+        <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li id=""><a target="_self" href="ES.html">ES</a></li>
+        
+        <li id=""><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="https://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; Jythons小站</span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="_self" href="index.html">主页</a></li>
+        
+        <li><a target="_self" href="Java.html">Java</a></li>
+        
+        <li><a target="_self" href="nginx.html">Nginx</a></li>
+        
+        <li><a target="_self" href="Shell.html">Shell</a></li>
+        
+        <li><a target="_self" href="LVS.html">LVS</a></li>
+        
+        <li><a target="_self" href="Redis.html">Redis</a></li>
+        
+        <li><a target="_self" href="ES.html">ES</a></li>
+        
+        <li><a target="_self" href="mq.html">MQ</a></li>
+        
+        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="nginx.html">nginx</a></li>
+        
+            <li><a href="Java.html">Java</a></li>
+        
+            <li><a href="Shell.html">Shell</a></li>
+        
+            <li><a href="LVS.html">LVS</a></li>
+        
+            <li><a href="Redis.html">Redis</a></li>
+        
+            <li><a href="ES.html">ES</a></li>
+        
+            <li><a href="MQ.html">MQ</a></li>
+        
+            <li><a href="Docker.html">Docker</a></li>
+        
+            <li><a href="Mysql.html">Mysql</a></li>
+        
+            <li><a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html">每日总结</a></li>
+        
+            <li><a href="Postman.html">Postman</a></li>
+        
+            <li><a href="Sublime.html">Sublime</a></li>
+        
+            <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+  $(function(){
+    $('#menu_item_index').addClass('is_active');
+  });
+</script>
+<div class="row">
+  <div class="large-8 medium-8 columns">
+      <div class="markdown-body article-wrap">
+       <div class="article">
+          
+          <h1>MySQL索引原理以及查询优化</h1>
+     
+        <div class="read-more clearfix">
+          <span class="date">2022/01/07</span>
+
+          <span>posted in&nbsp;</span> 
+          
+              <span class="posted-in"><a href='Mysql.html'>Mysql</a></span>
+           
+         
+          <span class="comments">
+            
+
+            
+          </span>
+
+        </div>
+      </div><!-- article -->
+
+      <div class="article-content">
+      <h2><a id="1%E3%80%81%E4%BB%8B%E7%BB%8D" class="anchor" aria-hidden="true" href="#1%E3%80%81%E4%BB%8B%E7%BB%8D"><span class="octicon octicon-link"></span></a>1、介绍</h2>
+<h3><a id="1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95%EF%BC%9F" class="anchor" aria-hidden="true" href="#1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95%EF%BC%9F"><span class="octicon octicon-link"></span></a>1.1、什么是索引？</h3>
+<p>一般的应用系统，读写比例在10:1左右，而且插入操作和一般的更新操作很少出现性能问题，在生产环境中，我们遇到最多的，也是最容易出问题的，还是一些复杂的查询操作，因此对查询语句的优化显然是重中之重。说起加速查询，就不得不提到索引了。</p>
+<h3><a id="1-2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%B4%A2%E5%BC%95%E5%91%A2%EF%BC%9F" class="anchor" aria-hidden="true" href="#1-2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%B4%A2%E5%BC%95%E5%91%A2%EF%BC%9F"><span class="octicon octicon-link"></span></a>1.2、为什么要有索引呢？</h3>
+<p>索引在MySQL中也叫做“键”，是存储引擎用于快速找到记录的一种数据结构。索引对于良好的性能
+非常关键，尤其是当表中的数据量越来越大时，索引对于性能的影响愈发重要。
+索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高好几个数量级。
+索引相当于字典的音序表，如果要查某个字，如果不使用音序表，则需要从几百页中逐页去查。</p>
+<span id="more"></span><!-- more -->
+<h2><a id="2%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8E%9F%E7%90%86" class="anchor" aria-hidden="true" href="#2%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8E%9F%E7%90%86"><span class="octicon octicon-link"></span></a>2、索引的原理</h2>
+<h3><a id="2-1%E3%80%81%E7%B4%A2%E5%BC%95%E5%8E%9F%E7%90%86" class="anchor" aria-hidden="true" href="#2-1%E3%80%81%E7%B4%A2%E5%BC%95%E5%8E%9F%E7%90%86"><span class="octicon octicon-link"></span></a>2.1、 索引原理</h3>
+<p>索引的目的在于提高查询效率，与我们查阅图书所用的目录是一个道理：先定位到章，然后定位到该章下的一个小节，然后找到页数。相似的例子还有：查字典，查火车车次，飞机航班等</p>
+<p>本质都是：通过不断地缩小想要获取数据的范围来筛选出最终想要的结果，同时把随机的事件变成顺序的事件，也就是说，有了这种索引机制，我们可以总是用同一种查找方式来锁定数据。</p>
+<p>数据库也是一样，但显然要复杂的多，因为不仅面临着等值查询，还有范围查询(&gt;、&lt;、between、in)、模糊查询(like)、并集查询(or)等等。数据库应该选择怎么样的方式来应对所有的问题呢？我们回想字典的例子，能不能把数据分成段，然后分段查询呢？最简单的如果1000条数据，1到100分成第一段，101到200分成第二段，201到300分成第三段......这样查第250条数据，只要找第三段就可以了，一下子去除了90%的无效数据。但如果是1千万的记录呢，分成几段比较好？稍有算法基础的同学会想到搜索树，其平均复杂度是lgN，具有不错的查询性能。但这里我们忽略了一个关键的问题，复杂度模型是基于每次相同的操作成本来考虑的。而数据库实现比较复杂，一方面数据是保存在磁盘上的，另外一方面为了提高性能，每次又可以把部分数据读入内存来计算，因为我们知道访问磁盘的成本大概是访问内存的十万倍左右，所以简单的搜索树难以满足复杂的应用场景。</p>
+<h3><a id="2-2%E3%80%81%E7%A3%81%E7%9B%98io%E4%B8%8E%E9%A2%84%E8%AF%BB" class="anchor" aria-hidden="true" href="#2-2%E3%80%81%E7%A3%81%E7%9B%98io%E4%B8%8E%E9%A2%84%E8%AF%BB"><span class="octicon octicon-link"></span></a>2.2、磁盘IO与预读</h3>
+<p>考虑到磁盘IO是非常高昂的操作，计算机操作系统做了一些优化，当一次IO时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次IO读取的数据我们称之为一页(page)。具体一页有多大数据跟操作系统有关，一般为4k或8k，也就是我们读取一页内的数据时候，实际上才发生了一次IO，这个理论对于索引的数据结构设计非常有帮助。</p>
+<h3><a id="2-3%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" class="anchor" aria-hidden="true" href="#2-3%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="octicon octicon-link"></span></a>2.3、索引的数据结构</h3>
+<p>任何一种数据结构都不是凭空产生的，一定会有它的背景和使用场景，我们现在总结一下，我们需要这种数据结构能够做些什么，其实很简单，那就是：每次查找数据时把磁盘IO次数控制在一个很小的数量级，最好是常数数量级。那么我们就想到如果一个高度可控的多路搜索树是否能满足需求呢？就这样，b+树应运而生。</p>
+<p><img src="media/16415257910695/B+tree.png" alt="B+tree" /></p>
+<p>如上图，是一颗b+树，关于b+树的定义可以参见B+树，这里只说一些重点，浅蓝色的块我们称之为一个磁盘块，可以看到每个磁盘块包含几个数据项（深蓝色所示）和指针（黄色所示），如磁盘块1包含数据项17和35，包含指针P1、P2、P3，P1表示小于17的磁盘块，P2表示在17和35之间的磁盘块，P3表示大于35的磁盘块。真实的数据存在于叶子节点即3、5、9、10、13、15、28、29、36、60、75、79、90、99。非叶子节点只不存储真实的数据，只存储指引搜索方向的数据项，如17、35并不真实存在于数据表中。</p>
+<h4><a id="2-3-1%E3%80%81b%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE%E8%BF%87%E7%A8%8B" class="anchor" aria-hidden="true" href="#2-3-1%E3%80%81b%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE%E8%BF%87%E7%A8%8B"><span class="octicon octicon-link"></span></a>2.3.1、b+树的查找过程</h4>
+<p>如图所示，如果要查找数据项29，那么首先会把磁盘块1由磁盘加载到内存，此时发生一次IO，在内存中用二分查找确定29在17和35之间，锁定磁盘块1的P2指针，内存时间因为非常短（相比磁盘的IO）可以忽略不计，通过磁盘块1的P2指针的磁盘地址把磁盘块3由磁盘加载到内存，发生第二次IO，29在26和30之间，锁定磁盘块3的P2指针，通过指针加载磁盘块8到内存，发生第三次IO，同时内存中做二分查找找到29，结束查询，总计三次IO。真实的情况是，3层的b+树可以表示上百万的数据，如果上百万的数据查找只需要三次IO，性能提高将是巨大的，如果没有索引，每个数据项都要发生一次IO，那么总共需要百万次的IO，显然成本非常非常高。</p>
+<h4><a id="2-3-2%E3%80%81b%E6%A0%91%E6%80%A7%E8%B4%A8" class="anchor" aria-hidden="true" href="#2-3-2%E3%80%81b%E6%A0%91%E6%80%A7%E8%B4%A8"><span class="octicon octicon-link"></span></a>2.3.2、b+树性质</h4>
+<ul>
+<li>索引字段要尽量的小：通过上面的分析，我们知道IO次数取决于b+数的高度h，假设当前数据表的数据为N，每个磁盘块的数据项的数量是m，则有h=㏒(m+1)N，当数据量N一定的情况下，m越大，h越小；而m = 磁盘块的大小 / 数据项的大小，磁盘块的大小也就是一个数据页的大小，是固定的，如果数据项占的空间越小，数据项的数量越多，树的高度越低。这就是为什么每个数据项，即索引字段要尽量的小，比如int占4字节，要比bigint8字节少一半。这也是为什么b+树要求把真实的数据放到叶子节点而不是内层节点，一旦放到内层节点，磁盘块的数据项会大幅度下降，导致树增高。当数据项等于1时将会退化成线性表。</li>
+<li>索引的最左匹配特性（即从左往右匹配）：当b+树的数据项是复合的数据结构，比如(name,age,sex)的时候，b+数是按照从左到右的顺序来建立搜索树的，比如当(张三,20,F)这样的数据来检索的时候，b+树会优先比较name来确定下一步的所搜方向，如果name相同再依次比较age和sex，最后得到检索的数据；但当(20,F)这样的没有name的数据来的时候，b+树就不知道下一步该查哪个节点，因为建立搜索树的时候name就是第一个比较因子，必须要先根据name来搜索才能知道下一步去哪里查询。比如当(张三,F)这样的数据来检索时，b+树可以用name来指定搜索方向，但下一个字段age的缺失，所以只能把名字等于张三的数据都找到，然后再匹配性别是F的数据了， 这个是非常重要的性质，即索引的最左匹配特性。</li>
+</ul>
+<h2><a id="3%E3%80%81mysql%E7%B4%A2%E5%BC%95%E7%AE%A1%E7%90%86" class="anchor" aria-hidden="true" href="#3%E3%80%81mysql%E7%B4%A2%E5%BC%95%E7%AE%A1%E7%90%86"><span class="octicon octicon-link"></span></a>3、Mysql索引管理</h2>
+<h3><a id="3-1%E3%80%81%E5%8A%9F%E8%83%BD" class="anchor" aria-hidden="true" href="#3-1%E3%80%81%E5%8A%9F%E8%83%BD"><span class="octicon octicon-link"></span></a>3.1、功能</h3>
+<ol>
+<li>索引的功能就是加速查找</li>
+<li>mysql中的primary key，unique，联合唯一也都是索引，这些索引除了加速查找以外，还有约束的功能
+二、MySQL的索引分类</li>
+</ol>
+<h3><a id="3-2%E3%80%81%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB" class="anchor" aria-hidden="true" href="#3-2%E3%80%81%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="octicon octicon-link"></span></a>3.2、索引分类</h3>
+<ul>
+<li>普通索引index :加速查找</li>
+<li>唯一索引
+<ul>
+<li>主键索引：primary key ：加速查找+约束（不为空且唯一）</li>
+<li>唯一索引：unique：加速查找+约束 （唯一）</li>
+</ul>
+</li>
+<li>联合索引
+<ul>
+<li>-primary key(id,name):联合主键索引</li>
+<li>-unique(id,name):联合唯一索引</li>
+<li>-index(id,name):联合普通索引</li>
+</ul>
+</li>
+<li>全文索引fulltext :用于搜索很长一篇文章的时候，效果最好。</li>
+<li>空间索引spatial :了解就好，几乎不用</li>
+</ul>
+<blockquote>
+<p>举个例子来说，比如你在为某商场做一个会员卡的系统。
+这个系统有一个会员表，有下列字段：</p>
+<ul>
+<li>会员编号 INT</li>
+<li>会员姓名 VARCHAR(10)</li>
+<li>会员身份证号码 VARCHAR(18)</li>
+<li>会员电话 VARCHAR(10)</li>
+<li>会员住址 VARCHAR(50)</li>
+<li>会员备注信息 TEXT<br />
+那么这个 会员编号，作为主键，使用 PRIMARY，<br />
+会员姓名 如果要建索引的话，那么就是普通的 INDEX，<br />
+会员身份证号码 如果要建索引的话，那么可以选择 UNIQUE （唯一的，不允许重复），<br />
+除此之外还有全文索引，即FULLTEXT，<br />
+会员备注信息，如果需要建索引的话，可以选择全文搜索。<br />
+用于搜索很长一篇文章的时候，效果最好。<br />
+用在比较短的文本，如果就一两行字的，普通的 INDEX 也可以。<br />
+但其实对于全文搜索，我们并不会使用MySQL自带的该索引，而是会选择第三方软件如Sphinx，专门来做全文搜索。<br />
+其他的如空间索引SPATIAL，了解即可，几乎不用。</li>
+</ul>
+</blockquote>
+<h3><a id="3-3%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E4%B8%A4%E5%A4%A7%E7%B1%BB%E5%9E%8B-hash%E4%B8%8Ebtree" class="anchor" aria-hidden="true" href="#3-3%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E4%B8%A4%E5%A4%A7%E7%B1%BB%E5%9E%8B-hash%E4%B8%8Ebtree"><span class="octicon octicon-link"></span></a>3.3、 索引的两大类型hash与btree</h3>
+<h4><a id="3-3-1%E3%80%81%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E5%9C%A8%E5%88%9B%E5%BB%BA%E4%B8%8A%E8%BF%B0%E7%B4%A2%E5%BC%95%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E4%B8%BA%E5%85%B6%E6%8C%87%E5%AE%9A%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%EF%BC%8C%E5%88%86%E4%B8%A4%E7%B1%BB" class="anchor" aria-hidden="true" href="#3-3-1%E3%80%81%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E5%9C%A8%E5%88%9B%E5%BB%BA%E4%B8%8A%E8%BF%B0%E7%B4%A2%E5%BC%95%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E4%B8%BA%E5%85%B6%E6%8C%87%E5%AE%9A%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%EF%BC%8C%E5%88%86%E4%B8%A4%E7%B1%BB"><span class="octicon octicon-link"></span></a>3.3.1、我们可以在创建上述索引的时候，为其指定索引类型，分两类</h4>
+<ul>
+<li>hash类型的索引：查询单条快，范围查询慢</li>
+<li>btree类型的索引：b+树，层数越多，数据量指数级增长（我们就用它，因为innodb默认支持它）</li>
+</ul>
+<h4><a id="3-3-2%E3%80%81%E4%B8%8D%E5%90%8C%E7%9A%84%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E6%94%AF%E6%8C%81%E7%9A%84%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%E4%B9%9F%E4%B8%8D%E4%B8%80%E6%A0%B7" class="anchor" aria-hidden="true" href="#3-3-2%E3%80%81%E4%B8%8D%E5%90%8C%E7%9A%84%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E6%94%AF%E6%8C%81%E7%9A%84%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%E4%B9%9F%E4%B8%8D%E4%B8%80%E6%A0%B7"><span class="octicon octicon-link"></span></a>3.3.2、不同的存储引擎支持的索引类型也不一样**</h4>
+<ul>
+<li>InnoDB 支持事务，支持行级别锁定，支持 B-tree、Full-text 等索引，不支持 Hash 索引；</li>
+<li>MyISAM 不支持事务，支持表级别锁定，支持 B-tree、Full-text 等索引，不支持 Hash 索引；</li>
+<li>Memory 不支持事务，支持表级别锁定，支持 B-tree、Hash 等索引，不支持 Full-text 索引；</li>
+<li>NDB 支持事务，支持行级别锁定，支持 Hash 索引，不支持 B-tree、Full-text 等索引；</li>
+<li>Archive 不支持事务，支持表级别锁定，不支持 B-tree、Hash、Full-text 等索引；</li>
+</ul>
+<h3><a id="3-4%E3%80%81%E5%88%9B%E5%BB%BA%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%E7%9A%84%E8%AF%AD%E6%B3%95" class="anchor" aria-hidden="true" href="#3-4%E3%80%81%E5%88%9B%E5%BB%BA%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="octicon octicon-link"></span></a>3.4、创建/删除索引的语法</h3>
+<h4><a id="3-4-1%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%88%9B%E5%BB%BA%E8%A1%A8%E6%97%B6" class="anchor" aria-hidden="true" href="#3-4-1%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%88%9B%E5%BB%BA%E8%A1%A8%E6%97%B6"><span class="octicon octicon-link"></span></a>3.4.1、方法一：创建表时</h4>
+<pre class="line-numbers"><code class="language-sql">CREATE TABLE 表名 (
+    字段名1  数据类型 [完整性约束条件…],
+    字段名2  数据类型 [完整性约束条件…],
+    [UNIQUE | FULLTEXT | SPATIAL ]   INDEX | KEY
+    [索引名]  (字段名[(长度)]  [ASC |DESC]) 
+);
+</code></pre>
+<h4><a id="3-4-2%E3%80%81%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9Acreate%E5%9C%A8%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A1%A8%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-4-2%E3%80%81%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9Acreate%E5%9C%A8%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A1%A8%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.4.2、方法二：CREATE在已存在的表上创建索引</h4>
+<pre class="line-numbers"><code class="language-sql">CREATE  [UNIQUE | FULLTEXT | SPATIAL ]  INDEX  索引名 
+ON 表名 (字段名[(长度)]  [ASC |DESC]) ;
+</code></pre>
+<h4><a id="3-4-3%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9Aalter-table%E5%9C%A8%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A1%A8%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-4-3%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9Aalter-table%E5%9C%A8%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A1%A8%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.4.3、方法三：ALTER TABLE在已存在的表上创建索引</h4>
+<pre class="line-numbers"><code class="language-sql">ALTER TABLE 表名 ADD  [UNIQUE | FULLTEXT | SPATIAL ] INDEX
+索引名 (字段名[(长度)]  [ASC |DESC]) ;
+</code></pre>
+<h4><a id="3-4-4%E3%80%81%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%EF%BC%9A" class="anchor" aria-hidden="true" href="#3-4-4%E3%80%81%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%EF%BC%9A"><span class="octicon octicon-link"></span></a>3.4.4、删除索引：</h4>
+<pre class="line-numbers"><code class="language-sql">DROP INDEX 索引名 ON 表名字;
+</code></pre>
+<h3><a id="3-5%E3%80%81%E5%96%84%E7%94%A8%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3" class="anchor" aria-hidden="true" href="#3-5%E3%80%81%E5%96%84%E7%94%A8%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3"><span class="octicon octicon-link"></span></a>3.5、善用帮助文档</h3>
+<ul>
+<li>help create</li>
+<li>help create index</li>
+</ul>
+<h4><a id="3-5-1%E3%80%81%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-5-1%E3%80%81%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.5.1、创建索引</h4>
+<ul>
+<li>在创建表时就创建（需要注意的几点）：</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">create table s1(
+    id int ,#可以在这加primary key
+    #id int index #不可以这样加索引，因为index只是索引，没有约束一说，
+    #不能像主键，还有唯一约束一样，在定义字段的时候加索引
+    name char(20),
+    age int,
+    email varchar(30)
+    #primary key(id) #也可以在这加
+    index(id) #可以这样加
+);
+</code></pre>
+<ul>
+<li>在创建表后在创建</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">create index name on s1(name); #添加普通索引
+create unique age on s1(age);添加唯一索引
+alter table s1 add primary key(id); #添加住建索引，也就是给id字段增加一个主键约束
+create index name on s1(id,name); #添加普通联合索引
+</code></pre>
+<h4><a id="3-5-2%E3%80%81%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-5-2%E3%80%81%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.5.2、删除索引</h4>
+<pre class="line-numbers"><code class="language-sql">drop index id on s1;
+drop index name on s1; #删除普通索引
+drop index age on s1; #删除唯一索引，就和普通索引一样，不用在index前加unique来删，直接就可以删了
+alter table s1 drop primary key; #删除主键(因为它添加的时候是按照alter来增加的，那么我们也用alter来删)
+</code></pre>
+<h3><a id="3-6%E3%80%81%E6%B5%8B%E8%AF%95%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-6%E3%80%81%E6%B5%8B%E8%AF%95%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.6、测试索引</h3>
+<h4><a id="3-6-1%E3%80%81%E5%87%86%E5%A4%87" class="anchor" aria-hidden="true" href="#3-6-1%E3%80%81%E5%87%86%E5%A4%87"><span class="octicon octicon-link"></span></a>3.6.1、准备</h4>
+<ul>
+<li>准备表</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">create table s1(
+    id int,
+    name varchar(20),
+    gender char(6),
+    email varchar(50)
+);
+</code></pre>
+<ul>
+<li>创建存储过程，实现批量插入记录</li>
+</ul>
+<blockquote>
+<p>delimiter $$ #声明存储过程的结束符号为$$</p>
+</blockquote>
+<pre class="line-numbers"><code class="language-sql">delimiter $$
+create procedure auto_insert1()
+    BEGIN
+        declare i int default 1;
+        while(i&lt;3000000)do
+            insert into s1  values(i,concat('egon',i),'male',concat('egon',i,'@oldboy')
+        );
+        set i=i+1;
+    end while;
+END$$ #$$结束
+delimiter ; #重新声明分号为结束符号
+</code></pre>
+<ul>
+<li>查看存储过程</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">show create procedure auto_insert1\G 
+</code></pre>
+<ul>
+<li>调用存储过程</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">call auto_insert1();
+</code></pre>
+<h4><a id="3-6-2%E3%80%81%E5%9C%A8%E6%B2%A1%E6%9C%89%E7%B4%A2%E5%BC%95%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%E6%B5%8B%E8%AF%95%E6%9F%A5%E8%AF%A2%E9%80%9F%E5%BA%A6" class="anchor" aria-hidden="true" href="#3-6-2%E3%80%81%E5%9C%A8%E6%B2%A1%E6%9C%89%E7%B4%A2%E5%BC%95%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%E6%B5%8B%E8%AF%95%E6%9F%A5%E8%AF%A2%E9%80%9F%E5%BA%A6"><span class="octicon octicon-link"></span></a>3.6.2、在没有索引的前提下测试查询速度</h4>
+<ul>
+<li>无索引：从头到尾扫描一遍，所以查询速度很慢</li>
+</ul>
+<pre class="line-numbers"><code>mysql&gt; select * from s1 where id=333;
++------+---------+--------+----------------+
+| id   | name    | gender | email          |
++------+---------+--------+----------------+
+|  333 | egon333 | male   | 333@oldboy.com |
+|  333 | egon333 | f      | alex333@oldboy |
+|  333 | egon333 | f      | alex333@oldboy |
++------+---------+--------+----------------+
+rows in set (0.32 sec)
+
+mysql&gt; select * from s1 where email='egon333@oldboy';
+....
+... rows in set (0.36 sec)
+</code></pre>
+<ul>
+<li>加上索引
+<ul>
+<li>一定是为搜索条件的字段创建索引，比如select * from t1 where age &gt; 5;就需要为age加上索引</li>
+<li>在表中已经有大量数据的情况下，建索引会很慢，且占用硬盘空间，插入删除更新都很慢，只有查询快
+比如create index idx on s1(id);会扫描表中所有的数据，然后以id为数据项，创建索引结构，存放于硬盘的表中。
+建完以后，再查询就会很快了</li>
+<li>需要注意的是：innodb表的索引会存放于s1.ibd文件中，而myisam表的索引则会有单独的索引文件table1.MYI
+<img src="media/16415257910695/yousuoyin.png" alt="yousuoyin" /></li>
+</ul>
+</li>
+</ul>
+<h3><a id="3-7%E3%80%81%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-7%E3%80%81%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.7、正确使用索引</h3>
+<h4><a id="3-7-1%E3%80%81%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-7-1%E3%80%81%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.7.1、覆盖索引</h4>
+<pre class="line-numbers"><code class="language-sql">select * from s1 where id=123;
+</code></pre>
+<p>该sql命中了索引，但未覆盖索引。<br />
+利用id=123到索引的数据结构中定位到该id在硬盘中的位置，或者说再数据表中的位置。<br />
+但是我们select的字段为*，除了id以外还需要其他字段，这就意味着，我们通过索引结构取到id还不够，还需要利用该id再去找到该id所在行的其他字段值，这是需要时间的，很明显，如果我们只select id，
+就减去了这份苦恼，如下</p>
+<pre class="line-numbers"><code class="language-sql">select id from s1 where id=123;
+</code></pre>
+<p>这条就是覆盖索引了，命中索引，且从索引的数据结构直接就取到了id在硬盘的地址，速度很快</p>
+<h4><a id="3-7-2%E3%80%81%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-7-2%E3%80%81%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.7.2、联合索引</h4>
+<p><img src="media/16415257910695/lianhesuoyin.png" alt="lianhesuoyin" /></p>
+<h4><a id="3-7-3%E3%80%81%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6" class="anchor" aria-hidden="true" href="#3-7-3%E3%80%81%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6"><span class="octicon octicon-link"></span></a>3.7.3、索引合并</h4>
+<p><strong>索引合并：</strong> 把多个单列索引合并使用</p>
+<p><strong>分析：</strong>
+组合索引能做到的事情，我们都可以用索引合并去解决，比如</p>
+<pre class="line-numbers"><code class="language-sql">create index ne on s1(name,email);#组合索引
+</code></pre>
+<p>我们完全可以单独为name和email创建索引</p>
+<p>组合索引可以命中：</p>
+<pre class="line-numbers"><code class="language-sql">select * from s1 where name='egon' ;
+select * from s1 where name='egon' and email='adf';
+</code></pre>
+<p>索引合并可以命中：</p>
+<pre class="line-numbers"><code class="language-sql">select * from s1 where name='egon' ;
+select * from s1 where email='adf';
+select * from s1 where name='egon' and email='adf';
+</code></pre>
+<p>乍一看好像索引合并更好了：可以命中更多的情况，但其实要分情况去看，如果是name='egon' and email='adf',
+那么组合索引的效率要高于索引合并，如果是单条件查，那么还是用索引合并比较合理</p>
+<h2><a id="4%E3%80%81%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE" class="anchor" aria-hidden="true" href="#4%E3%80%81%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="octicon octicon-link"></span></a>4、索引使用建议</h2>
+<h3><a id="4-1%E3%80%81%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#4-1%E3%80%81%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>4.1、联合索引</h3>
+<p>若想利用索引达到预想的提高查询速度的效果，我们在添加索引时，必须遵循以下原则</p>
+<ul>
+<li>
+<p>最左前缀匹配：必须按照从左到右的顺序匹配。mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</p>
+<pre class="line-numbers"><code>select * from s1 where name='egon'; #可以
+select * from s1 where name='egon' and email='asdf'; #可以
+select * from s1 where email='alex@oldboy.com'; #不可以
+</code></pre>
+</li>
+<li>
+<p>=和in可以乱序，比如a = 1 and b = 2 and c = 3 建立(a,b,c)索引可以任意顺序，mysql的查询优化器
+会帮你优化成索引可以识别的形式</p>
+</li>
+<li>
+<p>尽量选择区分度高的列作为索引,区分度的公式是count(distinct col)/count(*)，
+表示字段不重复的比例，比例越大我们扫描的记录数越少，唯一键的区分度是1，而一些状态、
+性别字段可能在大数据面前区分度就是0，那可能有人会问，这个比例有什么经验值吗？使用场景不同，
+这个值也很难确定，一般需要join的字段我们都要求是0.1以上，即平均1条扫描10条记录</p>
+</li>
+<li>
+<p>索引列不能参与计算，保持列“干净”，比如<code>from_unixtime(create_time) = ’2014-05-29’</code>就不能使用到索引，原因很简单，b+树中存的都是数据表中的字段值，但进行检索时，需要把所有元素都应用函数才能比较，显然成本太大。所以语句应该写成create_time = unix_timestamp(’2014-05-29’);</p>
+</li>
+</ul>
+<p><strong>最左前缀示范</strong></p>
+<pre class="line-numbers"><code class="language-sql">mysql&gt; select * from s1 where id&gt;3 and name='egon' and email='alex333@oldboy.com' and gender='male';
+Empty set (0.39 sec)
+
+mysql&gt; create index idx on s1(id,name,email,gender); #未遵循最左前缀
+Query OK, 0 rows affected (15.27 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql&gt; select * from s1 where id&gt;3 and name='egon' and email='alex333@oldboy.com' and gender='male';
+Empty set (0.43 sec)
+
+mysql&gt; drop index idx on s1;
+Query OK, 0 rows affected (0.16 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql&gt; create index idx on s1(name,email,gender,id); #遵循最左前缀
+Query OK, 0 rows affected (15.97 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql&gt; select * from s1 where id&gt;3 and name='egon' and email='alex333@oldboy.com' and gender='male';
+Empty set (0.03 sec)
+</code></pre>
+<p>建联合索引，最左匹配
+索引无法命中的情况需要注意：</p>
+<pre class="line-numbers"><code class="language-sql">- like '%xx'
+    select * from tb1 where email like '%cn';
+    
+    
+- 使用函数
+    select * from tb1 where reverse(email) = 'wupeiqi';
+    
+    
+- or
+    select * from tb1 where nid = 1 or name = 'seven@live.com';
+    
+    
+    特别的：当or条件中有未建立索引的列才失效，以下会走索引
+            select * from tb1 where nid = 1 or name = 'seven';
+            select * from tb1 where nid = 1 or name = 'seven@live.com' and email = 'alex'
+            
+            
+- 类型不一致
+    如果列是字符串类型，传入条件是必须用引号引起来，不然...
+    select * from tb1 where email = 999;
+    
+普通索引的不等于不会走索引
+- !=
+    select * from tb1 where email != 'alex'
+    
+    特别的：如果是主键，则还是会走索引
+        select * from tb1 where nid != 123
+- &gt;
+    select * from tb1 where email &gt; 'alex'
+    
+    
+    特别的：如果是主键或索引是整数类型，则还是会走索引
+        select * from tb1 where nid &gt; 123
+        select * from tb1 where num &gt; 123
+        
+        
+#排序条件为索引，则select字段必须也是索引字段，否则无法命中
+- order by
+    select name from s1 order by email desc;
+    当根据索引排序时候，select查询的字段如果不是索引，则不走索引
+    select email from s1 order by email desc;
+    特别的：如果对主键排序，则还是走索引：
+        select * from tb1 order by nid desc;
+ 
+- 组合索引最左前缀
+    如果组合索引为：(name,email)
+    name and email       -- 使用索引
+    name                 -- 使用索引
+    email                -- 不使用索引
+
+
+- count(1)或count(列)代替count(*)在mysql中没有差别了
+
+- create index xxxx  on tb(title(19)) #text类型，必须制定长度
+</code></pre>
+<h3><a id="4-2%E3%80%81%E5%85%B6%E4%BB%96" class="anchor" aria-hidden="true" href="#4-2%E3%80%81%E5%85%B6%E4%BB%96"><span class="octicon octicon-link"></span></a>4.2、其他</h3>
+<ul>
+<li>避免使用select *</li>
+<li>count(1)或count(列) 代替 count(*)</li>
+<li>创建表时尽量时 char 代替 varchar</li>
+<li>表的字段顺序固定长度的字段优先</li>
+<li>组合索引代替多个单列索引（经常使用多个条件查询时）</li>
+<li>尽量使用短索引</li>
+<li>使用连接（JOIN）来代替子查询(Sub-Queries)</li>
+<li>连表时注意条件类型需一致</li>
+<li>索引散列值（重复少）不适合建索引，例：性别不适合</li>
+</ul>
+<h2><a id="5%E3%80%81%E6%85%A2%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4" class="anchor" aria-hidden="true" href="#5%E3%80%81%E6%85%A2%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="octicon octicon-link"></span></a>5、慢查询优化的基本步骤</h2>
+<ol>
+<li>先运行看看是否真的很慢，注意设置SQL_NO_CACHE</li>
+<li>where条件单表查，锁定最小返回记录表。这句话的意思是把查询语句的where都应用到表中返回的记录数最小的表开始查起，单表每个字段分别查询，看哪个字段的区分度最高</li>
+<li>explain查看执行计划，是否与1预期一致（从锁定记录较少的表开始查询）</li>
+<li>order by limit 形式的sql语句让排序的表优先查</li>
+<li>了解业务方使用场景</li>
+<li>加索引时参照建索引的几大原则</li>
+<li>观察结果，不符合预期继续从0分析</li>
+</ol>
+<blockquote>
+<p>文章来源：<a href="https://www.cnblogs.com/bypp/p/7755307.html">https://www.cnblogs.com/bypp/p/7755307.html</a></p>
+</blockquote>
+
+
+    
+
+      </div>
+
+      <div class="row">
+        <div class="large-6 columns">
+        <p class="text-left" style="padding:15px 0px;">
+      
+        </p>
+        </div>
+        <div class="large-6 columns">
+      <p class="text-right" style="padding:15px 0px;">
+      
+          <a  href="16395498007523.html" 
+          title="Next Post: ClickHouse日常使用记录">ClickHouse日常使用记录 &raquo;</a>
+      
+      </p>
+        </div>
+      </div>
+      <div class="comments-wrap">
+        <div class="share-comments">
+          
+
+          
+
+          
+        </div>
+      </div>
+    </div><!-- article-wrap -->
+  </div><!-- large 8 -->
+
+
+
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1>Jythons小站</h1>
+                <div class="site-des">工作学习中的点点滴滴。</div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="nginx.html"><strong>nginx</strong></a>
+        
+            <a href="Java.html"><strong>Java</strong></a>
+        
+            <a href="Shell.html"><strong>Shell</strong></a>
+        
+            <a href="LVS.html"><strong>LVS</strong></a>
+        
+            <a href="Redis.html"><strong>Redis</strong></a>
+        
+            <a href="ES.html"><strong>ES</strong></a>
+        
+            <a href="MQ.html"><strong>MQ</strong></a>
+        
+            <a href="Docker.html"><strong>Docker</strong></a>
+        
+            <a href="Mysql.html"><strong>Mysql</strong></a>
+        
+            <a href="%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html"><strong>每日总结</strong></a>
+        
+            <a href="Postman.html"><strong>Postman</strong></a>
+        
+            <a href="Sublime.html"><strong>Sublime</strong></a>
+        
+            <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16370681631438.html">Xdebug配置</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16369427253226.html">Sublime插件之ctags</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 0;padding: 0;}
+figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+ http://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+    
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background:#b3d4fc;
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+}
+
+@media print {
+    code[class*="language-"],
+    pre[class*="language-"] {
+        text-shadow: none;
+    }
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #F7F7F7;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: slategray;
+}
+
+.token.punctuation {
+    color: #999;
+}
+
+.namespace {
+    opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #9a6e3a;
+    background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #07a;
+}
+
+.token.function,
+.token.class-name {
+    color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #e90;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+
+
+  </body>
+</html>

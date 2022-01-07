@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -172,7 +174,7 @@
       <div class="article-content">
       <p>如果一个用户短时间内多次提交请求，那么他的请求都会转发到第一次请求的RS服务器，这个时间段默认是300秒。
 配置方式：</p>
-<pre><code># 详细信息使用：man ipvsadm
+<pre class="line-numbers"><code># 详细信息使用：man ipvsadm
 ipvsadm -E -t 192.168.1.150:80 -s rr -p [time] 
 </code></pre>
 <blockquote>
@@ -180,7 +182,7 @@ ipvsadm -E -t 192.168.1.150:80 -s rr -p [time]
 </blockquote>
 <span id="more"></span><!-- more -->
 <p>通过以上配置，在访问的时候，经过time秒后，访问依然只请求到了一个服务器，这是因为有一个tcp或udp的链接超时时间，可以通过以下配置，修改超时时间。</p>
-<pre><code>ipvsadm --set 1 1 1
+<pre class="line-numbers"><code>ipvsadm --set 1 1 1
 </code></pre>
 <blockquote>
 <p>ipvsadm -Lnc 查看是否有链接</p>
@@ -283,6 +285,8 @@ ipvsadm -E -t 192.168.1.150:80 -s rr -p [time]
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -299,6 +303,18 @@ ipvsadm -E -t 192.168.1.150:80 -s rr -p [time]
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -312,18 +328,6 @@ ipvsadm -E -t 192.168.1.150:80 -s rr -p [time]
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

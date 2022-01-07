@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -174,18 +176,18 @@
 <h2><a id="%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%9A" class="anchor" aria-hidden="true" href="#%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%9A"><span class="octicon octicon-link"></span></a>下载所需软件包：</h2>
 <p>erlang、socat、rabbitmq-server的rpm包</p>
 <h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
-<pre><code>rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm
+<pre class="line-numbers"><code>rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm
 rpm -ivh socat-17.3.2-5.el7.lux.x86_64.rpm
 rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
 </code></pre>
 <h2><a id="%E5%90%AF%E5%8A%A8" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8"><span class="octicon octicon-link"></span></a>启动</h2>
-<pre><code>sbin]$ ./rabbitmq-server -detached
+<pre class="line-numbers"><code>sbin]$ ./rabbitmq-server -detached
 </code></pre>
 <h2><a id="%E9%80%80%E5%87%BA" class="anchor" aria-hidden="true" href="#%E9%80%80%E5%87%BA"><span class="octicon octicon-link"></span></a>退出</h2>
-<pre><code>./rabbitmqctl stop
+<pre class="line-numbers"><code>./rabbitmqctl stop
 </code></pre>
 <h2><a id="%E5%90%AF%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="octicon octicon-link"></span></a>启动管理工具</h2>
-<pre><code>sbin]$ ./rabbitmq-plugins enable rabbitmq_management
+<pre class="line-numbers"><code>sbin]$ ./rabbitmq-plugins enable rabbitmq_management
 </code></pre>
 <blockquote>
 <p>使用RabbitMQ 管理工具登录时，提示guest用户只能本地登录，解决方法如下：
@@ -291,6 +293,8 @@ rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -307,6 +311,18 @@ rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -320,18 +336,6 @@ rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

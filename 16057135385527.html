@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -191,7 +193,7 @@
 </blockquote>
 <p>在redis.conf配置文件搜索 REPLICATION 找到配置主从的位置。配置主从时，只需要配置从节点即可，无需配置主节点。</p>
 <h3><a id="%E9%85%8D%E7%BD%AE%E4%BB%8E%E8%8A%82%E7%82%B9" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AE%E4%BB%8E%E8%8A%82%E7%82%B9"><span class="octicon octicon-link"></span></a>配置从节点</h3>
-<pre><code># 配置主节点的ip和端口
+<pre class="line-numbers"><code># 配置主节点的ip和端口
 replicaof &lt;masterip&gt; &lt;masterport&gt;
 
 # 配置主节点的登录密码（主节点没有配置密码，不需要配置该选项）
@@ -204,7 +206,7 @@ replica-read-only yes
 <p>redis主从复制，默认是从节点将主节点保存在磁盘的rdb文件复制到从节点的磁盘，然后在将rdb文件恢复到内存。
 无磁盘化复制，是将主节点的数据从主节点的内存中直接读取并写入从节点的内存，这样的传输方式，是使用socket的方式进行传输。
 <img src="media/16057135385527/redis%E6%97%A0%E7%A3%81%E7%9B%98%E5%8C%96%E5%A4%8D%E5%88%B6.png" alt="redis无磁盘化复制" /></p>
-<pre><code># 数据同步策略：无磁盘化复制，yes 开启，no 关闭
+<pre class="line-numbers"><code># 数据同步策略：无磁盘化复制，yes 开启，no 关闭
 # 目前数据测试阶段，生产环境不建议使用 
 repl-diskless-sync no
 </code></pre>
@@ -212,7 +214,7 @@ repl-diskless-sync no
 <p>redis数据同步策略有两种，一种是磁盘同步，也是默认的同步方式，redis新建一个进程，将数据写入rdb文件，这些rdb文件会定期向slave节点的磁盘同步。另一种数据同步的策略就是无磁盘化同步，master会创建一个新的进程，这个进程会向socket写入rdb文件，不向磁盘写入。如果服务器网络吞吐量比较大，可以使用第二种方式，提高效率。</p>
 </blockquote>
 <p>master节点可以配置一个时间，定期的向socket写入rdb文件。</p>
-<pre><code># 无磁盘化同步间隔时间，单位（秒）
+<pre class="line-numbers"><code># 无磁盘化同步间隔时间，单位（秒）
 repl-diskless-sync-delay 5
 </code></pre>
 
@@ -313,6 +315,8 @@ repl-diskless-sync-delay 5
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -329,6 +333,18 @@ repl-diskless-sync-delay 5
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -342,18 +358,6 @@ repl-diskless-sync-delay 5
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

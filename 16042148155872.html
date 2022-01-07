@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -191,7 +193,7 @@
 解决办法：安装libnl/libnl-3依赖，<code>yum -y install libnl libnl-devel</code>, 然后重新安装步骤的第4步和第五部一下，此时OK。</p>
 </blockquote>
 <p>##Keepalived 核心配置文件</p>
-<pre><code>! 全局配置
+<pre class="line-numbers"><code>! 全局配置
 global_defs {
    ! 配置切换通知的email
    notification_email {
@@ -362,22 +364,22 @@ virtual_server 10.10.10.3 1358 {
 }
 </code></pre>
 <h2><a id="%E5%90%AF%E5%8A%A8keepalived" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8keepalived"><span class="octicon octicon-link"></span></a>启动 Keepalived</h2>
-<pre><code>cd /usr/local/keepalived/sbin
+<pre class="line-numbers"><code>cd /usr/local/keepalived/sbin
 ./keepalived
 </code></pre>
 <h2><a id="%E5%85%B3%E9%97%ADkeepalived" class="anchor" aria-hidden="true" href="#%E5%85%B3%E9%97%ADkeepalived"><span class="octicon octicon-link"></span></a>关闭 Keepalived</h2>
 <p><code>ps -ef | grep keepalived</code>, 查出进程号，直接kill -9 进程ID。</p>
 <h2><a id="keepalived%E6%B3%A8%E5%86%8C%E4%B8%BA%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1" class="anchor" aria-hidden="true" href="#keepalived%E6%B3%A8%E5%86%8C%E4%B8%BA%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1"><span class="octicon octicon-link"></span></a>Keepalived 注册为系统服务</h2>
 <p>进入Keepalived的安装目录（安装包解压后的文件夹内），里面有一个keepalived文件夹，进入，里面有一个 etc 文件夹。拷贝 etc/init.d/keepalived 到系统目录/etc/init.d/ 文件夹下。</p>
-<pre><code class="language-shell">cp ./keepalived/etc/init.d/keepalived /etc/init.d/
+<pre class="line-numbers"><code class="language-shell">cp ./keepalived/etc/init.d/keepalived /etc/init.d/
 cp ./keepalived/etc/sysconfig/keepalived /etc/sysconfig/
 </code></pre>
 <p>然后刷新系统服务，使刚加进去的服务生效。</p>
-<pre><code>systemctl daemon-reload
+<pre class="line-numbers"><code>systemctl daemon-reload
 </code></pre>
 <p>这样就可以在系统服务中使用Keepalived了。
 ###系统中使用Keepalived</p>
-<pre><code>systemctl start keepalived.service    # 启动Keepalived服务
+<pre class="line-numbers"><code>systemctl start keepalived.service    # 启动Keepalived服务
 systemctl stop keepalived.service     # 停止Keepalived服务
 systemctl restart keepalived.service  # 重新启动Keepalived服务
 </code></pre>
@@ -479,6 +481,8 @@ systemctl restart keepalived.service  # 重新启动Keepalived服务
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -495,6 +499,18 @@ systemctl restart keepalived.service  # 重新启动Keepalived服务
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -508,18 +524,6 @@ systemctl restart keepalived.service  # 重新启动Keepalived服务
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

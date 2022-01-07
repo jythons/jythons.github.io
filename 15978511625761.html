@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -179,7 +181,7 @@ worker进程抢占accept_mutex互斥锁，谁先抢到，谁与client建立连�
 nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器的模式，所以当第一个请求被阻塞时，也可以同事处理接下来的其他请求（use epoll, linux的epoll模型，可以同时处理6-8万个请求）
 ###配置nginx的最大连接数
 在nginx.conf配置文件内</p>
-<pre><code>events {
+<pre class="line-numbers"><code>events {
     # 默认使用epoll
     use epoll;
     # 每个worker允许连接的客户端最大连接数
@@ -366,6 +368,8 @@ nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -382,6 +386,18 @@ nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -395,18 +411,6 @@ nginx的worker进程是异步非阻塞的通信模式，类似于多路复用器
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

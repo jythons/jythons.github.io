@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -178,19 +180,19 @@
 <h2><a id="%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BAlvs" class="anchor" aria-hidden="true" href="#%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BAlvs"><span class="octicon octicon-link"></span></a>开始搭建 LVS</h2>
 <h3><a id="%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip"><span class="octicon octicon-link"></span></a>配置虚拟IP</h3>
 <p>第一步，首先要关闭服务器网络配置管理器，如果不关闭，可能会引起接口网络的冲突，因为是在本地使用虚拟机的关系。</p>
-<pre><code># 关闭网络配置管理器
+<pre class="line-numbers"><code># 关闭网络配置管理器
 systemctl stop NetworkManager
 systemctl disable NetworkManager
 </code></pre>
 <p>同样 Nginx 服务器也需要关闭网络配置管理器。</p>
 <p>第二步，构建LVS的IP。</p>
-<pre><code># 进入网卡配置文件目录
+<pre class="line-numbers"><code># 进入网卡配置文件目录
 cd /etc/sysconfig/network-script/
 # 拷贝一份网卡配置文件，起一个别名
 cp ifcfg-ens33 ifcfg-ens33:1
 </code></pre>
 <p>然后配置ifcfg-ens33:1文件, 配置如下：</p>
-<pre><code>BOOTPROTO=static
+<pre class="line-numbers"><code>BOOTPROTO=static
 # 与网卡名称要保持统一
 DEVICE=ens33:1
 ONBOOT=yes
@@ -198,7 +200,7 @@ IPADDR=192.168.1.150
 NETMASK=255.255.255.0
 </code></pre>
 <p>配置好网卡后，重启网卡：</p>
-<pre><code>service network restart
+<pre class="line-numbers"><code>service network restart
 ip addr # 查看IP地址是否生效
 </code></pre>
 <p>到这里，虚拟IP就配置好了。</p>
@@ -208,10 +210,10 @@ ip addr # 查看IP地址是否生效
 <p>ipvs 是lvs自带的工具，ipvsadm需要安装。</p>
 </blockquote>
 <p>安装ipvsadm：</p>
-<pre><code>yum install ipvsadm
+<pre class="line-numbers"><code>yum install ipvsadm
 </code></pre>
 <p>接下来执行如下命令查看集群列表</p>
-<pre><code>ipvsadm -Ln
+<pre class="line-numbers"><code>ipvsadm -Ln
 </code></pre>
 <blockquote>
 <p>阿里云云服务器不支持虚拟IP配置，需要购买他们的负载均衡服务，腾讯云服务器支持配置虚拟IP，但是要额外的去购买的，因为是建立在网卡之上的，需要使用成本的，腾讯云支持虚拟IP的最大数量是10个。</p>
@@ -220,15 +222,15 @@ ip addr # 查看IP地址是否生效
 <p>LVS服务器配置好以后，接下来去配置RIS节点服务器的IP，也就是Nginx所在的服务器。
 首先也需要配置一个虚拟IP，这个IP用于返回数据报文。
 首先进入到网卡配置文件所在的目录：</p>
-<pre><code># 进入网卡配置文件目录
+<pre class="line-numbers"><code># 进入网卡配置文件目录
 cd /etc/sysconfig/network-script/
 </code></pre>
 <p>在这个目录下，有一个 ifcfg-lo 配置文件，这个是服务器本地环回接口，我们要构建一个虚拟IP，这个IP不能被用户访问到，只是在返回报文时使用。
 复制一份 ifcfg-lo 配置文件为：ifcfg-lo:1。</p>
-<pre><code>cp ifcfg-lo ifcfg-lo:1
+<pre class="line-numbers"><code>cp ifcfg-lo ifcfg-lo:1
 </code></pre>
 <p>修改成如下配置：</p>
-<pre><code># BOOTPROTO=static
+<pre class="line-numbers"><code># BOOTPROTO=static
 # 与网卡名称要保持统一
 DEVICE=lo:1
 ONBOOT=yes
@@ -257,7 +259,7 @@ NAME=loopback
 <p>RS 服务器的环回IP是用来响应客户端请求的，所以不能使用其他IP来返回，必须使用环回地址返回，因为客户端请求的是VIP，所以接收请求也必须使用RS服务器上和VIP相同的环回IP才能使客户端识别。</p>
 </blockquote>
 <h3><a id="%E9%85%8D%E7%BD%AErs%E6%9C%8D%E5%8A%A1%E5%99%A8apr" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AErs%E6%9C%8D%E5%8A%A1%E5%99%A8apr"><span class="octicon octicon-link"></span></a>配置RS服务器APR</h3>
-<pre><code># 打开配置文件
+<pre class="line-numbers"><code># 打开配置文件
 vim /etc/sysctl.conf
 # 配置如下内容：
 net.ipv4.conf.all.arp_ignore = 1
@@ -275,7 +277,7 @@ default：表示默认网卡
 lo：环回网卡</p>
 </blockquote>
 <h3><a id="rs%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E8%B7%AF%E7%94%B1" class="anchor" aria-hidden="true" href="#rs%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E8%B7%AF%E7%94%B1"><span class="octicon octicon-link"></span></a>RS 服务器配置路由</h3>
-<pre><code># 临时配置路由，开机回失效，需要添加到开机启动配置文件内
+<pre class="line-numbers"><code># 临时配置路由，开机回失效，需要添加到开机启动配置文件内
 route add -host 192.168.1.150 dev lo:1
 # 永久添加, 执行如下命令
 echo &quot;route add -host 192.168.1.150 dev lo:1&quot; &gt;&gt; /etc/rc.local
@@ -286,7 +288,7 @@ echo &quot;route add -host 192.168.1.150 dev lo:1&quot; &gt;&gt; /etc/rc.local
 </blockquote>
 <h3><a id="%E4%BD%BF%E7%94%A8ipvsadm%E9%85%8D%E7%BD%AE%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%99" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8ipvsadm%E9%85%8D%E7%BD%AE%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%99"><span class="octicon octicon-link"></span></a>使用ipvsadm配置集群规则</h3>
 <h4><a id="%E9%85%8D%E7%BD%AElvs%E6%9C%8D%E5%8A%A1%E4%BB%A5%E5%8F%8A%E8%8A%82%E7%82%B9" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AElvs%E6%9C%8D%E5%8A%A1%E4%BB%A5%E5%8F%8A%E8%8A%82%E7%82%B9"><span class="octicon octicon-link"></span></a>配置LVS服务以及节点</h4>
-<pre><code># 添加服务
+<pre class="line-numbers"><code># 添加服务
 ipvsadm -A -t 192.168.1.150:80 -s rr
 # 查看配置列表
 ipvsadm -Ln
@@ -294,14 +296,14 @@ ipvsadm -Ln
 <blockquote>
 <p>添加一个服务，-A 添加一个服务，-t tcp,添加服务地址，-s 负载均衡算法，rr 轮询，轮询是负载均衡里用的比较多的算法。</p>
 </blockquote>
-<pre><code># 构建服务
+<pre class="line-numbers"><code># 构建服务
 ipvsadm -a -t 192.168.1.150:80 -r 192.168.1.171:80 -g
 </code></pre>
 <blockquote>
 <p>配置服务，-a 添加一个服务节点，-t 服务地址，表示为哪个服务地址添加节点，-r real server 的意思，写RS服务器的IP地址, -g 表示是DR模式。</p>
 </blockquote>
 <h4><a id="%E9%AA%8C%E8%AF%81dr%E6%A8%A1%E5%BC%8F" class="anchor" aria-hidden="true" href="#%E9%AA%8C%E8%AF%81dr%E6%A8%A1%E5%BC%8F"><span class="octicon octicon-link"></span></a>验证DR模式</h4>
-<pre><code># 查看LVS运行状态
+<pre class="line-numbers"><code># 查看LVS运行状态
 ipvsadm -Ln
 </code></pre>
 <blockquote>
@@ -405,6 +407,8 @@ ipvsadm -Ln
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -421,6 +425,18 @@ ipvsadm -Ln
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -434,18 +450,6 @@ ipvsadm -Ln
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

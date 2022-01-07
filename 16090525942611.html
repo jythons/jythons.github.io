@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -175,17 +177,17 @@
 <span id="more"></span><!-- more -->
 <h2><a id="%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95"><span class="octicon octicon-link"></span></a>安装方法</h2>
 <p>1.下载安装包解压</p>
-<pre><code>tar -zxvf elasticsearch.tar.gz
+<pre class="line-numbers"><code>tar -zxvf elasticsearch.tar.gz
 </code></pre>
 <p>2.将解压出来的文件夹转移到/user/lcoal文件夹下</p>
-<pre><code>mv elasticsearch /usr/local/
+<pre class="line-numbers"><code>mv elasticsearch /usr/local/
 </code></pre>
 <p>3.创建一个用于存放数据的目录</p>
-<pre><code>cd /usr/lcoal/elasticsearch/
+<pre class="line-numbers"><code>cd /usr/lcoal/elasticsearch/
 mkdir data
 </code></pre>
 <p>4.修改核心配置文件</p>
-<pre><code>vim ./config/elasticsearch.yml
+<pre class="line-numbers"><code>vim ./config/elasticsearch.yml
 
 # 配置文件解析
 cluster.name: my-application                # 集群名称
@@ -203,7 +205,7 @@ http.core.allow-origin: &quot;*&quot;
 # 这里的节点名称要与上面配置的node.name的名称相同
 cluster.initial_master_nodes: [&quot;node-1&quot;, &quot;node-2&quot;]
 </code></pre>
-<pre><code>vim ./config/jvm.options
+<pre class="line-numbers"><code>vim ./config/jvm.options
 
 修改内存大小
 -Xms1g # 初始化内存空间，默认1G，虚拟机建议修改为128m
@@ -216,7 +218,7 @@ cluster.initial_master_nodes: [&quot;node-1&quot;, &quot;node-2&quot;]
 </blockquote>
 <p>5.启动ES
 进入到/usr/lcoal/elasticsearch/bin目录下</p>
-<pre><code>切换为esuser用户
+<pre class="line-numbers"><code>切换为esuser用户
 su esuser
 启动ES
 ./elasticsearch
@@ -231,19 +233,19 @@ su esuser
 问题3：支持最大虚拟内存vm.max_map_count数太低
 解决以上问题，需要修改配置文件: /etc/security/limits.conf
 添加如下配置：</p>
-<pre><code>* soft nofile 65536
+<pre class="line-numbers"><code>* soft nofile 65536
 * hard nofile 131072
 * soft nproc 4096
 * hard nproc 4096
 </code></pre>
 <p>然后在/etc/sysctl.d文件内添加如下配置：</p>
-<pre><code>vm.max_map_count=262145
+<pre class="line-numbers"><code>vm.max_map_count=262145
 </code></pre>
 <p>修改/etc/sysctl.d文件需要刷新：<code>sysctl -p</code>
 如果还是不能启动，重启服务器即可</p>
 </blockquote>
 <p>6.后台启动ES</p>
-<pre><code>./elasticsearch -d
+<pre class="line-numbers"><code>./elasticsearch -d
 </code></pre>
 <h2><a id="%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90" class="anchor" aria-hidden="true" href="#%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90"><span class="octicon octicon-link"></span></a>文件解析</h2>
 <table>
@@ -412,6 +414,8 @@ su esuser
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -428,6 +432,18 @@ su esuser
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -441,18 +457,6 @@ su esuser
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

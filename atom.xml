@@ -4,13 +4,413 @@
   <title><![CDATA[Jythons小站]]></title>
   <link href="jythons.github.io/atom.xml" rel="self"/>
   <link href="jythons.github.io/"/>
-  <updated>2021-11-16T22:17:25+08:00</updated>
+  <updated>2022-01-07T14:31:00+08:00</updated>
   <id>jythons.github.io/</id>
   <author>
     <name><![CDATA[]]></name>
     
   </author>
   <generator uri="http://www.mweb.im/">MWeb</generator>
+  
+  <entry>
+    <title type="html"><![CDATA[MySQL索引原理以及查询优化]]></title>
+    <link href="jythons.github.io/16415257910695.html"/>
+    <updated>2022-01-07T11:23:11+08:00</updated>
+    <id>jythons.github.io/16415257910695.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="1%E3%80%81%E4%BB%8B%E7%BB%8D" class="anchor" aria-hidden="true" href="#1%E3%80%81%E4%BB%8B%E7%BB%8D"><span class="octicon octicon-link"></span></a>1、介绍</h2>
+<h3><a id="1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95%EF%BC%9F" class="anchor" aria-hidden="true" href="#1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95%EF%BC%9F"><span class="octicon octicon-link"></span></a>1.1、什么是索引？</h3>
+<p>一般的应用系统，读写比例在10:1左右，而且插入操作和一般的更新操作很少出现性能问题，在生产环境中，我们遇到最多的，也是最容易出问题的，还是一些复杂的查询操作，因此对查询语句的优化显然是重中之重。说起加速查询，就不得不提到索引了。</p>
+<h3><a id="1-2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%B4%A2%E5%BC%95%E5%91%A2%EF%BC%9F" class="anchor" aria-hidden="true" href="#1-2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%B4%A2%E5%BC%95%E5%91%A2%EF%BC%9F"><span class="octicon octicon-link"></span></a>1.2、为什么要有索引呢？</h3>
+<p>索引在MySQL中也叫做“键”，是存储引擎用于快速找到记录的一种数据结构。索引对于良好的性能
+非常关键，尤其是当表中的数据量越来越大时，索引对于性能的影响愈发重要。
+索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高好几个数量级。
+索引相当于字典的音序表，如果要查某个字，如果不使用音序表，则需要从几百页中逐页去查。</p>
+<span id="more"></span><!-- more -->
+<h2><a id="2%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8E%9F%E7%90%86" class="anchor" aria-hidden="true" href="#2%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8E%9F%E7%90%86"><span class="octicon octicon-link"></span></a>2、索引的原理</h2>
+<h3><a id="2-1%E3%80%81%E7%B4%A2%E5%BC%95%E5%8E%9F%E7%90%86" class="anchor" aria-hidden="true" href="#2-1%E3%80%81%E7%B4%A2%E5%BC%95%E5%8E%9F%E7%90%86"><span class="octicon octicon-link"></span></a>2.1、 索引原理</h3>
+<p>索引的目的在于提高查询效率，与我们查阅图书所用的目录是一个道理：先定位到章，然后定位到该章下的一个小节，然后找到页数。相似的例子还有：查字典，查火车车次，飞机航班等</p>
+<p>本质都是：通过不断地缩小想要获取数据的范围来筛选出最终想要的结果，同时把随机的事件变成顺序的事件，也就是说，有了这种索引机制，我们可以总是用同一种查找方式来锁定数据。</p>
+<p>数据库也是一样，但显然要复杂的多，因为不仅面临着等值查询，还有范围查询(&gt;、&lt;、between、in)、模糊查询(like)、并集查询(or)等等。数据库应该选择怎么样的方式来应对所有的问题呢？我们回想字典的例子，能不能把数据分成段，然后分段查询呢？最简单的如果1000条数据，1到100分成第一段，101到200分成第二段，201到300分成第三段......这样查第250条数据，只要找第三段就可以了，一下子去除了90%的无效数据。但如果是1千万的记录呢，分成几段比较好？稍有算法基础的同学会想到搜索树，其平均复杂度是lgN，具有不错的查询性能。但这里我们忽略了一个关键的问题，复杂度模型是基于每次相同的操作成本来考虑的。而数据库实现比较复杂，一方面数据是保存在磁盘上的，另外一方面为了提高性能，每次又可以把部分数据读入内存来计算，因为我们知道访问磁盘的成本大概是访问内存的十万倍左右，所以简单的搜索树难以满足复杂的应用场景。</p>
+<h3><a id="2-2%E3%80%81%E7%A3%81%E7%9B%98io%E4%B8%8E%E9%A2%84%E8%AF%BB" class="anchor" aria-hidden="true" href="#2-2%E3%80%81%E7%A3%81%E7%9B%98io%E4%B8%8E%E9%A2%84%E8%AF%BB"><span class="octicon octicon-link"></span></a>2.2、磁盘IO与预读</h3>
+<p>考虑到磁盘IO是非常高昂的操作，计算机操作系统做了一些优化，当一次IO时，不光把当前磁盘地址的数据，而是把相邻的数据也都读取到内存缓冲区内，因为局部预读性原理告诉我们，当计算机访问一个地址的数据的时候，与其相邻的数据也会很快被访问到。每一次IO读取的数据我们称之为一页(page)。具体一页有多大数据跟操作系统有关，一般为4k或8k，也就是我们读取一页内的数据时候，实际上才发生了一次IO，这个理论对于索引的数据结构设计非常有帮助。</p>
+<h3><a id="2-3%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84" class="anchor" aria-hidden="true" href="#2-3%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="octicon octicon-link"></span></a>2.3、索引的数据结构</h3>
+<p>任何一种数据结构都不是凭空产生的，一定会有它的背景和使用场景，我们现在总结一下，我们需要这种数据结构能够做些什么，其实很简单，那就是：每次查找数据时把磁盘IO次数控制在一个很小的数量级，最好是常数数量级。那么我们就想到如果一个高度可控的多路搜索树是否能满足需求呢？就这样，b+树应运而生。</p>
+<p><img src="media/16415257910695/B+tree.png" alt="B+tree" /></p>
+<p>如上图，是一颗b+树，关于b+树的定义可以参见B+树，这里只说一些重点，浅蓝色的块我们称之为一个磁盘块，可以看到每个磁盘块包含几个数据项（深蓝色所示）和指针（黄色所示），如磁盘块1包含数据项17和35，包含指针P1、P2、P3，P1表示小于17的磁盘块，P2表示在17和35之间的磁盘块，P3表示大于35的磁盘块。真实的数据存在于叶子节点即3、5、9、10、13、15、28、29、36、60、75、79、90、99。非叶子节点只不存储真实的数据，只存储指引搜索方向的数据项，如17、35并不真实存在于数据表中。</p>
+<h4><a id="2-3-1%E3%80%81b%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE%E8%BF%87%E7%A8%8B" class="anchor" aria-hidden="true" href="#2-3-1%E3%80%81b%E6%A0%91%E7%9A%84%E6%9F%A5%E6%89%BE%E8%BF%87%E7%A8%8B"><span class="octicon octicon-link"></span></a>2.3.1、b+树的查找过程</h4>
+<p>如图所示，如果要查找数据项29，那么首先会把磁盘块1由磁盘加载到内存，此时发生一次IO，在内存中用二分查找确定29在17和35之间，锁定磁盘块1的P2指针，内存时间因为非常短（相比磁盘的IO）可以忽略不计，通过磁盘块1的P2指针的磁盘地址把磁盘块3由磁盘加载到内存，发生第二次IO，29在26和30之间，锁定磁盘块3的P2指针，通过指针加载磁盘块8到内存，发生第三次IO，同时内存中做二分查找找到29，结束查询，总计三次IO。真实的情况是，3层的b+树可以表示上百万的数据，如果上百万的数据查找只需要三次IO，性能提高将是巨大的，如果没有索引，每个数据项都要发生一次IO，那么总共需要百万次的IO，显然成本非常非常高。</p>
+<h4><a id="2-3-2%E3%80%81b%E6%A0%91%E6%80%A7%E8%B4%A8" class="anchor" aria-hidden="true" href="#2-3-2%E3%80%81b%E6%A0%91%E6%80%A7%E8%B4%A8"><span class="octicon octicon-link"></span></a>2.3.2、b+树性质</h4>
+<ul>
+<li>索引字段要尽量的小：通过上面的分析，我们知道IO次数取决于b+数的高度h，假设当前数据表的数据为N，每个磁盘块的数据项的数量是m，则有h=㏒(m+1)N，当数据量N一定的情况下，m越大，h越小；而m = 磁盘块的大小 / 数据项的大小，磁盘块的大小也就是一个数据页的大小，是固定的，如果数据项占的空间越小，数据项的数量越多，树的高度越低。这就是为什么每个数据项，即索引字段要尽量的小，比如int占4字节，要比bigint8字节少一半。这也是为什么b+树要求把真实的数据放到叶子节点而不是内层节点，一旦放到内层节点，磁盘块的数据项会大幅度下降，导致树增高。当数据项等于1时将会退化成线性表。</li>
+<li>索引的最左匹配特性（即从左往右匹配）：当b+树的数据项是复合的数据结构，比如(name,age,sex)的时候，b+数是按照从左到右的顺序来建立搜索树的，比如当(张三,20,F)这样的数据来检索的时候，b+树会优先比较name来确定下一步的所搜方向，如果name相同再依次比较age和sex，最后得到检索的数据；但当(20,F)这样的没有name的数据来的时候，b+树就不知道下一步该查哪个节点，因为建立搜索树的时候name就是第一个比较因子，必须要先根据name来搜索才能知道下一步去哪里查询。比如当(张三,F)这样的数据来检索时，b+树可以用name来指定搜索方向，但下一个字段age的缺失，所以只能把名字等于张三的数据都找到，然后再匹配性别是F的数据了， 这个是非常重要的性质，即索引的最左匹配特性。</li>
+</ul>
+<h2><a id="3%E3%80%81mysql%E7%B4%A2%E5%BC%95%E7%AE%A1%E7%90%86" class="anchor" aria-hidden="true" href="#3%E3%80%81mysql%E7%B4%A2%E5%BC%95%E7%AE%A1%E7%90%86"><span class="octicon octicon-link"></span></a>3、Mysql索引管理</h2>
+<h3><a id="3-1%E3%80%81%E5%8A%9F%E8%83%BD" class="anchor" aria-hidden="true" href="#3-1%E3%80%81%E5%8A%9F%E8%83%BD"><span class="octicon octicon-link"></span></a>3.1、功能</h3>
+<ol>
+<li>索引的功能就是加速查找</li>
+<li>mysql中的primary key，unique，联合唯一也都是索引，这些索引除了加速查找以外，还有约束的功能
+二、MySQL的索引分类</li>
+</ol>
+<h3><a id="3-2%E3%80%81%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB" class="anchor" aria-hidden="true" href="#3-2%E3%80%81%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="octicon octicon-link"></span></a>3.2、索引分类</h3>
+<ul>
+<li>普通索引index :加速查找</li>
+<li>唯一索引
+<ul>
+<li>主键索引：primary key ：加速查找+约束（不为空且唯一）</li>
+<li>唯一索引：unique：加速查找+约束 （唯一）</li>
+</ul>
+</li>
+<li>联合索引
+<ul>
+<li>-primary key(id,name):联合主键索引</li>
+<li>-unique(id,name):联合唯一索引</li>
+<li>-index(id,name):联合普通索引</li>
+</ul>
+</li>
+<li>全文索引fulltext :用于搜索很长一篇文章的时候，效果最好。</li>
+<li>空间索引spatial :了解就好，几乎不用</li>
+</ul>
+<blockquote>
+<p>举个例子来说，比如你在为某商场做一个会员卡的系统。
+这个系统有一个会员表，有下列字段：</p>
+<ul>
+<li>会员编号 INT</li>
+<li>会员姓名 VARCHAR(10)</li>
+<li>会员身份证号码 VARCHAR(18)</li>
+<li>会员电话 VARCHAR(10)</li>
+<li>会员住址 VARCHAR(50)</li>
+<li>会员备注信息 TEXT<br />
+那么这个 会员编号，作为主键，使用 PRIMARY，<br />
+会员姓名 如果要建索引的话，那么就是普通的 INDEX，<br />
+会员身份证号码 如果要建索引的话，那么可以选择 UNIQUE （唯一的，不允许重复），<br />
+除此之外还有全文索引，即FULLTEXT，<br />
+会员备注信息，如果需要建索引的话，可以选择全文搜索。<br />
+用于搜索很长一篇文章的时候，效果最好。<br />
+用在比较短的文本，如果就一两行字的，普通的 INDEX 也可以。<br />
+但其实对于全文搜索，我们并不会使用MySQL自带的该索引，而是会选择第三方软件如Sphinx，专门来做全文搜索。<br />
+其他的如空间索引SPATIAL，了解即可，几乎不用。</li>
+</ul>
+</blockquote>
+<h3><a id="3-3%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E4%B8%A4%E5%A4%A7%E7%B1%BB%E5%9E%8B-hash%E4%B8%8Ebtree" class="anchor" aria-hidden="true" href="#3-3%E3%80%81%E7%B4%A2%E5%BC%95%E7%9A%84%E4%B8%A4%E5%A4%A7%E7%B1%BB%E5%9E%8B-hash%E4%B8%8Ebtree"><span class="octicon octicon-link"></span></a>3.3、 索引的两大类型hash与btree</h3>
+<h4><a id="3-3-1%E3%80%81%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E5%9C%A8%E5%88%9B%E5%BB%BA%E4%B8%8A%E8%BF%B0%E7%B4%A2%E5%BC%95%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E4%B8%BA%E5%85%B6%E6%8C%87%E5%AE%9A%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%EF%BC%8C%E5%88%86%E4%B8%A4%E7%B1%BB" class="anchor" aria-hidden="true" href="#3-3-1%E3%80%81%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E5%9C%A8%E5%88%9B%E5%BB%BA%E4%B8%8A%E8%BF%B0%E7%B4%A2%E5%BC%95%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E4%B8%BA%E5%85%B6%E6%8C%87%E5%AE%9A%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%EF%BC%8C%E5%88%86%E4%B8%A4%E7%B1%BB"><span class="octicon octicon-link"></span></a>3.3.1、我们可以在创建上述索引的时候，为其指定索引类型，分两类</h4>
+<ul>
+<li>hash类型的索引：查询单条快，范围查询慢</li>
+<li>btree类型的索引：b+树，层数越多，数据量指数级增长（我们就用它，因为innodb默认支持它）</li>
+</ul>
+<h4><a id="3-3-2%E3%80%81%E4%B8%8D%E5%90%8C%E7%9A%84%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E6%94%AF%E6%8C%81%E7%9A%84%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%E4%B9%9F%E4%B8%8D%E4%B8%80%E6%A0%B7" class="anchor" aria-hidden="true" href="#3-3-2%E3%80%81%E4%B8%8D%E5%90%8C%E7%9A%84%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E6%94%AF%E6%8C%81%E7%9A%84%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B%E4%B9%9F%E4%B8%8D%E4%B8%80%E6%A0%B7"><span class="octicon octicon-link"></span></a>3.3.2、不同的存储引擎支持的索引类型也不一样**</h4>
+<ul>
+<li>InnoDB 支持事务，支持行级别锁定，支持 B-tree、Full-text 等索引，不支持 Hash 索引；</li>
+<li>MyISAM 不支持事务，支持表级别锁定，支持 B-tree、Full-text 等索引，不支持 Hash 索引；</li>
+<li>Memory 不支持事务，支持表级别锁定，支持 B-tree、Hash 等索引，不支持 Full-text 索引；</li>
+<li>NDB 支持事务，支持行级别锁定，支持 Hash 索引，不支持 B-tree、Full-text 等索引；</li>
+<li>Archive 不支持事务，支持表级别锁定，不支持 B-tree、Hash、Full-text 等索引；</li>
+</ul>
+<h3><a id="3-4%E3%80%81%E5%88%9B%E5%BB%BA%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%E7%9A%84%E8%AF%AD%E6%B3%95" class="anchor" aria-hidden="true" href="#3-4%E3%80%81%E5%88%9B%E5%BB%BA%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%E7%9A%84%E8%AF%AD%E6%B3%95"><span class="octicon octicon-link"></span></a>3.4、创建/删除索引的语法</h3>
+<h4><a id="3-4-1%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%88%9B%E5%BB%BA%E8%A1%A8%E6%97%B6" class="anchor" aria-hidden="true" href="#3-4-1%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%88%9B%E5%BB%BA%E8%A1%A8%E6%97%B6"><span class="octicon octicon-link"></span></a>3.4.1、方法一：创建表时</h4>
+<pre class="line-numbers"><code class="language-sql">CREATE TABLE 表名 (
+    字段名1  数据类型 [完整性约束条件…],
+    字段名2  数据类型 [完整性约束条件…],
+    [UNIQUE | FULLTEXT | SPATIAL ]   INDEX | KEY
+    [索引名]  (字段名[(长度)]  [ASC |DESC]) 
+);
+</code></pre>
+<h4><a id="3-4-2%E3%80%81%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9Acreate%E5%9C%A8%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A1%A8%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-4-2%E3%80%81%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9Acreate%E5%9C%A8%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A1%A8%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.4.2、方法二：CREATE在已存在的表上创建索引</h4>
+<pre class="line-numbers"><code class="language-sql">CREATE  [UNIQUE | FULLTEXT | SPATIAL ]  INDEX  索引名 
+ON 表名 (字段名[(长度)]  [ASC |DESC]) ;
+</code></pre>
+<h4><a id="3-4-3%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9Aalter-table%E5%9C%A8%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A1%A8%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-4-3%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9Aalter-table%E5%9C%A8%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E8%A1%A8%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.4.3、方法三：ALTER TABLE在已存在的表上创建索引</h4>
+<pre class="line-numbers"><code class="language-sql">ALTER TABLE 表名 ADD  [UNIQUE | FULLTEXT | SPATIAL ] INDEX
+索引名 (字段名[(长度)]  [ASC |DESC]) ;
+</code></pre>
+<h4><a id="3-4-4%E3%80%81%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%EF%BC%9A" class="anchor" aria-hidden="true" href="#3-4-4%E3%80%81%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95%EF%BC%9A"><span class="octicon octicon-link"></span></a>3.4.4、删除索引：</h4>
+<pre class="line-numbers"><code class="language-sql">DROP INDEX 索引名 ON 表名字;
+</code></pre>
+<h3><a id="3-5%E3%80%81%E5%96%84%E7%94%A8%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3" class="anchor" aria-hidden="true" href="#3-5%E3%80%81%E5%96%84%E7%94%A8%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3"><span class="octicon octicon-link"></span></a>3.5、善用帮助文档</h3>
+<ul>
+<li>help create</li>
+<li>help create index</li>
+</ul>
+<h4><a id="3-5-1%E3%80%81%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-5-1%E3%80%81%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.5.1、创建索引</h4>
+<ul>
+<li>在创建表时就创建（需要注意的几点）：</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">create table s1(
+    id int ,#可以在这加primary key
+    #id int index #不可以这样加索引，因为index只是索引，没有约束一说，
+    #不能像主键，还有唯一约束一样，在定义字段的时候加索引
+    name char(20),
+    age int,
+    email varchar(30)
+    #primary key(id) #也可以在这加
+    index(id) #可以这样加
+);
+</code></pre>
+<ul>
+<li>在创建表后在创建</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">create index name on s1(name); #添加普通索引
+create unique age on s1(age);添加唯一索引
+alter table s1 add primary key(id); #添加住建索引，也就是给id字段增加一个主键约束
+create index name on s1(id,name); #添加普通联合索引
+</code></pre>
+<h4><a id="3-5-2%E3%80%81%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-5-2%E3%80%81%E5%88%A0%E9%99%A4%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.5.2、删除索引</h4>
+<pre class="line-numbers"><code class="language-sql">drop index id on s1;
+drop index name on s1; #删除普通索引
+drop index age on s1; #删除唯一索引，就和普通索引一样，不用在index前加unique来删，直接就可以删了
+alter table s1 drop primary key; #删除主键(因为它添加的时候是按照alter来增加的，那么我们也用alter来删)
+</code></pre>
+<h3><a id="3-6%E3%80%81%E6%B5%8B%E8%AF%95%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-6%E3%80%81%E6%B5%8B%E8%AF%95%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.6、测试索引</h3>
+<h4><a id="3-6-1%E3%80%81%E5%87%86%E5%A4%87" class="anchor" aria-hidden="true" href="#3-6-1%E3%80%81%E5%87%86%E5%A4%87"><span class="octicon octicon-link"></span></a>3.6.1、准备</h4>
+<ul>
+<li>准备表</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">create table s1(
+    id int,
+    name varchar(20),
+    gender char(6),
+    email varchar(50)
+);
+</code></pre>
+<ul>
+<li>创建存储过程，实现批量插入记录</li>
+</ul>
+<blockquote>
+<p>delimiter $$ #声明存储过程的结束符号为$$</p>
+</blockquote>
+<pre class="line-numbers"><code class="language-sql">delimiter $$
+create procedure auto_insert1()
+    BEGIN
+        declare i int default 1;
+        while(i&lt;3000000)do
+            insert into s1  values(i,concat('egon',i),'male',concat('egon',i,'@oldboy')
+        );
+        set i=i+1;
+    end while;
+END$$ #$$结束
+delimiter ; #重新声明分号为结束符号
+</code></pre>
+<ul>
+<li>查看存储过程</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">show create procedure auto_insert1\G 
+</code></pre>
+<ul>
+<li>调用存储过程</li>
+</ul>
+<pre class="line-numbers"><code class="language-sql">call auto_insert1();
+</code></pre>
+<h4><a id="3-6-2%E3%80%81%E5%9C%A8%E6%B2%A1%E6%9C%89%E7%B4%A2%E5%BC%95%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%E6%B5%8B%E8%AF%95%E6%9F%A5%E8%AF%A2%E9%80%9F%E5%BA%A6" class="anchor" aria-hidden="true" href="#3-6-2%E3%80%81%E5%9C%A8%E6%B2%A1%E6%9C%89%E7%B4%A2%E5%BC%95%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%E6%B5%8B%E8%AF%95%E6%9F%A5%E8%AF%A2%E9%80%9F%E5%BA%A6"><span class="octicon octicon-link"></span></a>3.6.2、在没有索引的前提下测试查询速度</h4>
+<ul>
+<li>无索引：从头到尾扫描一遍，所以查询速度很慢</li>
+</ul>
+<pre class="line-numbers"><code>mysql&gt; select * from s1 where id=333;
++------+---------+--------+----------------+
+| id   | name    | gender | email          |
++------+---------+--------+----------------+
+|  333 | egon333 | male   | 333@oldboy.com |
+|  333 | egon333 | f      | alex333@oldboy |
+|  333 | egon333 | f      | alex333@oldboy |
++------+---------+--------+----------------+
+rows in set (0.32 sec)
+
+mysql&gt; select * from s1 where email='egon333@oldboy';
+....
+... rows in set (0.36 sec)
+</code></pre>
+<ul>
+<li>加上索引
+<ul>
+<li>一定是为搜索条件的字段创建索引，比如select * from t1 where age &gt; 5;就需要为age加上索引</li>
+<li>在表中已经有大量数据的情况下，建索引会很慢，且占用硬盘空间，插入删除更新都很慢，只有查询快
+比如create index idx on s1(id);会扫描表中所有的数据，然后以id为数据项，创建索引结构，存放于硬盘的表中。
+建完以后，再查询就会很快了</li>
+<li>需要注意的是：innodb表的索引会存放于s1.ibd文件中，而myisam表的索引则会有单独的索引文件table1.MYI
+<img src="media/16415257910695/yousuoyin.png" alt="yousuoyin" /></li>
+</ul>
+</li>
+</ul>
+<h3><a id="3-7%E3%80%81%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-7%E3%80%81%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.7、正确使用索引</h3>
+<h4><a id="3-7-1%E3%80%81%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-7-1%E3%80%81%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.7.1、覆盖索引</h4>
+<pre class="line-numbers"><code class="language-sql">select * from s1 where id=123;
+</code></pre>
+<p>该sql命中了索引，但未覆盖索引。<br />
+利用id=123到索引的数据结构中定位到该id在硬盘中的位置，或者说再数据表中的位置。<br />
+但是我们select的字段为*，除了id以外还需要其他字段，这就意味着，我们通过索引结构取到id还不够，还需要利用该id再去找到该id所在行的其他字段值，这是需要时间的，很明显，如果我们只select id，
+就减去了这份苦恼，如下</p>
+<pre class="line-numbers"><code class="language-sql">select id from s1 where id=123;
+</code></pre>
+<p>这条就是覆盖索引了，命中索引，且从索引的数据结构直接就取到了id在硬盘的地址，速度很快</p>
+<h4><a id="3-7-2%E3%80%81%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#3-7-2%E3%80%81%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>3.7.2、联合索引</h4>
+<p><img src="media/16415257910695/lianhesuoyin.png" alt="lianhesuoyin" /></p>
+<h4><a id="3-7-3%E3%80%81%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6" class="anchor" aria-hidden="true" href="#3-7-3%E3%80%81%E7%B4%A2%E5%BC%95%E5%90%88%E5%B9%B6"><span class="octicon octicon-link"></span></a>3.7.3、索引合并</h4>
+<p><strong>索引合并：</strong> 把多个单列索引合并使用</p>
+<p><strong>分析：</strong>
+组合索引能做到的事情，我们都可以用索引合并去解决，比如</p>
+<pre class="line-numbers"><code class="language-sql">create index ne on s1(name,email);#组合索引
+</code></pre>
+<p>我们完全可以单独为name和email创建索引</p>
+<p>组合索引可以命中：</p>
+<pre class="line-numbers"><code class="language-sql">select * from s1 where name='egon' ;
+select * from s1 where name='egon' and email='adf';
+</code></pre>
+<p>索引合并可以命中：</p>
+<pre class="line-numbers"><code class="language-sql">select * from s1 where name='egon' ;
+select * from s1 where email='adf';
+select * from s1 where name='egon' and email='adf';
+</code></pre>
+<p>乍一看好像索引合并更好了：可以命中更多的情况，但其实要分情况去看，如果是name='egon' and email='adf',
+那么组合索引的效率要高于索引合并，如果是单条件查，那么还是用索引合并比较合理</p>
+<h2><a id="4%E3%80%81%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE" class="anchor" aria-hidden="true" href="#4%E3%80%81%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8%E5%BB%BA%E8%AE%AE"><span class="octicon octicon-link"></span></a>4、索引使用建议</h2>
+<h3><a id="4-1%E3%80%81%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95" class="anchor" aria-hidden="true" href="#4-1%E3%80%81%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="octicon octicon-link"></span></a>4.1、联合索引</h3>
+<p>若想利用索引达到预想的提高查询速度的效果，我们在添加索引时，必须遵循以下原则</p>
+<ul>
+<li>
+<p>最左前缀匹配：必须按照从左到右的顺序匹配。mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</p>
+<pre class="line-numbers"><code>select * from s1 where name='egon'; #可以
+select * from s1 where name='egon' and email='asdf'; #可以
+select * from s1 where email='alex@oldboy.com'; #不可以
+</code></pre>
+</li>
+<li>
+<p>=和in可以乱序，比如a = 1 and b = 2 and c = 3 建立(a,b,c)索引可以任意顺序，mysql的查询优化器
+会帮你优化成索引可以识别的形式</p>
+</li>
+<li>
+<p>尽量选择区分度高的列作为索引,区分度的公式是count(distinct col)/count(*)，
+表示字段不重复的比例，比例越大我们扫描的记录数越少，唯一键的区分度是1，而一些状态、
+性别字段可能在大数据面前区分度就是0，那可能有人会问，这个比例有什么经验值吗？使用场景不同，
+这个值也很难确定，一般需要join的字段我们都要求是0.1以上，即平均1条扫描10条记录</p>
+</li>
+<li>
+<p>索引列不能参与计算，保持列“干净”，比如<code>from_unixtime(create_time) = ’2014-05-29’</code>就不能使用到索引，原因很简单，b+树中存的都是数据表中的字段值，但进行检索时，需要把所有元素都应用函数才能比较，显然成本太大。所以语句应该写成create_time = unix_timestamp(’2014-05-29’);</p>
+</li>
+</ul>
+<p><strong>最左前缀示范</strong></p>
+<pre class="line-numbers"><code class="language-sql">mysql&gt; select * from s1 where id&gt;3 and name='egon' and email='alex333@oldboy.com' and gender='male';
+Empty set (0.39 sec)
+
+mysql&gt; create index idx on s1(id,name,email,gender); #未遵循最左前缀
+Query OK, 0 rows affected (15.27 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql&gt; select * from s1 where id&gt;3 and name='egon' and email='alex333@oldboy.com' and gender='male';
+Empty set (0.43 sec)
+
+mysql&gt; drop index idx on s1;
+Query OK, 0 rows affected (0.16 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql&gt; create index idx on s1(name,email,gender,id); #遵循最左前缀
+Query OK, 0 rows affected (15.97 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql&gt; select * from s1 where id&gt;3 and name='egon' and email='alex333@oldboy.com' and gender='male';
+Empty set (0.03 sec)
+</code></pre>
+<p>建联合索引，最左匹配
+索引无法命中的情况需要注意：</p>
+<pre class="line-numbers"><code class="language-sql">- like '%xx'
+    select * from tb1 where email like '%cn';
+    
+    
+- 使用函数
+    select * from tb1 where reverse(email) = 'wupeiqi';
+    
+    
+- or
+    select * from tb1 where nid = 1 or name = 'seven@live.com';
+    
+    
+    特别的：当or条件中有未建立索引的列才失效，以下会走索引
+            select * from tb1 where nid = 1 or name = 'seven';
+            select * from tb1 where nid = 1 or name = 'seven@live.com' and email = 'alex'
+            
+            
+- 类型不一致
+    如果列是字符串类型，传入条件是必须用引号引起来，不然...
+    select * from tb1 where email = 999;
+    
+普通索引的不等于不会走索引
+- !=
+    select * from tb1 where email != 'alex'
+    
+    特别的：如果是主键，则还是会走索引
+        select * from tb1 where nid != 123
+- &gt;
+    select * from tb1 where email &gt; 'alex'
+    
+    
+    特别的：如果是主键或索引是整数类型，则还是会走索引
+        select * from tb1 where nid &gt; 123
+        select * from tb1 where num &gt; 123
+        
+        
+#排序条件为索引，则select字段必须也是索引字段，否则无法命中
+- order by
+    select name from s1 order by email desc;
+    当根据索引排序时候，select查询的字段如果不是索引，则不走索引
+    select email from s1 order by email desc;
+    特别的：如果对主键排序，则还是走索引：
+        select * from tb1 order by nid desc;
+ 
+- 组合索引最左前缀
+    如果组合索引为：(name,email)
+    name and email       -- 使用索引
+    name                 -- 使用索引
+    email                -- 不使用索引
+
+
+- count(1)或count(列)代替count(*)在mysql中没有差别了
+
+- create index xxxx  on tb(title(19)) #text类型，必须制定长度
+</code></pre>
+<h3><a id="4-2%E3%80%81%E5%85%B6%E4%BB%96" class="anchor" aria-hidden="true" href="#4-2%E3%80%81%E5%85%B6%E4%BB%96"><span class="octicon octicon-link"></span></a>4.2、其他</h3>
+<ul>
+<li>避免使用select *</li>
+<li>count(1)或count(列) 代替 count(*)</li>
+<li>创建表时尽量时 char 代替 varchar</li>
+<li>表的字段顺序固定长度的字段优先</li>
+<li>组合索引代替多个单列索引（经常使用多个条件查询时）</li>
+<li>尽量使用短索引</li>
+<li>使用连接（JOIN）来代替子查询(Sub-Queries)</li>
+<li>连表时注意条件类型需一致</li>
+<li>索引散列值（重复少）不适合建索引，例：性别不适合</li>
+</ul>
+<h2><a id="5%E3%80%81%E6%85%A2%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4" class="anchor" aria-hidden="true" href="#5%E3%80%81%E6%85%A2%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4"><span class="octicon octicon-link"></span></a>5、慢查询优化的基本步骤</h2>
+<ol>
+<li>先运行看看是否真的很慢，注意设置SQL_NO_CACHE</li>
+<li>where条件单表查，锁定最小返回记录表。这句话的意思是把查询语句的where都应用到表中返回的记录数最小的表开始查起，单表每个字段分别查询，看哪个字段的区分度最高</li>
+<li>explain查看执行计划，是否与1预期一致（从锁定记录较少的表开始查询）</li>
+<li>order by limit 形式的sql语句让排序的表优先查</li>
+<li>了解业务方使用场景</li>
+<li>加索引时参照建索引的几大原则</li>
+<li>观察结果，不符合预期继续从0分析</li>
+</ol>
+<blockquote>
+<p>文章来源：<a href="https://www.cnblogs.com/bypp/p/7755307.html">https://www.cnblogs.com/bypp/p/7755307.html</a></p>
+</blockquote>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ClickHouse日常使用记录]]></title>
+    <link href="jythons.github.io/16395498007523.html"/>
+    <updated>2021-12-15T14:30:00+08:00</updated>
+    <id>jythons.github.io/16395498007523.html</id>
+    <content type="html"><![CDATA[
+<h2><a id="%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E8%AF%AD%E5%8F%A5" class="anchor" aria-hidden="true" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E8%AF%AD%E5%8F%A5"><span class="octicon octicon-link"></span></a>基本操作语句</h2>
+<h3><a id="%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93" class="anchor" aria-hidden="true" href="#%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="octicon octicon-link"></span></a>导入文件数据到数据库</h3>
+<pre class="line-numbers"><code>clickhouse-client --port=9002 --query &quot;INSERT INTO tutorial.visits_v1 FORMAT TSV&quot; --max_insert_block_size=100000 &lt; ./visits_v1.tsv
+</code></pre>
+<blockquote>
+<p>--port：指定端口<br />
+--query：查询语句</p>
+</blockquote>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Xdebug配置]]></title>
@@ -30,13 +430,13 @@
 <h2><a id="3%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#3%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>3.安装</h2>
 <p>需要在本地和docker内先安装php的xdebug拓展，安装方法如下：<br />
 <strong>本地安装：</strong></p>
-<pre><code>pecl install xdebug
+<pre class="line-numbers"><code>pecl install xdebug
 </code></pre>
 <blockquote>
 <p>安装成功后，会自动配置带php.ini内，pecl在安装php环境的时候，会自动安装，如果没有添加到环境变量，可以去php的安装目录下：<code>/bin</code>文件夹下查找</p>
 </blockquote>
 <p><strong>docker安装：</strong></p>
-<pre><code>1.安装xdebug拓展
+<pre class="line-numbers"><code>1.安装xdebug拓展
 pecl install xdebug
 
 2.为php开启xdebug插件
@@ -49,7 +449,7 @@ docker-php-ext-enable xdebug
 <p>docker环境下得php.ini文件是不存在得，他的配置都是根据拓展插件分开存放的，所以docker下配置xdebug的文件只需要在这个文件下配置即可：<br />
 <code>/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini</code>。</p>
 <p><strong>配置信息：</strong></p>
-<pre><code>xdebug.profiler_enable=on
+<pre class="line-numbers"><code>xdebug.profiler_enable=on
 xdebug.auto_trace=on
 xdebug.collect_params=on
 xdebug.collect_return=on
@@ -110,7 +510,7 @@ mac下安装：<code>brew install ctags</code></p>
 <p><strong>第三步：</strong><br />
 配置快捷键：配置在sublime中使用Ctrl+左键单击函数跳转、Ctrl+右键单击跳回函数调用位置
 复制以下代码到 Preferences-&gt;Package Settings-&gt;Ctags-&gt;Mouse Bindings-User</p>
-<pre><code class="language-json">[
+<pre class="line-numbers"><code class="language-json">[
     {
         &quot;button&quot;: &quot;button1&quot;,
         &quot;count&quot;: 1,
@@ -137,12 +537,12 @@ mac下安装：<code>brew install ctags</code></p>
     <id>jythons.github.io/16353903707629.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3" class="anchor" aria-hidden="true" href="#%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3"><span class="octicon octicon-link"></span></a>后端接口</h2>
-<pre><code>public function store(Request $request){
+<pre class="line-numbers"><code>public function store(Request $request){
     return Formater::ajaxReturn(0, 'success',['csrf_token'=&gt;csrf_token()]);
 }
 </code></pre>
 <h2><a id="%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC" class="anchor" aria-hidden="true" href="#%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC"><span class="octicon octicon-link"></span></a>预处理脚本</h2>
-<pre><code>var host = pm.environment.get(&quot;URL&quot;);
+<pre class="line-numbers"><code>var host = pm.environment.get(&quot;URL&quot;);
 
 pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (err, response) {
     if (response.code === 200) {
@@ -177,7 +577,7 @@ pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (
     <updated>2021-10-14T16:48:03+08:00</updated>
     <id>jythons.github.io/16342012831501.html</id>
     <content type="html"><![CDATA[
-<pre><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
+<pre class="line-numbers"><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
 var token = &quot;lBZXpB5uRw5M&quot;;
 var timestamps = pm.environment.get(&quot;timestamps&quot;);
 
@@ -490,7 +890,7 @@ InnoDB表避免使用COUNT(*)操作，计数统计实时要求较强可以使用
     <updated>2021-04-06T11:31:40+08:00</updated>
     <id>jythons.github.io/16176799000056.html</id>
     <content type="html"><![CDATA[
-<pre><code>version: &quot;2.1&quot;
+<pre class="line-numbers"><code>version: &quot;2.1&quot;
 services:
   nginx:
     image: nginx
@@ -512,7 +912,7 @@ networks:
   lnmp-network:
 </code></pre>
 <h2><a id="nginx%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#nginx%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>nginx 配置</h2>
-<pre><code>server {
+<pre class="line-numbers"><code>server {
     listen       80;
     server_name  hdcrmlocal.kerlala.com;
     root   /usr/share/nginx/html/hdcrm.kerlala.com/public/;
@@ -549,7 +949,7 @@ networks:
     <id>jythons.github.io/16176785301116.html</id>
     <content type="html"><![CDATA[
 <h2><a id="%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>拉取PHP镜像</h2>
-<pre><code>docker pull php:7.3-fpm
+<pre class="line-numbers"><code>docker pull php:7.3-fpm
 </code></pre>
 <h2><a id="%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95"><span class="octicon octicon-link"></span></a>安装拓展</h2>
 <p>docker容器内安装php拓展使用如下命令进行安装</p>
@@ -582,12 +982,12 @@ networks:
 <blockquote>
 <p>例如：安装pdo拓展，使用如下命令即可</p>
 </blockquote>
-<pre><code>docker-php-ext-install pdo
+<pre class="line-numbers"><code>docker-php-ext-install pdo
 </code></pre>
 <blockquote>
 <p>有些拓展使用 <code>docker-php-ext-install</code> 命令不能安装，可以使用pecl工具进行安装，当装好php的容器之后，容器内已经安装好了pecl工具，所以直接拿来使用即可。使用方法如下：</p>
 </blockquote>
-<pre><code>例如安装php的memcached拓展
+<pre class="line-numbers"><code>例如安装php的memcached拓展
 1.首先更新源
 apt-get update
 2.安装所需依赖
@@ -614,7 +1014,7 @@ docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/u
 <blockquote>
 <p>也可以编写一个DockerFile，加入如下命令：</p>
 </blockquote>
-<pre><code>FROM php:7.1-fpm
+<pre class="line-numbers"><code>FROM php:7.1-fpm
 RUN apt-get update \
 	# 手动安装依赖
 	&amp;&amp; apt-get install -y libmemcached-dev zlib1g-dev \
@@ -623,11 +1023,47 @@ RUN apt-get update \
    # 启用扩展
    &amp;&amp; docker-php-ext-enable memcached
 </code></pre>
-<pre><code>安装zip扩展所需的依赖扩展
+<pre class="line-numbers"><code>安装zip扩展所需的依赖扩展
 apt-get update &amp;&amp; apt-get install -y zlib1g-dev &amp;&amp; apt-get install -y libzip-dev
 
 安装并启动zip扩展
 docker-php-ext-install zip
+</code></pre>
+<pre class="line-numbers"><code>./configure --prefix=/usr/local/php/php8 \
+     --with-config-file-path=/usr/local/php/php8/etc \
+     --with-config-file-scan-dir=/usr/local/php/php8/etc/conf.d \
+     --enable-bcmath \
+     --with-bz2=/usr/local/opt/bzip2 \
+     --with-curl=/usr/local/opt/curl \
+     --enable-filter \
+     --enable-fpm \
+     --with-gd \
+     --enable-gd-native-ttf \
+     --with-freetype-dir \
+     --with-jpeg-dir \
+     --with-png-dir \
+     --enable-intl \
+     --enable-mbstring \
+     --with-mcrypt \
+     --enable-mysqlnd \
+     --with-mysql-sock=/tmp/mysql.sock \
+     --with-mysqli=mysqlnd \
+     --with-pdo-mysql=mysqlnd \
+     --with-pdo-sqlite \
+     --with-zlib-dir=/usr/local/opt/zlib \
+     --with-iconv=/usr/local/opt/libiconv \
+     --with-icu-dir=/usr/local/opt/icu4c \
+     --disable-phpdbg \
+     --disable-phpdbg-webhelper \
+     --enable-opcache \
+     --with-openssl=/usr/bin/openssl \
+     --enable-simplexml \
+     --with-sqlite3 \
+     --enable-xmlreader \
+     --enable-xmlwriter \
+     --enable-zip \
+     --enable-sockets \
+     --with-xmlrpc
 </code></pre>
 
 ]]></content>
@@ -658,7 +1094,7 @@ docker-php-ext-install zip
     <id>jythons.github.io/16121005012878.html</id>
     <content type="html"><![CDATA[
 <span id="more"></span><!-- more -->
-<pre><code># 第一行一般写一些注释描述
+<pre class="line-numbers"><code># 第一行一般写一些注释描述
 FROM debian
 MAINTAINER Jythons
 RUN mkdir test1 # 容器启动后，执行的命令
@@ -672,14 +1108,14 @@ CMD [&quot;-c&quot;, &quot;ls -l&quot;] # 启动容器时，如果没有指定�
 
 </code></pre>
 <p>写好dockerfile文件后，使用下面的命令进行构建一个镜像</p>
-<pre><code>docker build -t mysh .
+<pre class="line-numbers"><code>docker build -t mysh .
 </code></pre>
 <blockquote>
 <p>mysh 是镜像名称
 . 表示在当前目录</p>
 </blockquote>
 <p>接下来就是启动这个镜像</p>
-<pre><code>docker run mysh
+<pre class="line-numbers"><code>docker run mysh
 </code></pre>
 
 ]]></content>
@@ -693,17 +1129,17 @@ CMD [&quot;-c&quot;, &quot;ls -l&quot;] # 启动容器时，如果没有指定�
     <content type="html"><![CDATA[
 <span id="more"></span><!-- more -->
 <p>从docker官网下载安装脚本</p>
-<pre><code>curl -fsSL get.docker.com -o get-docker.sh
+<pre class="line-numbers"><code>curl -fsSL get.docker.com -o get-docker.sh
 </code></pre>
 <p>执行脚本</p>
-<pre><code>使用阿里云镜像源执行脚本
+<pre class="line-numbers"><code>使用阿里云镜像源执行脚本
 get-docker.sh --mirror Aliyun
 </code></pre>
 <p>安装完成后重载一下daemon-reload</p>
-<pre><code>systemctl daemon-reload
+<pre class="line-numbers"><code>systemctl daemon-reload
 </code></pre>
 <p>然后重启docker</p>
-<pre><code>systemctl restart docker
+<pre class="line-numbers"><code>systemctl restart docker
 </code></pre>
 
 ]]></content>
@@ -717,16 +1153,16 @@ get-docker.sh --mirror Aliyun
     <content type="html"><![CDATA[
 <span id="more"></span><!-- more -->
 <h2><a id="%E6%9F%A5%E7%9C%8Bdocker%E8%BF%9B%E7%A8%8B" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E7%9C%8Bdocker%E8%BF%9B%E7%A8%8B"><span class="octicon octicon-link"></span></a>查看docker进程</h2>
-<pre><code>docker ps 查看当前正在执行的进程
+<pre class="line-numbers"><code>docker ps 查看当前正在执行的进程
 docker ps -a 查看所有进程，包括曾经执行过的进程
 </code></pre>
 <h2><a id="%E6%9F%A5%E7%9C%8Bdocker%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E7%9C%8Bdocker%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>查看docker镜像</h2>
-<pre><code>docker images
+<pre class="line-numbers"><code>docker images
 </code></pre>
 <h2><a id="%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E8%BF%90%E8%A1%8C%E4%B8%80%E4%B8%AA%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>运行一个镜像</h2>
-<pre><code>docker run image-name # image-name是镜像名称
+<pre class="line-numbers"><code>docker run image-name # image-name是镜像名称
 </code></pre>
-<pre><code>启动nginx容器
+<pre class="line-numbers"><code>启动nginx容器
 docker start container_id
 暂停容器
 docker pause container_id
@@ -740,7 +1176,7 @@ docker kill container_id
 docker rm container_id
 </code></pre>
 <h3><a id="%E4%BB%A5server%E7%9A%84%E5%BD%A2%E5%BC%8F%EF%BC%8C%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E7%9A%84%E8%BF%9B%E7%A8%8B" class="anchor" aria-hidden="true" href="#%E4%BB%A5server%E7%9A%84%E5%BD%A2%E5%BC%8F%EF%BC%8C%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AA%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E7%9A%84%E8%BF%9B%E7%A8%8B"><span class="octicon octicon-link"></span></a>以server的形式，启动一个后台运行的进程</h3>
-<pre><code>docker run -d redis:3.2 redis-server
+<pre class="line-numbers"><code>docker run -d redis:3.2 redis-server
 </code></pre>
 <blockquote>
 <p>-d 表示后台启动
@@ -748,19 +1184,19 @@ redis:3.2 表示运行一个3.2版本的Redis服务
 redis-server 表示已服务的方式启动，不加此项，不会启动主进程</p>
 </blockquote>
 <h3><a id="%E6%9C%AC%E6%9C%BA%E7%AB%AF%E5%8F%A3%E4%B8%8E%E9%95%9C%E5%83%8F%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84%E7%9A%84%E6%96%B9%E5%BC%8F%E5%90%AF%E5%8A%A8" class="anchor" aria-hidden="true" href="#%E6%9C%AC%E6%9C%BA%E7%AB%AF%E5%8F%A3%E4%B8%8E%E9%95%9C%E5%83%8F%E7%AB%AF%E5%8F%A3%E6%98%A0%E5%B0%84%E7%9A%84%E6%96%B9%E5%BC%8F%E5%90%AF%E5%8A%A8"><span class="octicon octicon-link"></span></a>本机端口与镜像端口映射的方式启动</h3>
-<pre><code>docker run -d -p 80:80 nginx
+<pre class="line-numbers"><code>docker run -d -p 80:80 nginx
 </code></pre>
 <blockquote>
 <p>-p 80:80 表示把本地物理机的80端口和NGINX镜像的80端口绑定，前面是物理机的端口，后面的是镜像的端口</p>
 </blockquote>
 <h3><a id="%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%A4%B9%E6%8C%82%E8%BD%BD%E5%88%B0docker%E9%95%9C%E5%83%8F%E5%86%85" class="anchor" aria-hidden="true" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%A4%B9%E6%8C%82%E8%BD%BD%E5%88%B0docker%E9%95%9C%E5%83%8F%E5%86%85"><span class="octicon octicon-link"></span></a>本地文件夹挂载到docker镜像内</h3>
-<pre><code>docker run -d -p 80:80 -v 本地文件夹:镜像文件夹 nginx
+<pre class="line-numbers"><code>docker run -d -p 80:80 -v 本地文件夹:镜像文件夹 nginx
 </code></pre>
 <blockquote>
 <p>-v 表示将本地文件夹挂载到镜像中去，实现镜像与宿主机文件共享</p>
 </blockquote>
 <h2><a id="%E4%B8%8E%E5%AE%B9%E5%99%A8%E4%BA%A4%E4%BA%92" class="anchor" aria-hidden="true" href="#%E4%B8%8E%E5%AE%B9%E5%99%A8%E4%BA%A4%E4%BA%92"><span class="octicon octicon-link"></span></a>与容器交互</h2>
-<pre><code>docker exec -it container_id redis-cli
+<pre class="line-numbers"><code>docker exec -it container_id redis-cli
 </code></pre>
 <blockquote>
 <p>-it 表示这个命令是和终端有交互的
@@ -768,7 +1204,7 @@ container_id 表示容器的短名称，可以使用docker ps 命令查看
 redis-cli 表示使用redis-cli的方式进行交互，如果使用bash，表示使用bash进行交互</p>
 </blockquote>
 <h2><a id="%E6%89%93%E5%8C%85%E6%88%90%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%89%93%E5%8C%85%E6%88%90%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>打包成镜像</h2>
-<pre><code>docker commit 
+<pre class="line-numbers"><code>docker commit 
 </code></pre>
 <blockquote>
 <p>docker commit用来将程序打包成镜像，通常项目中使用Dockerfile的方式实现</p>
@@ -787,18 +1223,18 @@ redis-cli 表示使用redis-cli的方式进行交互，如果使用bash，表示
 <h2><a id="%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%9A" class="anchor" aria-hidden="true" href="#%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E8%BD%AF%E4%BB%B6%E5%8C%85%EF%BC%9A"><span class="octicon octicon-link"></span></a>下载所需软件包：</h2>
 <p>erlang、socat、rabbitmq-server的rpm包</p>
 <h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
-<pre><code>rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm
+<pre class="line-numbers"><code>rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm
 rpm -ivh socat-17.3.2-5.el7.lux.x86_64.rpm
 rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
 </code></pre>
 <h2><a id="%E5%90%AF%E5%8A%A8" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8"><span class="octicon octicon-link"></span></a>启动</h2>
-<pre><code>sbin]$ ./rabbitmq-server -detached
+<pre class="line-numbers"><code>sbin]$ ./rabbitmq-server -detached
 </code></pre>
 <h2><a id="%E9%80%80%E5%87%BA" class="anchor" aria-hidden="true" href="#%E9%80%80%E5%87%BA"><span class="octicon octicon-link"></span></a>退出</h2>
-<pre><code>./rabbitmqctl stop
+<pre class="line-numbers"><code>./rabbitmqctl stop
 </code></pre>
 <h2><a id="%E5%90%AF%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="octicon octicon-link"></span></a>启动管理工具</h2>
-<pre><code>sbin]$ ./rabbitmq-plugins enable rabbitmq_management
+<pre class="line-numbers"><code>sbin]$ ./rabbitmq-plugins enable rabbitmq_management
 </code></pre>
 <blockquote>
 <p>使用RabbitMQ 管理工具登录时，提示guest用户只能本地登录，解决方法如下：
@@ -924,7 +1360,7 @@ Kafka使用Zookeeper来协调，kafka大部分时间都是采用内存级别的�
 <img src="media/16114984325290/RabbitMQ%E4%B8%BB%E5%A4%87%E5%8E%9F%E7%90%86%E5%9B%BE.png" alt="RabbitMQ主备原理图" />
 它是由HaProxy路由到主节点，由主节点提供服务，当主节点发生故障时，HaProxy会帮我们把请求路由到备份节点，继续提供服务。当原来的主节点恢复了之后，他会成为原来备份节点的备份节点。</p>
 <h3><a id="1-1%E4%B8%BB%E5%A4%87%E6%A8%A1%E5%BC%8F-haproxy%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#1-1%E4%B8%BB%E5%A4%87%E6%A8%A1%E5%BC%8F-haproxy%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>1.1 主备模式 - HaProxy配置</h3>
-<pre><code># 集群名字 
+<pre class="line-numbers"><code># 集群名字 
 listen rabbitmq_cluster
 # 配置TCP模式
 bind 0.0.0.0:5672
@@ -1061,7 +1497,7 @@ RabbitMQ部署架构采用双中心模式（多中心），那么在两套（或
 <p>在logstash根目录下创建sync目录。创建配置文件：logstash-db-sync.conf。
 接下来下载mysql驱动到sync目录下。（msyql-connector-java-5.1.41.jar）
 配置文件内容如下：</p>
-<pre><code>input {
+<pre class="line-numbers"><code>input {
     jdbc {
         # 设置MySQL/MariaDB数据库URL以及数据库名称
         jdbc_connection_string =&gt; &quot;jdbc:mysql://192.168.1.6：3306/dbname?useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&quot;
@@ -1118,82 +1554,7 @@ output {
 }
 </code></pre>
 <h2><a id="%E5%90%AF%E5%8A%A8logstash" class="anchor" aria-hidden="true" href="#%E5%90%AF%E5%8A%A8logstash"><span class="octicon octicon-link"></span></a>启动logstash</h2>
-<pre><code>./bin/logstash -f /usr/local/logstash-6.4.3/sync/logstash-db-sync.conf
-</code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SpringBoot整合ElasticSearch]]></title>
-    <link href="jythons.github.io/16114061687150.html"/>
-    <updated>2021-01-23T20:49:28+08:00</updated>
-    <id>jythons.github.io/16114061687150.html</id>
-    <content type="html"><![CDATA[
-<span id="more"></span><!-- more -->
-<h2><a id="%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="octicon octicon-link"></span></a>添加依赖</h2>
-<pre><code>&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-boot-starter-data-elasticsearch&lt;/artifactId&gt;
-        &lt;version&gt;2.2.2.RELEASE&lt;/version&gt;
-    &lt;/dependency&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-        &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
-        &lt;scope&gt;test&lt;/scope&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;
-</code></pre>
-<blockquote>
-<p>注意SpringBoot安装的ES依赖，要保持与ES服务的版本保持一致。</p>
-</blockquote>
-<h2><a id="%E9%85%8D%E7%BD%AEes" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AEes"><span class="octicon octicon-link"></span></a>配置ES</h2>
-<pre><code>spring:
-    data:
-        elasticsearch:
-            cluster-name: es6
-            cluster-nodes: 192.168.3.214:9300
-</code></pre>
-<blockquote>
-<p>使用ES客户端连接ES服务的时候，端口号使用的是9200，但是在java中要使用9300，这个需要注意一下。如果是ES集群的话，在nodes后面配置所有的节点地址，用逗号分隔。</p>
-</blockquote>
-<p><strong>Netty issue fix</strong></p>
-<pre><code>@Configuration
-public class ESConfig {
-    /**
-     * 解决netty引起的issue
-     */
-    @PostConstruct
-    void init() {
-        System.setProperty(&quot;es.set.netty.runtime.available.processors&quot;, &quot;false&quot;);
-    } 
-}
-</code></pre>
-<blockquote>
-<p>将上面的类，放到和启动类同级目录下即可。</p>
-</blockquote>
-<h2><a id="%E4%BD%BF%E7%94%A8elasticsearchtemplate%E6%B3%A8%E6%84%8F" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8elasticsearchtemplate%E6%B3%A8%E6%84%8F"><span class="octicon octicon-link"></span></a>使用ElasticsearchTemplate注意</h2>
-<blockquote>
-<p>不建议使用ElasticsearchTemplate对索引进行管理（创建索引，更新映射，删除索引）
-索引就像是数据库或者数据库中的表，我们平时是不会通过Java代码频繁的去创建修改删除数据库的
-我们只会针对数据做CURD的操作
-在ES中也是同理，我们尽量使用ElasticsearchTemplate对文档数据做CRUD的操作
-1.属性（FieldType）类型不灵活
-2.主分片与副本分片数无法设置</p>
-</blockquote>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[常用命令]]></title>
-    <link href="jythons.github.io/16113857471276.html"/>
-    <updated>2021-01-23T15:09:07+08:00</updated>
-    <id>jythons.github.io/16113857471276.html</id>
-    <content type="html"><![CDATA[
-<h2><a id="%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E5%8E%BB%E9%99%A4%E6%B3%A8%E9%87%8A" class="anchor" aria-hidden="true" href="#%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E5%8E%BB%E9%99%A4%E6%B3%A8%E9%87%8A"><span class="octicon octicon-link"></span></a>输出文件内容去除注释</h2>
-<pre><code>more file.conf | grep ^[^#]
+<pre class="line-numbers"><code>./bin/logstash -f /usr/local/logstash-6.4.3/sync/logstash-db-sync.conf
 </code></pre>
 
 ]]></content>

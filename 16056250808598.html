@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -190,7 +192,7 @@ Reids的持久化有两种方式，一种是RDB，另一种是AOF。下面分别
 </ul>
 <h3><a id="rdb%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#rdb%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>RDB配置</h3>
 <p>打开Redis的配置文件 redis.conf，搜索SNAPSHOTTING，找到dir，这个就是备份时保存的文件路径。</p>
-<pre><code># 如果至少有一个key发生变化，在900秒后就会保存一次快照
+<pre class="line-numbers"><code># 如果至少有一个key发生变化，在900秒后就会保存一次快照
 save 900 1
 # 如果至少有10个key发生变化，那么在300秒后就回保存一次快照
 save 300 10
@@ -239,7 +241,7 @@ dir /usr/local/redis/working
 <h3><a id="aof%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#aof%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>AOF 配置</h3>
 <p>打开Redis的配置文件 redis.conf，搜索APPEND，下方的配置都是AOF配置相关的。
 redis安装完毕后，默认的持久化方式是RDB模式</p>
-<pre><code># 默认是关闭的， 启动AOF
+<pre class="line-numbers"><code># 默认是关闭的， 启动AOF
 appendonly yes
 
 # AOF备份的文件名称
@@ -363,6 +365,8 @@ redis在恢复的时候，是先去加载AOF日志进行恢复，如果AOF日志
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -379,6 +383,18 @@ redis在恢复的时候，是先去加载AOF日志进行恢复，如果AOF日志
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -392,18 +408,6 @@ redis在恢复的时候，是先去加载AOF日志进行恢复，如果AOF日志
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

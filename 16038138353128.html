@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -175,7 +177,7 @@
 <ul>
 <li>定义<strong>变量</strong>时，不使用<code>$</code>，等号两边不能有空格,使用变量时使用<code>$</code>。</li>
 </ul>
-<pre><code class="language-shell">例如：
+<pre class="line-numbers"><code class="language-shell">例如：
 val='abc'   (正确)
 val = 'abc' (错误) 
 echo ${val} (使用变量)
@@ -183,7 +185,7 @@ echo ${val} (使用变量)
 <ul>
 <li><strong>字符串：</strong></li>
 </ul>
-<pre><code class="language-shell">获取字符串长度:${#abc},结果返回3;截取字符串:${abc:1:2}。
+<pre class="line-numbers"><code class="language-shell">获取字符串长度:${#abc},结果返回3;截取字符串:${abc:1:2}。
 例如：
 str='abcdefg'
 echo ${str:1:2}
@@ -194,7 +196,7 @@ echo ${str:1:2}
 <ul>
 <li><strong>数组：</strong></li>
 </ul>
-<pre><code class="language-bash">定义数组：arr=(val1 val2 val3 ... valn) 或 arr[0]=val0
+<pre class="line-numbers"><code class="language-bash">定义数组：arr=(val1 val2 val3 ... valn) 或 arr[0]=val0
 使用数组元素：${arr[0]}  
 输出数组元素：${arr[*]} 或 ${arr[@]}  
 获取数组长度：${#arr[*]} 或 ${#arr[@]}
@@ -206,7 +208,7 @@ echo ${str:1:2}
 <p>计算数值时使用：<code>expr 表达式</code> 或 <code>$((表达式))</code>，如果使用 <code>expr</code> 时，乘法使用 <code>\*</code>，使用运算符时，使用<code>[]</code>,并且运算符两边都要有空格，例如：<code>if [ $a -eq $b ] then fi</code></p>
 </blockquote>
 <h6><a id="%E5%85%B3%E7%B3%BB%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E5%85%B3%E7%B3%BB%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>关系运算符</h6>
-<pre><code>-eq 检测两个数是都相等，相等返回 true  
+<pre class="line-numbers"><code>-eq 检测两个数是都相等，相等返回 true  
 -ne 检测两个数是都相等，不相等返回true  
 -gt 大于号  
 -lt 小于号  
@@ -214,18 +216,18 @@ echo ${str:1:2}
 -le 小于等于
 </code></pre>
 <h6><a id="%E5%B8%83%E5%B0%94%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E5%B8%83%E5%B0%94%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>布尔运算符</h6>
-<pre><code>!  非  
+<pre class="line-numbers"><code>!  非  
 -o 或  
 -a 与
 </code></pre>
 <h6><a id="%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>逻辑运算符</h6>
-<pre><code>&amp;&amp; 逻辑的AND
+<pre class="line-numbers"><code>&amp;&amp; 逻辑的AND
 || 逻辑的OR
 </code></pre>
 <blockquote>
 <p>注意：使用逻辑运算符时，if语句需要使用<code>[[ 表达式 ]]</code>；</p>
 </blockquote>
-<pre><code class="language-shell">例如：
+<pre class="line-numbers"><code class="language-shell">例如：
 a=10
 b=10
 if [[ $a -lt 100 &amp;&amp; $b -gt 100 ]]
@@ -236,7 +238,7 @@ else
 fi
 </code></pre>
 <h6><a id="%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%90%E7%AE%97%E7%AC%A6" class="anchor" aria-hidden="true" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="octicon octicon-link"></span></a>字符串运算符</h6>
-<pre><code>=   检测两个字符串是否相等，相等返回true    例：[ $a = $b ]  
+<pre class="line-numbers"><code>=   检测两个字符串是否相等，相等返回true    例：[ $a = $b ]  
 !=  检测两个字符串是否相等，不相等返回true  例：[ $a != $b ]  
 -z  检测字符串长度是否为0，为0返回true　　　例：[ -z $a ]  
 -n  检测字符串长度是否为0，不为0返回true    例：[ -n $a ]  
@@ -246,7 +248,7 @@ str 检测字符串是否为空，不为空返回true      例：[ $a ]
 <blockquote>
 <p>$file 为文件路径</p>
 </blockquote>
-<pre><code class="language-shell">[ -b $file ] 检测文件是否是块设备文件，是返回true  
+<pre class="line-numbers"><code class="language-shell">[ -b $file ] 检测文件是否是块设备文件，是返回true  
 [ -c $file ] 检测文件是否是字符设备文件，如果是，则返回 true  
 [ -d $file ] 检测文件是否是目录，如果是，则返回 true  
 [ -f $file ] 检测文件是否是普通文件（既不是目录，也不是设备文件），如果是，则返回 true  
@@ -264,7 +266,7 @@ str 检测字符串是否为空，不为空返回true      例：[ $a ]
 <li><strong>test命令</strong><br />
 <code>[]</code>作为基本运算符使用时，内部不能有空格</li>
 </ul>
-<pre><code class="language-shell">例如：  
+<pre class="line-numbers"><code class="language-shell">例如：  
 a=5
 b=5
 res=$[a+b]
@@ -274,7 +276,7 @@ echo $res # 结果为10
 <li><strong>read</strong><br />
 <code>read</code> 等待用户输入。</li>
 </ul>
-<pre><code class="language-shell">例：
+<pre class="line-numbers"><code class="language-shell">例：
 #!/bin/sh
 read name
 echo &quot;输入的值name等于 ${name}&quot;
@@ -283,7 +285,7 @@ echo &quot;输入的值name等于 ${name}&quot;
 <li><strong>流程控制</strong></li>
 </ul>
 <h6><a id="if%E8%AF%AD%E5%8F%A5%EF%BC%9A" class="anchor" aria-hidden="true" href="#if%E8%AF%AD%E5%8F%A5%EF%BC%9A"><span class="octicon octicon-link"></span></a>if语句：</h6>
-<pre><code class="language-shell">if condition
+<pre class="line-numbers"><code class="language-shell">if condition
 then
 	command
 fi
@@ -309,7 +311,7 @@ else
 fi
 </code></pre>
 <h6><a id="for%E5%BE%AA%E7%8E%AF" class="anchor" aria-hidden="true" href="#for%E5%BE%AA%E7%8E%AF"><span class="octicon octicon-link"></span></a>for循环</h6>
-<pre><code class="language-shell">for var in item1 item2 ... itemN
+<pre class="line-numbers"><code class="language-shell">for var in item1 item2 ... itemN
 do
 	command1
 	...
@@ -319,7 +321,7 @@ done
 写成一行：for var in item1 ... itemN; do cmooand1;command2... done;
 </code></pre>
 <h6><a id="while%E5%BE%AA%E7%8E%AF%EF%BC%8C%E4%B8%8Euntil%E5%BE%AA%E7%8E%AF%E7%94%A8%E6%B3%95%E7%9B%B8%E5%90%8C%EF%BC%88%E7%BB%93%E6%9E%9C%E4%B8%BA%E7%9C%9F%E6%97%B6%E9%80%80%E5%87%BA%E5%BE%AA%E7%8E%AF%EF%BC%89" class="anchor" aria-hidden="true" href="#while%E5%BE%AA%E7%8E%AF%EF%BC%8C%E4%B8%8Euntil%E5%BE%AA%E7%8E%AF%E7%94%A8%E6%B3%95%E7%9B%B8%E5%90%8C%EF%BC%88%E7%BB%93%E6%9E%9C%E4%B8%BA%E7%9C%9F%E6%97%B6%E9%80%80%E5%87%BA%E5%BE%AA%E7%8E%AF%EF%BC%89"><span class="octicon octicon-link"></span></a>while循环，与until循环用法相同（结果为真时退出循环）</h6>
-<pre><code class="language-shell">例：
+<pre class="line-numbers"><code class="language-shell">例：
 #!/bin/sh
 int=1
 while(( $int&lt;=5 ))
@@ -332,7 +334,7 @@ done
 <p>使用了 <code>let</code> 命令，用于执行一个或多个表达式，变量计算中不需要加上 <code>$</code> 来表示变量。</p>
 </blockquote>
 <h6><a id="case" class="anchor" aria-hidden="true" href="#case"><span class="octicon octicon-link"></span></a>case</h6>
-<pre><code class="language-shell">例：
+<pre class="line-numbers"><code class="language-shell">例：
 read aNum
 case $aNum in
 	1) echo '1'
@@ -348,7 +350,7 @@ esac
 <li><strong>函数</strong></li>
 </ul>
 <h6><a id="%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0" class="anchor" aria-hidden="true" href="#%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="octicon octicon-link"></span></a>定义函数</h6>
-<pre><code class="language-shell">[function] funcName[()]{
+<pre class="line-numbers"><code class="language-shell">[function] funcName[()]{
 	command
 	[return n] # n为0-255之间的数字
 }
@@ -359,7 +361,7 @@ funcName  # 调用函数funcName
 <p>1.可以带function fun()定义，也可以直接fun()定义，不到任何参数<br />
 2.参数返回，可以显示的加：return返回，如果不加，将以最后一条命令运行结果，作为返回值。</p>
 </blockquote>
-<pre><code class="language-shell">例：
+<pre class="line-numbers"><code class="language-shell">例：
 #!/bin/sh
 function funcName(){
 	echo 'this is a function!'
@@ -369,7 +371,7 @@ funcName
 # 函数执行结束
 </code></pre>
 <h6><a id="%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0" class="anchor" aria-hidden="true" href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0"><span class="octicon octicon-link"></span></a>函数参数</h6>
-<pre><code class="language-shell">例：
+<pre class="line-numbers"><code class="language-shell">例：
 funWithParam(){
 	echo &quot;第一个参数：$1&quot;
 	echo &quot;第二个参数：$2&quot;
@@ -392,7 +394,7 @@ funWidthParam 1 2 3 4 5 6 7  #调用函数传参
 <li><strong>Shell文件包含</strong><br />
 Shell包含外部脚本语法合适如下：</li>
 </ul>
-<pre><code class="language-shell">. filename    # 注意点号（.）和文件名中间有一个空格
+<pre class="line-numbers"><code class="language-shell">. filename    # 注意点号（.）和文件名中间有一个空格
 或
 source filename
 </code></pre>
@@ -497,6 +499,8 @@ source filename
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -513,6 +517,18 @@ source filename
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -526,18 +542,6 @@ source filename
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

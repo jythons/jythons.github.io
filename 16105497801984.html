@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -248,7 +250,7 @@
 <blockquote>
 <p>根据字段查询数据，如果该字段不支持分词，例如keyword类型的字段，查询的字段内容只是一部分的话，是查不出来数据的。</p>
 </blockquote>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match&quot;: {
             &quot;desc&quot;: &quot;你好&quot;
@@ -257,7 +259,7 @@
 }
 </code></pre>
 <p>如果要查询同时满足两个词汇都存在的数据，可以使用下面这种方式查询：</p>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match&quot;: {
             &quot;desc&quot;: {
@@ -269,7 +271,7 @@
 }
 </code></pre>
 <p>minimum_should_match, 这个属性表示查询的字符串被分词后，匹配百分之多少词汇的数据。例如查询：今天天气好晴朗，我想出去玩。假设这个句子被分成10个词汇，minimum_should_match参数设置60%（向下取整 ），表示查询的数据中，匹配上6个词汇就会被查询出来。</p>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match&quot;: {
             &quot;desc&quot;: {
@@ -281,7 +283,7 @@
 }
 </code></pre>
 <h4><a id="%E6%9F%A5%E8%AF%A2%E7%B4%A2%E5%BC%95%E6%98%AF%E5%90%A6%E5%8C%85%E5%90%AB%E6%9F%90%E4%B8%AA%E5%B1%9E%E6%80%A7" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E8%AF%A2%E7%B4%A2%E5%BC%95%E6%98%AF%E5%90%A6%E5%8C%85%E5%90%AB%E6%9F%90%E4%B8%AA%E5%B1%9E%E6%80%A7"><span class="octicon octicon-link"></span></a>查询索引是否包含某个属性</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;exists&quot;: {
             &quot;field&quot;: &quot;username&quot;
@@ -290,14 +292,14 @@
 }
 </code></pre>
 <h4><a id="%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89"><span class="octicon octicon-link"></span></a>查询所有</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match_all&quot;: {}
     }
 }
 </code></pre>
 <h4><a id="%E6%9F%A5%E8%AF%A2%E9%83%A8%E5%88%86%E5%AD%97%E6%AE%B5%E6%95%B0%E6%8D%AE" class="anchor" aria-hidden="true" href="#%E6%9F%A5%E8%AF%A2%E9%83%A8%E5%88%86%E5%AD%97%E6%AE%B5%E6%95%B0%E6%8D%AE"><span class="octicon octicon-link"></span></a>查询部分字段数据</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match_all&quot;: {}
     },
@@ -309,7 +311,7 @@
 }
 </code></pre>
 <h4><a id="%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2" class="anchor" aria-hidden="true" href="#%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="octicon octicon-link"></span></a>分页查询</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match_all&quot;: {}
     },
@@ -323,7 +325,7 @@
 }
 </code></pre>
 <h4><a id="%E6%A0%B9%E6%8D%AE%E5%AD%97%E6%AE%B5%E5%86%85%E5%AE%B9%E6%A8%A1%E7%B3%8A%E5%8C%B9%E9%85%8D" class="anchor" aria-hidden="true" href="#%E6%A0%B9%E6%8D%AE%E5%AD%97%E6%AE%B5%E5%86%85%E5%AE%B9%E6%A8%A1%E7%B3%8A%E5%8C%B9%E9%85%8D"><span class="octicon octicon-link"></span></a>根据字段内容模糊匹配</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;term&quot;: {
             &quot;desc&quot;: &quot;你好&quot;
@@ -340,7 +342,7 @@
 <p>term 是模糊搜索这个字段内容，只要这个字段内容包含搜索的字符串，就展示出来，match是分词搜索，首先会对搜索的字符串进行分词，然后会检索出所有包含这些分词的数据。</p>
 </blockquote>
 <p>也可以同时查询多个词汇：</p>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;terms&quot;: {
             &quot;desc&quot;: [&quot;你好&quot;, &quot;学习&quot;]
@@ -357,7 +359,7 @@
 <p>使用terms是可以支持多个词汇查询，只要包含搜索词汇中的其中一个，就会被检索出来。</p>
 </blockquote>
 <h4><a id="%E6%A0%B9%E6%8D%AE%E8%AF%8D%E6%9D%A1%E5%8E%BB%E6%9F%A5%E8%AF%A2" class="anchor" aria-hidden="true" href="#%E6%A0%B9%E6%8D%AE%E8%AF%8D%E6%9D%A1%E5%8E%BB%E6%9F%A5%E8%AF%A2"><span class="octicon octicon-link"></span></a>根据词条去查询</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match_phrase&quot;: {
             &quot;desc&quot;: {
@@ -376,7 +378,7 @@
 <blockquote>
 <p>使用match_phrase查询，首先会对查询的词条进行分词，然后去找这些分词同时在这个字段内容下的数据。上面的例子两个词汇，需要连贯在一起才能查询出来。如果要查询非连贯的词汇，可以使用下面的方式。</p>
 </blockquote>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match_phrase&quot;: {
             &quot;desc&quot;: {
@@ -394,7 +396,7 @@
 
 </code></pre>
 <h4><a id="%E6%8C%87%E5%AE%9A%E5%A4%9A%E4%B8%AAid%E6%9F%A5%E8%AF%A2" class="anchor" aria-hidden="true" href="#%E6%8C%87%E5%AE%9A%E5%A4%9A%E4%B8%AAid%E6%9F%A5%E8%AF%A2"><span class="octicon octicon-link"></span></a>指定多个ID查询</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;ids&quot;: {
             &quot;type&quot;: &quot;_doc&quot;,
@@ -409,7 +411,7 @@
 }
 </code></pre>
 <h4><a id="%E5%9C%A8%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5%E5%8E%BB%E6%9F%A5%E8%AF%A2" class="anchor" aria-hidden="true" href="#%E5%9C%A8%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5%E5%8E%BB%E6%9F%A5%E8%AF%A2"><span class="octicon octicon-link"></span></a>在多个字段去查询</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;multi_match&quot;: {
             &quot;desc&quot;: &quot;你好啊&quot;,
@@ -424,7 +426,7 @@
 <p>由于默认匹配的词汇越少，分数越低，搜索出来的数据排名会靠下，如果要对某个字段查询出来的数据提升排名，则可以为这个字段设置权重，设置方法见上方：&quot;nickname ^ 10&quot;</p>
 </blockquote>
 <h4><a id="%E5%B8%83%E5%B0%94%E6%9F%A5%E8%AF%A2" class="anchor" aria-hidden="true" href="#%E5%B8%83%E5%B0%94%E6%9F%A5%E8%AF%A2"><span class="octicon octicon-link"></span></a>布尔查询</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;bool&quot;: {
             &quot;must&quot;: [
@@ -456,7 +458,7 @@ must_not: 表示所有词汇都不满足才会被搜索出来 (相当于MySQL的
 should: 表示所有词汇只要满足一个就会被搜索出来（相当于MySQL的or）</p>
 </blockquote>
 <p>有时候我们想把分数较低的词汇排名靠前，可以是boost属性为这个词汇加权，使用方法见下方示例:</p>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;bool&quot;: {
             &quot;should&quot;: [
@@ -478,7 +480,7 @@ should: 表示所有词汇只要满足一个就会被搜索出来（相当于MyS
 </code></pre>
 <h4><a id="%E8%BF%87%E6%BB%A4%E5%99%A8" class="anchor" aria-hidden="true" href="#%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="octicon octicon-link"></span></a>过滤器</h4>
 <p>过滤器，顾名思义可以在数据集合中过滤出自己想要的数据，比如过滤数据中金额在50~60之间的数据。</p>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match&quot;: {
             &quot;desc&quot;: &quot;五子棋游戏&quot;
@@ -499,7 +501,7 @@ should: 表示所有词汇只要满足一个就会被搜索出来（相当于MyS
 gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
 </blockquote>
 <h4><a id="%E6%8E%92%E5%BA%8F" class="anchor" aria-hidden="true" href="#%E6%8E%92%E5%BA%8F"><span class="octicon octicon-link"></span></a>排序</h4>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match&quot;: {
             &quot;desc&quot;: &quot;五子棋游戏&quot;
@@ -515,7 +517,7 @@ gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
 <blockquote>
 <p>支持分词的字段，是不能进行排序的，比如text类型的字段，如果要对这个字段进行排序，可以为这个字段添加一个附属的属性用于排序，可以参考下面创建mapping的例子：</p>
 </blockquote>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;properties&quot;: {
         &quot;id&quot;: {
             &quot;type&quot;: &quot;long&quot;
@@ -533,7 +535,7 @@ gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
 }
 </code></pre>
 <p>创建好可以排序的text类型的字段后，在使用这个字段排序时，需要使用如下方式去排序：</p>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;sort&quot;: [
         {
             &quot;nickname.keyword&quot;: &quot;desc&quot;
@@ -547,7 +549,7 @@ gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
 <h4><a id="%E6%90%9C%E7%B4%A2%E5%87%BA%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8C%B9%E9%85%8D%E7%9A%84%E8%AF%8D%E6%B1%87%E9%AB%98%E4%BA%AE" class="anchor" aria-hidden="true" href="#%E6%90%9C%E7%B4%A2%E5%87%BA%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%8C%B9%E9%85%8D%E7%9A%84%E8%AF%8D%E6%B1%87%E9%AB%98%E4%BA%AE"><span class="octicon octicon-link"></span></a>搜索出的数据中匹配的词汇高亮</h4>
 <p>在我们搜索出来的数据，是根据查询的字符串分词后的词汇匹配出来的，我们可以将这些词汇进行高亮显示。
 使用高亮显示的方式如下:</p>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;query&quot;: {
         &quot;match&quot;: {
             &quot;desc&quot;: &quot;五子棋游戏&quot;
@@ -660,6 +662,8 @@ gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -676,6 +680,18 @@ gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -689,18 +705,6 @@ gt：大于，lt：小于，gte：大于等于，lte：小于等于</p>
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

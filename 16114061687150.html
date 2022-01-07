@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -172,7 +174,7 @@
       <div class="article-content">
       <span id="more"></span><!-- more -->
 <h2><a id="%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96" class="anchor" aria-hidden="true" href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="octicon octicon-link"></span></a>添加依赖</h2>
-<pre><code>&lt;dependencies&gt;
+<pre class="line-numbers"><code>&lt;dependencies&gt;
     &lt;dependency&gt;
         &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
         &lt;artifactId&gt;spring-boot-starter-data-elasticsearch&lt;/artifactId&gt;
@@ -189,7 +191,7 @@
 <p>注意SpringBoot安装的ES依赖，要保持与ES服务的版本保持一致。</p>
 </blockquote>
 <h2><a id="%E9%85%8D%E7%BD%AEes" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AEes"><span class="octicon octicon-link"></span></a>配置ES</h2>
-<pre><code>spring:
+<pre class="line-numbers"><code>spring:
     data:
         elasticsearch:
             cluster-name: es6
@@ -199,7 +201,7 @@
 <p>使用ES客户端连接ES服务的时候，端口号使用的是9200，但是在java中要使用9300，这个需要注意一下。如果是ES集群的话，在nodes后面配置所有的节点地址，用逗号分隔。</p>
 </blockquote>
 <p><strong>Netty issue fix</strong></p>
-<pre><code>@Configuration
+<pre class="line-numbers"><code>@Configuration
 public class ESConfig {
     /**
      * 解决netty引起的issue
@@ -320,6 +322,8 @@ public class ESConfig {
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -336,6 +340,18 @@ public class ESConfig {
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -349,18 +365,6 @@ public class ESConfig {
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

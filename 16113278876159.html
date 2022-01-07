@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -181,7 +183,7 @@
 <p>搭建集群之前，如果之前有启动过，需要将节点数据删除。ES根目录下data文件夹下的node目录。</p>
 </blockquote>
 <p><strong>修改各个节点的配置文件</strong></p>
-<pre><code># 修改各个服务的名称, 每个服务的名称需要相同
+<pre class="line-numbers"><code># 修改各个服务的名称, 每个服务的名称需要相同
 cluster.name: es-cluster-name
 # 修改节点名称，每个节点需要使用不同的名称
 node.name: es-node1
@@ -203,7 +205,7 @@ cluster.initial_master_nodes: [&quot;es-node1&quot;]
 <p><strong>启动</strong>
 每个几点分别启动，启动命令
 进入到/usr/lcoal/elasticsearch/bin目录下</p>
-<pre><code>切换为esuser用户
+<pre class="line-numbers"><code>切换为esuser用户
 su esuser
 启动ES
 ./elasticsearch -d
@@ -217,7 +219,7 @@ su esuser
 <p>当服务器1宕机后，服务器2可能会被选举为master节点，这时服务器1恢复了，并且也是master节点，这时就会出现集群割裂问题，原因是，选举master节点有一个最小投票人数的选举，服务器1本身就是一台服务器。</p>
 <p><strong>脑裂问题解决</strong>
 需要修改最小投票人数，默认值是1，新版本的ES在ES内部已经解决了脑裂的问题，老版本需要注意一下以下配置。</p>
-<pre><code># 这里的n是指master被设置成true的节点数量
+<pre class="line-numbers"><code># 这里的n是指master被设置成true的节点数量
 discovery.zen.minimum_master_nodes = (n/2)+1 
 </code></pre>
 <h2><a id="4%E9%9B%86%E7%BE%A4%E6%96%87%E6%A1%A3%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86" class="anchor" aria-hidden="true" href="#4%E9%9B%86%E7%BE%A4%E6%96%87%E6%A1%A3%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86"><span class="octicon octicon-link"></span></a>4 集群文档读写原理</h2>
@@ -326,6 +328,8 @@ discovery.zen.minimum_master_nodes = (n/2)+1
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -342,6 +346,18 @@ discovery.zen.minimum_master_nodes = (n/2)+1
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -355,18 +371,6 @@ discovery.zen.minimum_master_nodes = (n/2)+1
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

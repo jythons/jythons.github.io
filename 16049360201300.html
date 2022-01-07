@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -173,32 +175,32 @@
       <h2><a id="redis%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#redis%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>Redis安装</h2>
 <p><a href="https://redis.io">Redis官网</a>
 在官网下载redis的安装压缩包，然后解压：</p>
-<pre><code>tar -zxvf redis-6.0.9.tar.gz
+<pre class="line-numbers"><code>tar -zxvf redis-6.0.9.tar.gz
 cd redis-6.0.9
 </code></pre>
 <p>这里需要注意的是，安装redis之前需要先安装他的一个依赖：</p>
-<pre><code>yum install gcc-c++
+<pre class="line-numbers"><code>yum install gcc-c++
 </code></pre>
 <p>然后使用 make &amp;&amp; make install 安装；</p>
-<pre><code>make &amp;&amp; make install
+<pre class="line-numbers"><code>make &amp;&amp; make install
 </code></pre>
 <span id="more"></span><!-- more -->
 <h2><a id="redis%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#redis%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>Redis配置</h2>
 <p>安装好了以后，接下来需要先配置，然后才可以使用。
 进入到安装目录下的 utils 文件夹：</p>
-<pre><code>cd utils
+<pre class="line-numbers"><code>cd utils
 </code></pre>
 <p>进去之后找到：redis_init_script文件，这个文件是redis的一个自动脚本，先复制一份：</p>
-<pre><code>cp redis_init_script /etc/init.d/
+<pre class="line-numbers"><code>cp redis_init_script /etc/init.d/
 cd /etc/init.d/
 </code></pre>
 <p>然后再在 /usr/local/ 创建一个redis文件夹：</p>
-<pre><code>mkdir /usr/local/redis -p 
+<pre class="line-numbers"><code>mkdir /usr/local/redis -p 
 # 拷贝核心配置文件到这个目录下
 cp redis.conf /usr/local/redis/
 </code></pre>
 <p>然后修改/usr/local/redis/这个目录下的配置文件：</p>
-<pre><code># 找到daemonize，这个参数的意思是，redis启动后是在前台运行还是在后台运行
+<pre class="line-numbers"><code># 找到daemonize，这个参数的意思是，redis启动后是在前台运行还是在后台运行
 # yes表示在后台运行，no表示在前台运行（默认）
 daemonize yes
 
@@ -218,11 +220,11 @@ port 6379
 pid redis_6379.pid
 </code></pre>
 <p>配置好核心配置文件以后，接下来就要配置/etc/init.d/redis_init_script文件：</p>
-<pre><code># 修改CONF的核心配置文件路径
+<pre class="line-numbers"><code># 修改CONF的核心配置文件路径
 CONF=&quot;/usr/local/redis/redis.conf&quot;
 </code></pre>
 <p>接下来就可以启动redis了</p>
-<pre><code>chmod 777 redis_init_script
+<pre class="line-numbers"><code>chmod 777 redis_init_script
 # 启动
 ./redis_init_script start
 # 停止 
@@ -230,11 +232,11 @@ CONF=&quot;/usr/local/redis/redis.conf&quot;
 </code></pre>
 <h2><a id="%E9%85%8D%E7%BD%AEredis%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AEredis%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="octicon octicon-link"></span></a>配置redis开机自启动</h2>
 <p>在redis_init_script文件内加上下面两段配置</p>
-<pre><code>#chkconfig：22345 10 90
+<pre class="line-numbers"><code>#chkconfig：22345 10 90
 #description Start and Stop redis
 </code></pre>
 <p>然后执行如下命令：</p>
-<pre><code>chkconfig redis_init_script on
+<pre class="line-numbers"><code>chkconfig redis_init_script on
 </code></pre>
 
 
@@ -334,6 +336,8 @@ CONF=&quot;/usr/local/redis/redis.conf&quot;
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -350,6 +354,18 @@ CONF=&quot;/usr/local/redis/redis.conf&quot;
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -363,18 +379,6 @@ CONF=&quot;/usr/local/redis/redis.conf&quot;
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

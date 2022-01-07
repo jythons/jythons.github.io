@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -150,6 +152,76 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
+                <a class="clearlink" href="16090525942611.html">
+                
+                  <h1>Elasticsearch安装</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80" class="anchor" aria-hidden="true" href="#%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80"><span class="octicon octicon-link"></span></a>下载地址</h2>
+<p><a href="https://www.elastic.co/cn/elasticsearch/">官方下载</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16090525942611.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2020/12/27</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16076110407363.html">
+                
+                  <h1>Elasticsearch原理</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16076110407363.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2020/12/10</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
                 <a class="clearlink" href="16073547198404.html">
                 
                   <h1>SpringBoot使用模版</h1>
@@ -159,13 +231,13 @@
                         
                         	<p>SpringBoot使用html模版，Controller需要使用注解：@Controller</p>
 <h2><a id="pom%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#pom%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>pom配置</h2>
-<pre><code>&lt;dependency&gt;
+<pre class="line-numbers"><code>&lt;dependency&gt;
 	  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
 	  &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
 &lt;/dependency&gt;
 </code></pre>
 <h2><a id="yml%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#yml%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>yml配置</h2>
-<pre><code>spring:
+<pre class="line-numbers"><code>spring:
     thymeleaf:
     mode: HTML
     encoding: UTF-8
@@ -243,17 +315,17 @@
                         
                         	<p>使用SpringSession，需要先引入依赖，查看Maven Dependency Spring Session, 目前都是使用分布式的方式部署，因此使用redis会好一点。</p>
 <h2><a id="application%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#application%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>Application配置</h2>
-<pre><code>spring:
+<pre class="line-numbers"><code>spring:
     session:
         store-type: redis
 </code></pre>
 <h2><a id="%E9%85%8D%E7%BD%AE%E5%90%AF%E5%8A%A8" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AE%E5%90%AF%E5%8A%A8"><span class="octicon octicon-link"></span></a>配置启动</h2>
 <p>在启动类里面配置启动</p>
-<pre><code>// 开启使用redis作为Spring Session
+<pre class="line-numbers"><code>// 开启使用redis作为Spring Session
 @EnableRedisHttpSession
 </code></pre>
 <h2><a id="%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="octicon octicon-link"></span></a>使用方法</h2>
-<pre><code>public Object setSession(HttpServletRequest request) {
+<pre class="line-numbers"><code>public Object setSession(HttpServletRequest request) {
     HttpSession session = request.getSession();
     session.setAttribute(&quot;userInfo&quot;, &quot;XXX&quot;);
     session.setMaxInactiveInterval(3600);
@@ -264,7 +336,7 @@
 <blockquote>
 <p>因为使用Spring Session，需要安装Spring安全框架依赖，因为安装了这个依赖后，程序每次访问都需要登录，很麻烦，因此在启动类将它排除即可。排除方法见下方：</p>
 </blockquote>
-<pre><code>@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+<pre class="line-numbers"><code>@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 </code></pre>
 
                         
@@ -405,7 +477,7 @@
                         
                         	<h2><a id="%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>集群配置</h2>
 <p>打开redis配置文件，找到 REDIS CLUSTER 配置块。修改以下配置：</p>
-<pre><code># 开启redis-cluster集群配置
+<pre class="line-numbers"><code># 开启redis-cluster集群配置
 cluster-enabled yes
 # 每一个节点在集群中的配置文件, 该文件有redis自己去维护 
 cluster-config-file nodes-6379.conf
@@ -465,79 +537,6 @@ appendfilename &quot;appendonly.aof&quot;
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='Java.html'>Java</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16062286652893.html">
-                
-                  <h1>Redis哨兵机制与实现</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>Redis使用源码安装的，在源码包内有一个 sentinel.conf 文件，这个文件就是哨兵机制的配置文件，将该配置文件拷贝到 /usr/local/redis 目录下。然后编辑配置即可。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16062286652893.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/11/24</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Redis.html'>Redis</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16061468058717.html">
-                
-                  <h1>Redis 缓存过期机制</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<ul>
-<li>（主动）定期删除</li>
-<li>（被动）惰性删除</li>
-</ul>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16061468058717.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/11/23</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Redis.html'>Redis</a></span>
           				   
                     
 
@@ -629,6 +628,8 @@ appendfilename &quot;appendonly.aof&quot;
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -645,6 +646,18 @@ appendfilename &quot;appendonly.aof&quot;
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -658,18 +671,6 @@ appendfilename &quot;appendonly.aof&quot;
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

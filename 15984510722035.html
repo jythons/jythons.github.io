@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -174,7 +176,7 @@
 现有的日志都会存在于<code>access.log</code>文件中，但是随着时间的推移，这个文件的内容会越来越多，体积会越来越大，不便于运维人员查看，所以我们可以通过把这个大的日志文件切割为多份不同的小文件作为日志，切割规则可以以天为单位，如果每天有几百G或者几个T的日志的话，则可以按需以每半天或者每小时对日志切割以下。</p>
 <span id="more"></span><!-- more -->
 <p>1.创建一个shell可执行文件：<code>cut_my_log.sh</code>, 内容为：</p>
-<pre><code>#!/bin/bash
+<pre class="line-numbers"><code>#!/bin/bash
 LOG_PATH=&quot;/var/log/nginx/&quot;
 RECORD_TIME=$(date -d &quot;yesterday&quot; +%Y-%m-%d+%H:%M)
 PID=/var/run/nginx/nginx.pid
@@ -185,10 +187,10 @@ mv ${LOG_PATH}/ERROR.log ${LOG_PATH}/error.${RECORD_TIME}.log
 kill -USR1 `cat $PID`
 </code></pre>
 <p>2.为cut_my_log.sh添加可执行的权限</p>
-<pre><code>chmod +x cut_my_log.sh
+<pre class="line-numbers"><code>chmod +x cut_my_log.sh
 </code></pre>
 <p>3.测试日志切割后的结果</p>
-<pre><code>./cut_my_log.sh
+<pre class="line-numbers"><code>./cut_my_log.sh
 </code></pre>
 <p>##自动切割
 使用Linux系统的crontab，定时执行。</p>
@@ -290,6 +292,8 @@ kill -USR1 `cat $PID`
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -306,6 +310,18 @@ kill -USR1 `cat $PID`
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -319,18 +335,6 @@ kill -USR1 `cat $PID`
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

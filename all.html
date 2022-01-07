@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -149,6 +151,90 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="16415257910695.html">
+                
+                  <h1>MySQL索引原理以及查询优化</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="1%E3%80%81%E4%BB%8B%E7%BB%8D" class="anchor" aria-hidden="true" href="#1%E3%80%81%E4%BB%8B%E7%BB%8D"><span class="octicon octicon-link"></span></a>1、介绍</h2>
+<h3><a id="1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95%EF%BC%9F" class="anchor" aria-hidden="true" href="#1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95%EF%BC%9F"><span class="octicon octicon-link"></span></a>1.1、什么是索引？</h3>
+<p>一般的应用系统，读写比例在10:1左右，而且插入操作和一般的更新操作很少出现性能问题，在生产环境中，我们遇到最多的，也是最容易出问题的，还是一些复杂的查询操作，因此对查询语句的优化显然是重中之重。说起加速查询，就不得不提到索引了。</p>
+<h3><a id="1-2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%B4%A2%E5%BC%95%E5%91%A2%EF%BC%9F" class="anchor" aria-hidden="true" href="#1-2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%B4%A2%E5%BC%95%E5%91%A2%EF%BC%9F"><span class="octicon octicon-link"></span></a>1.2、为什么要有索引呢？</h3>
+<p>索引在MySQL中也叫做“键”，是存储引擎用于快速找到记录的一种数据结构。索引对于良好的性能
+非常关键，尤其是当表中的数据量越来越大时，索引对于性能的影响愈发重要。
+索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高好几个数量级。
+索引相当于字典的音序表，如果要查某个字，如果不使用音序表，则需要从几百页中逐页去查。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16415257910695.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/01/07</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Mysql.html'>Mysql</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16395498007523.html">
+                
+                  <h1>ClickHouse日常使用记录</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E8%AF%AD%E5%8F%A5" class="anchor" aria-hidden="true" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E8%AF%AD%E5%8F%A5"><span class="octicon octicon-link"></span></a>基本操作语句</h2>
+<h3><a id="%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93" class="anchor" aria-hidden="true" href="#%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="octicon octicon-link"></span></a>导入文件数据到数据库</h3>
+<pre class="line-numbers"><code>clickhouse-client --port=9002 --query &quot;INSERT INTO tutorial.visits_v1 FORMAT TSV&quot; --max_insert_block_size=100000 &lt; ./visits_v1.tsv
+</code></pre>
+<blockquote>
+<p>--port：指定端口<br />
+--query：查询语句</p>
+</blockquote>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2021/12/15</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ClickHouse.html'>ClickHouse</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="16370681631438.html">
                 
@@ -204,7 +290,7 @@ mac下安装：<code>brew install ctags</code></p>
 <p><strong>第三步：</strong><br />
 配置快捷键：配置在sublime中使用Ctrl+左键单击函数跳转、Ctrl+右键单击跳回函数调用位置
 复制以下代码到 Preferences-&gt;Package Settings-&gt;Ctags-&gt;Mouse Bindings-User</p>
-<pre><code class="language-json">[
+<pre class="line-numbers"><code class="language-json">[
     {
         &quot;button&quot;: &quot;button1&quot;,
         &quot;count&quot;: 1,
@@ -255,12 +341,12 @@ mac下安装：<code>brew install ctags</code></p>
                       <div class="a-content-text">
                         
                         	<h2><a id="%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3" class="anchor" aria-hidden="true" href="#%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3"><span class="octicon octicon-link"></span></a>后端接口</h2>
-<pre><code>public function store(Request $request){
+<pre class="line-numbers"><code>public function store(Request $request){
     return Formater::ajaxReturn(0, 'success',['csrf_token'=&gt;csrf_token()]);
 }
 </code></pre>
 <h2><a id="%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC" class="anchor" aria-hidden="true" href="#%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC"><span class="octicon octicon-link"></span></a>预处理脚本</h2>
-<pre><code>var host = pm.environment.get(&quot;URL&quot;);
+<pre class="line-numbers"><code>var host = pm.environment.get(&quot;URL&quot;);
 
 pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (err, response) {
     if (response.code === 200) {
@@ -343,7 +429,7 @@ pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (
                       
                       <div class="a-content-text">
                         
-                        	<pre><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
+                        	<pre class="line-numbers"><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
 var token = &quot;lBZXpB5uRw5M&quot;;
 var timestamps = pm.environment.get(&quot;timestamps&quot;);
 
@@ -704,7 +790,7 @@ InnoDB表避免使用COUNT(*)操作，计数统计实时要求较强可以使用
                       
                       <div class="a-content-text">
                         
-                        	<pre><code>version: &quot;2.1&quot;
+                        	<pre class="line-numbers"><code>version: &quot;2.1&quot;
 services:
   nginx:
     image: nginx
@@ -726,7 +812,7 @@ networks:
   lnmp-network:
 </code></pre>
 <h2><a id="nginx%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#nginx%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>nginx 配置</h2>
-<pre><code>server {
+<pre class="line-numbers"><code>server {
     listen       80;
     server_name  hdcrmlocal.kerlala.com;
     root   /usr/share/nginx/html/hdcrm.kerlala.com/public/;
@@ -787,7 +873,7 @@ networks:
                       <div class="a-content-text">
                         
                         	<h2><a id="%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>拉取PHP镜像</h2>
-<pre><code>docker pull php:7.3-fpm
+<pre class="line-numbers"><code>docker pull php:7.3-fpm
 </code></pre>
 <h2><a id="%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95"><span class="octicon octicon-link"></span></a>安装拓展</h2>
 <p>docker容器内安装php拓展使用如下命令进行安装</p>
@@ -820,12 +906,12 @@ networks:
 <blockquote>
 <p>例如：安装pdo拓展，使用如下命令即可</p>
 </blockquote>
-<pre><code>docker-php-ext-install pdo
+<pre class="line-numbers"><code>docker-php-ext-install pdo
 </code></pre>
 <blockquote>
 <p>有些拓展使用 <code>docker-php-ext-install</code> 命令不能安装，可以使用pecl工具进行安装，当装好php的容器之后，容器内已经安装好了pecl工具，所以直接拿来使用即可。使用方法如下：</p>
 </blockquote>
-<pre><code>例如安装php的memcached拓展
+<pre class="line-numbers"><code>例如安装php的memcached拓展
 1.首先更新源
 apt-get update
 2.安装所需依赖
@@ -852,7 +938,7 @@ docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/u
 <blockquote>
 <p>也可以编写一个DockerFile，加入如下命令：</p>
 </blockquote>
-<pre><code>FROM php:7.1-fpm
+<pre class="line-numbers"><code>FROM php:7.1-fpm
 RUN apt-get update \
 	# 手动安装依赖
 	&amp;&amp; apt-get install -y libmemcached-dev zlib1g-dev \
@@ -861,11 +947,47 @@ RUN apt-get update \
    # 启用扩展
    &amp;&amp; docker-php-ext-enable memcached
 </code></pre>
-<pre><code>安装zip扩展所需的依赖扩展
+<pre class="line-numbers"><code>安装zip扩展所需的依赖扩展
 apt-get update &amp;&amp; apt-get install -y zlib1g-dev &amp;&amp; apt-get install -y libzip-dev
 
 安装并启动zip扩展
 docker-php-ext-install zip
+</code></pre>
+<pre class="line-numbers"><code>./configure --prefix=/usr/local/php/php8 \
+     --with-config-file-path=/usr/local/php/php8/etc \
+     --with-config-file-scan-dir=/usr/local/php/php8/etc/conf.d \
+     --enable-bcmath \
+     --with-bz2=/usr/local/opt/bzip2 \
+     --with-curl=/usr/local/opt/curl \
+     --enable-filter \
+     --enable-fpm \
+     --with-gd \
+     --enable-gd-native-ttf \
+     --with-freetype-dir \
+     --with-jpeg-dir \
+     --with-png-dir \
+     --enable-intl \
+     --enable-mbstring \
+     --with-mcrypt \
+     --enable-mysqlnd \
+     --with-mysql-sock=/tmp/mysql.sock \
+     --with-mysqli=mysqlnd \
+     --with-pdo-mysql=mysqlnd \
+     --with-pdo-sqlite \
+     --with-zlib-dir=/usr/local/opt/zlib \
+     --with-iconv=/usr/local/opt/libiconv \
+     --with-icu-dir=/usr/local/opt/icu4c \
+     --disable-phpdbg \
+     --disable-phpdbg-webhelper \
+     --enable-opcache \
+     --with-openssl=/usr/bin/openssl \
+     --enable-simplexml \
+     --with-sqlite3 \
+     --enable-xmlreader \
+     --enable-xmlwriter \
+     --enable-zip \
+     --enable-sockets \
+     --with-xmlrpc
 </code></pre>
 
                         
@@ -879,74 +1001,6 @@ docker-php-ext-install zip
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='Docker.html'>Docker</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16121029199620.html">
-                
-                  <h1>Docker网络</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16121029199620.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/31</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Shell.html'>Shell</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16121005012878.html">
-                
-                  <h1>Dockerfile</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16121005012878.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/31</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Shell.html'>Shell</a></span>
           				   
                     
 
@@ -1038,6 +1092,8 @@ docker-php-ext-install zip
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -1054,6 +1110,18 @@ docker-php-ext-install zip
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -1067,18 +1135,6 @@ docker-php-ext-install zip
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

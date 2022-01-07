@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -178,19 +180,19 @@
 <span id="more"></span><!-- more -->
 <h2><a id="redis%E5%AE%9E%E7%8E%B0%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85" class="anchor" aria-hidden="true" href="#redis%E5%AE%9E%E7%8E%B0%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85"><span class="octicon octicon-link"></span></a>redis实现发布订阅</h2>
 <h3><a id="%E5%8F%91%E5%B8%83%E8%80%85" class="anchor" aria-hidden="true" href="#%E5%8F%91%E5%B8%83%E8%80%85"><span class="octicon octicon-link"></span></a>发布者</h3>
-<pre><code>publish chan message
+<pre class="line-numbers"><code>publish chan message
 </code></pre>
 <blockquote>
 <p>publish 发布消息，chan 通道，向chan通道发布消息，这里的chan和订阅者的ch是相同的，message 是发布的内容。</p>
 </blockquote>
 <h3><a id="%E8%AE%A2%E9%98%85%E8%80%85" class="anchor" aria-hidden="true" href="#%E8%AE%A2%E9%98%85%E8%80%85"><span class="octicon octicon-link"></span></a>订阅者</h3>
-<pre><code># 订阅频道
+<pre class="line-numbers"><code># 订阅频道
 subscribe ch [ch ...]
 </code></pre>
 <blockquote>
 <p>subscribe 订阅，ch相当于频道，也就是发布者, 可以同时订阅多个频道。</p>
 </blockquote>
-<pre><code># 批量订阅，订阅所有moto开头的频道
+<pre class="line-numbers"><code># 批量订阅，订阅所有moto开头的频道
 psubscribe moto*
 </code></pre>
 <blockquote>
@@ -294,6 +296,8 @@ psubscribe moto*
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -310,6 +314,18 @@ psubscribe moto*
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -323,18 +339,6 @@ psubscribe moto*
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -172,7 +174,7 @@
       <div class="article-content">
       <span id="more"></span><!-- more -->
 <h2><a id="nginx%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#nginx%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>Nginx配置</h2>
-<pre><code>#配置上游服务器
+<pre class="line-numbers"><code>#配置上游服务器
 upstream tomcats {
         server 192.168.3.26:8080;
         server 192.168.3.27:8080;
@@ -195,7 +197,7 @@ JMeter是apache的一个基于java的测试工具
 nginx负载均衡默认的策略是轮询
 ##负载均衡之加权轮询
 通过配置权重，来实现轮训，权重越大，被分配流量越多。</p>
-<pre><code>upstream tomcats {
+<pre class="line-numbers"><code>upstream tomcats {
         server 192.168.3.26:8080 weight=1;
         server 192.168.3.27:8080 weight=2;
         server 192.168.3.28:8080 weight=5;
@@ -206,7 +208,7 @@ nginx负载均衡默认的策略是轮询
 <blockquote>
 <p>指配置到上游的每个服务器的最大链接数，根据每个服务器能够承受的最大流量，起到保险丝的作用。默认值是0，代表不做任何限制。1.11.5版本之前只有商业版才能使用。如果是在共享内存使用的话，nginx每个work工作进程都可以使用。</p>
 </blockquote>
-<pre><code>upstream tomcats {
+<pre class="line-numbers"><code>upstream tomcats {
         server 192.168.3.26:8080 max_conns=1;
         server 192.168.3.27:8080 max_conns=2;
         server 192.168.3.28:8080 max_conns=5;
@@ -216,7 +218,7 @@ nginx负载均衡默认的策略是轮询
 <blockquote>
 <p>慢启动，主要用于，当某个服务器加入到集群后，不希望直接加入，需要启动一些软件之后在加入到集群，例如：启动监控服务等。如果该服务器配置的权重是10，设置了该值之后，他会慢慢的将权重加到10，对于hash和random方式的负载均衡是不支持的。对于单个服务器，这个参数是不适用的，需要至少有两个才行。 (商业版才能使用这个参数)</p>
 </blockquote>
-<pre><code>upstream tomcats {
+<pre class="line-numbers"><code>upstream tomcats {
         server 192.168.3.26:8080 weight=6 slow_start=60s;
         server 192.168.3.27:8080 weight=2;
         server 192.168.3.28:8080 weight=2;
@@ -226,7 +228,7 @@ nginx负载均衡默认的策略是轮询
 <blockquote>
 <p>标识服务器为不可用状态。</p>
 </blockquote>
-<pre><code>upstream tomcats {
+<pre class="line-numbers"><code>upstream tomcats {
         server 192.168.3.26:8080 down;
         server 192.168.3.27:8080 weight=2;
         server 192.168.3.28:8080 weight=2;
@@ -236,7 +238,7 @@ nginx负载均衡默认的策略是轮询
 <blockquote>
 <p>标识服务器只有在其他服务器挂掉之后才会启用，相当于备用机。</p>
 </blockquote>
-<pre><code>upstream tomcats {
+<pre class="line-numbers"><code>upstream tomcats {
         server 192.168.3.26:8080 backup;
         server 192.168.3.27:8080 weight=2;
         server 192.168.3.28:8080 weight=2;
@@ -248,7 +250,7 @@ nginx负载均衡默认的策略是轮询
 ###fail_timeout
 配合<code>max_fails</code>参数使用，当请求失败次数达到最大时，在接下来的错误时间段内，请求不会到达这台服务器，等到<code>fail_timeout</code>时间之后，nginx会再次尝试请求这台服务器。</p>
 </blockquote>
-<pre><code>upstream tomcats {
+<pre class="line-numbers"><code>upstream tomcats {
         server 192.168.3.26:8080 max_fails=2 fail_timeout=15s;
         server 192.168.3.27:8080 max_fails=2 fail_timeout=15s;
         server 192.168.3.28:8080 max_fails=2 fail_timeout=15s;
@@ -258,7 +260,7 @@ nginx负载均衡默认的策略是轮询
 <blockquote>
 <p>Keepalive的作用是将链接作为长链接，大大的减少了链接创建和断开时间上的消耗。</p>
 </blockquote>
-<pre><code>upstream tomcats {
+<pre class="line-numbers"><code>upstream tomcats {
         server 192.168.3.26:8080;
         server 192.168.3.27:8080;
         server 192.168.3.28:8080;
@@ -374,6 +376,8 @@ server {
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -390,6 +394,18 @@ server {
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -403,18 +419,6 @@ server {
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -198,7 +200,7 @@ ES 本身不支持中文的分词</p>
 </tr>
 </tbody>
 </table>
-<pre><code>{
+<pre class="line-numbers"><code>{
     &quot;analyzer&quot; : &quot;standard&quot;,
     &quot;text&quot;: &quot;I study ES&quot;
 }
@@ -250,7 +252,7 @@ ES 本身不支持中文的分词</p>
 <p>源码地址：<a href="https://github.com/medcl/elasticsearch-analysis-ik">ik分词器</a></p>
 <h3><a id="ik%E5%88%86%E8%AF%8D%E5%99%A8%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#ik%E5%88%86%E8%AF%8D%E5%99%A8%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>ik分词器安装</h3>
 <p>将下载好的包解压到ES目录下的plugins目录下</p>
-<pre><code>tar -zxvf elasticsearch-analysis-ik-7.10.1.zip -d /usr/local/es/plugins/ik
+<pre class="line-numbers"><code>tar -zxvf elasticsearch-analysis-ik-7.10.1.zip -d /usr/local/es/plugins/ik
 </code></pre>
 <p>然后重新启动ES即可。</p>
 <h3><a id="ik%E5%88%86%E8%AF%8D%E5%99%A8%EF%BC%88%E6%9D%A5%E8%87%AAgithub%E8%AF%B4%E6%98%8E%EF%BC%89" class="anchor" aria-hidden="true" href="#ik%E5%88%86%E8%AF%8D%E5%99%A8%EF%BC%88%E6%9D%A5%E8%87%AAgithub%E8%AF%B4%E6%98%8E%EF%BC%89"><span class="octicon octicon-link"></span></a>ik分词器（来自GitHub说明）</h3>
@@ -265,7 +267,7 @@ ik分词器已经有了自定义分词库的方法，按照文档上描述操作
 <h3><a id="%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95" class="anchor" aria-hidden="true" href="#%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95"><span class="octicon octicon-link"></span></a>操作方法</h3>
 <p>找到ik插件下，config目录下的：IKAnalyzer.cfg.xml配置文件
 编辑如下配置：</p>
-<pre><code>&lt;!DOCTYPE properties SYSTEM &quot;http://java.sun.com/dtd/properties.dtd&quot;&gt;
+<pre class="line-numbers"><code>&lt;!DOCTYPE properties SYSTEM &quot;http://java.sun.com/dtd/properties.dtd&quot;&gt;
 &lt;properties&gt;
         &lt;comment&gt;IK Analyzer 扩展配置&lt;/comment&gt;
         &lt;!--用户可以在这里配置自己的扩展字典 --&gt;
@@ -377,6 +379,8 @@ ik分词器已经有了自定义分词库的方法，按照文档上描述操作
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -393,6 +397,18 @@ ik分词器已经有了自定义分词库的方法，按照文档上描述操作
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -406,18 +422,6 @@ ik分词器已经有了自定义分词库的方法，按照文档上描述操作
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  

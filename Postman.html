@@ -128,6 +128,8 @@
             <li><a href="Sublime.html">Sublime</a></li>
         
             <li><a href="PhpStorm.html">PhpStorm</a></li>
+        
+            <li><a href="ClickHouse.html">ClickHouse</a></li>
          
 
       </ul>
@@ -158,12 +160,12 @@
                       <div class="a-content-text">
                         
                         	<h2><a id="%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3" class="anchor" aria-hidden="true" href="#%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3"><span class="octicon octicon-link"></span></a>后端接口</h2>
-<pre><code>public function store(Request $request){
+<pre class="line-numbers"><code>public function store(Request $request){
     return Formater::ajaxReturn(0, 'success',['csrf_token'=&gt;csrf_token()]);
 }
 </code></pre>
 <h2><a id="%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC" class="anchor" aria-hidden="true" href="#%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC"><span class="octicon octicon-link"></span></a>预处理脚本</h2>
-<pre><code>var host = pm.environment.get(&quot;URL&quot;);
+<pre class="line-numbers"><code>var host = pm.environment.get(&quot;URL&quot;);
 
 pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (err, response) {
     if (response.code === 200) {
@@ -209,7 +211,7 @@ pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (
                       
                       <div class="a-content-text">
                         
-                        	<pre><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
+                        	<pre class="line-numbers"><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
 var token = &quot;lBZXpB5uRw5M&quot;;
 var timestamps = pm.environment.get(&quot;timestamps&quot;);
 
@@ -357,6 +359,8 @@ console.log(str);
             <a href="Sublime.html"><strong>Sublime</strong></a>
         
             <a href="PhpStorm.html"><strong>PhpStorm</strong></a>
+        
+            <a href="ClickHouse.html"><strong>ClickHouse</strong></a>
          
         </p>
 
@@ -373,6 +377,18 @@ console.log(str);
 	      
 		      
 			      <li class="post">
+			        <a href="16415257910695.html">MySQL索引原理以及查询优化</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16395498007523.html">ClickHouse日常使用记录</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16370681631438.html">Xdebug配置</a>
 			      </li>
 		     
@@ -386,18 +402,6 @@ console.log(str);
 		      
 			      <li class="post">
 			        <a href="16353903707629.html">POSTMAN自动获取laravel csrf</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16346556525274.html">2021-10-19 企业微信授权：redirect_uri unauthorized</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16342012831501.html">POSTMAN自动生成签名</a>
 			      </li>
 		     
 		  
