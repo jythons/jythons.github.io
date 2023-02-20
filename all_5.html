@@ -54,7 +54,7 @@
         
         <li id=""><a target="_self" href="mq.html">MQ</a></li>
         
-        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        <li id=""><a target="_self" href="机器学习.html">机器学习</a></li>
         
         </ul>
 
@@ -97,7 +97,7 @@
         
         <li><a target="_self" href="mq.html">MQ</a></li>
         
-        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        <li><a target="_self" href="机器学习.html">机器学习</a></li>
         
 
     <li><label>Categories</label></li>
@@ -138,6 +138,8 @@
             <li><a href="Nodejs.html">Nodejs</a></li>
         
             <li><a href="Git.html">Git</a></li>
+        
+            <li><a href="%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0.html">机器学习</a></li>
          
 
       </ul>
@@ -159,6 +161,293 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="16113278876159.html">
+                
+                  <h1>ES集群</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="1%E9%9B%86%E7%BE%A4%E7%9A%84%E6%A6%82%E5%BF%B5" class="anchor" aria-hidden="true" href="#1%E9%9B%86%E7%BE%A4%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="octicon octicon-link"></span></a>1 集群的概念</h2>
+<blockquote>
+<p>ES 集群中主分片和副本分片是不能放到同一个服务器中的。这样可以保证主分片挂掉之后，数据依然可用。</p>
+</blockquote>
+<p><img src="media/16113278876159/ES%E9%9B%86%E7%BE%A4%E6%A6%82%E5%BF%B5.png" alt="ES集群概念" /></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16113278876159.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2021/01/22</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16111534541333.html">
+                
+                  <h1>ES查询 - 批量操作</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>使用id查询单条记录的方式，如果要查询n次，我们就要调用n次查询接口，这样做会对资源造成浪费，因此ES提供了批量查询的方法。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16111534541333.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2021/01/20</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16111512182369.html">
+                
+                  <h1>ES 深度分页</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>正常的使用from和size去分页查询的时候，from+size的结果要小于10000，因为ES内部考虑到性能的因素，对此做了限制。
+ES在查询数据的时候，例如获取9999-10009的数据时，他的from=9999，size=10，假如有3个shard，每个shard有10W条数据，他会从每个shard获取10009条数据，合成一个结果集，在从这个结果集中取10条数据，剩下的30017条数据就会丢弃，这么做的缺点会造成资源和性能的浪费。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16111512182369.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2021/01/20</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16105497801984.html">
+                
+                  <h1>ES dsl搜索</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16105497801984.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2021/01/13</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16103794709126.html">
+                
+                  <h1>ES 分词与内置分词器</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<blockquote>
+<p>分词就是将一段文字进行切分，将里面的词汇提取出来，这个过程就是分词。
+ES 本身不支持中文的分词</p>
+</blockquote>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16103794709126.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2021/01/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16103778537691.html">
+                
+                  <h1>ES文档的乐观锁控制</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<blockquote>
+<p>文档的乐观锁，文档数据内有很多的源数据，其中_version就是用来控制文档的乐观锁的，如果文档被删除或者修改，他的_version会累加，如果有多个线程或用户同时去更新同一个数据，ES会判断数据的版本号，如果版本号匹配，则可以更新，如果版本号不匹配，就不允许更新。</p>
+</blockquote>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16103778537691.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2021/01/11</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16093421785520.html">
+                
+                  <h1>ES数据类型</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16093421785520.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2020/12/30</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16093414600296.html">
+                
+                  <h1>ES基本操作</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16093414600296.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2020/12/30</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="16090525942611.html">
                 
@@ -215,336 +504,6 @@
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='ES.html'>ES</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16073547198404.html">
-                
-                  <h1>SpringBoot使用模版</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>SpringBoot使用html模版，Controller需要使用注解：@Controller</p>
-<h2><a id="pom%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#pom%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>pom配置</h2>
-<pre class="line-numbers"><code>&lt;dependency&gt;
-	  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-	  &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
-<h2><a id="yml%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#yml%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>yml配置</h2>
-<pre class="line-numbers"><code>spring:
-    thymeleaf:
-    mode: HTML
-    encoding: UTF-8
-    prefix: classpath:/templates/
-    suffix: .html
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2020/12/07</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16073519255991.html">
-                
-                  <h1>SpringBoot会话拦截器</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>会话拦截器，用于在请求一些接口之前，统一去拦截请求，进行验证等操作。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16073519255991.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/12/07</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16073500415348.html">
-                
-                  <h1>SpringSession yml配置</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>使用SpringSession，需要先引入依赖，查看Maven Dependency Spring Session, 目前都是使用分布式的方式部署，因此使用redis会好一点。</p>
-<h2><a id="application%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#application%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>Application配置</h2>
-<pre class="line-numbers"><code>spring:
-    session:
-        store-type: redis
-</code></pre>
-<h2><a id="%E9%85%8D%E7%BD%AE%E5%90%AF%E5%8A%A8" class="anchor" aria-hidden="true" href="#%E9%85%8D%E7%BD%AE%E5%90%AF%E5%8A%A8"><span class="octicon octicon-link"></span></a>配置启动</h2>
-<p>在启动类里面配置启动</p>
-<pre class="line-numbers"><code>// 开启使用redis作为Spring Session
-@EnableRedisHttpSession
-</code></pre>
-<h2><a id="%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="octicon octicon-link"></span></a>使用方法</h2>
-<pre class="line-numbers"><code>public Object setSession(HttpServletRequest request) {
-    HttpSession session = request.getSession();
-    session.setAttribute(&quot;userInfo&quot;, &quot;XXX&quot;);
-    session.setMaxInactiveInterval(3600);
-    session.getAttribute(&quot;userInfo);
-    session.removeAttribute(&quot;userInfo&quot;);
-}
-</code></pre>
-<blockquote>
-<p>因为使用Spring Session，需要安装Spring安全框架依赖，因为安装了这个依赖后，程序每次访问都需要登录，很麻烦，因此在启动类将它排除即可。排除方法见下方：</p>
-</blockquote>
-<pre class="line-numbers"><code>@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2020/12/07</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16073491976884.html">
-                
-                  <h1>Maven Dependency</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16073491976884.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/12/07</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16068348833531.html">
-                
-                  <h1>缓存雪崩预防</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>当缓存大面积失效，请求会全部打到数据库上，这种情况就是雪崩。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16068348833531.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/12/01</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Redis.html'>Redis</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16067500364861.html">
-                
-                  <h1>SpringBoot集成Redis集群</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16067500364861.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/11/30</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16067481675978.html">
-                
-                  <h1>Redis-Cluster集群</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2><a id="%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>集群配置</h2>
-<p>打开redis配置文件，找到 REDIS CLUSTER 配置块。修改以下配置：</p>
-<pre class="line-numbers"><code># 开启redis-cluster集群配置
-cluster-enabled yes
-# 每一个节点在集群中的配置文件, 该文件有redis自己去维护 
-cluster-config-file nodes-6379.conf
-# 超时时间，超时自动切换
-cluster-node-timeout 5000
-# aof模式
-appendonly yes
-# aof日志文件名
-appendfilename &quot;appendonly.aof&quot;
-</code></pre>
-<blockquote>
-<p>构建集群时，需要将.rdb文件和.aof文件删除或者清空，否则会报错。</p>
-</blockquote>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16067481675978.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/11/30</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Redis.html'>Redis</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16067477234035.html">
-                
-                  <h1>SpringBoot集成Redis哨兵</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16067477234035.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/11/30</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
           				   
                     
 
@@ -646,6 +605,8 @@ appendfilename &quot;appendonly.aof&quot;
             <a href="Nodejs.html"><strong>Nodejs</strong></a>
         
             <a href="Git.html"><strong>Git</strong></a>
+        
+            <a href="%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0.html"><strong>机器学习</strong></a>
          
         </p>
 
@@ -662,31 +623,31 @@ appendfilename &quot;appendonly.aof&quot;
 	      
 		      
 			      <li class="post">
-			        <a href="16602701188846.html">不保留本地修改</a>
+			        <a href="16762508531479.html">分类问题求解（逻辑回归）</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16576035901040.html">Npm源修改</a>
+			        <a href="16753064247480.html">线性回归问题求解</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16575934400731.html">Laravel动态创建表</a>
+			        <a href="16740299909794.html">Jupyter 开启代码提示</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16570024842451.html">跨域</a>
+			        <a href="16740290336448.html">开发工具使用中异常解决</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16569086965834.html">生成本地ssl签名工具：mkcert</a>
+			        <a href="16715444528067.html">机器学习入门</a>
 			      </li>
 		     
 		  

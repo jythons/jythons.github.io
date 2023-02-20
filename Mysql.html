@@ -54,7 +54,7 @@
         
         <li id=""><a target="_self" href="mq.html">MQ</a></li>
         
-        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        <li id=""><a target="_self" href="机器学习.html">机器学习</a></li>
         
         </ul>
 
@@ -97,7 +97,7 @@
         
         <li><a target="_self" href="mq.html">MQ</a></li>
         
-        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        <li><a target="_self" href="机器学习.html">机器学习</a></li>
         
 
     <li><label>Categories</label></li>
@@ -138,6 +138,8 @@
             <li><a href="Nodejs.html">Nodejs</a></li>
         
             <li><a href="Git.html">Git</a></li>
+        
+            <li><a href="%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0.html">机器学习</a></li>
          
 
       </ul>
@@ -159,6 +161,124 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="16643679322289.html">
+                
+                  <h1>位图记录的数据，统计每个位上的数据</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16643679322289.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/09/28</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Mysql.html'>Mysql</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16636626054103.html">
+                
+                  <h1>解决mysql没有root用户问题</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>先说这个问题产生的影响，这个跟解题有关，有必要说明，我的user表没有任何一个用户，包括root，所以一开始我要给权限，方便后续操作：</p>
+<pre class="line-numbers"><code>vim /etc/my.cnf
+skip-grant-tables     #在[mysqld]下面添加这一行，忽略权限表
+</code></pre>
+<p>然后重启mysql：</p>
+<pre class="line-numbers"><code>/etc/init.d/mysqld restart
+</code></pre>
+<p>先说解决步骤：<br />
+1.创建root用户<br />
+2.给予root所有权限<br />
+过程：<br />
+1.创建root用户：</p>
+<pre class="line-numbers"><code>create user 'root'@'localhost' identified by '123457';
+</code></pre>
+<p>localhost表示本地，mysql登入的时候，不用指定ip登入</p>
+<p>此步骤可能会报以下错误，没报错的跳过（直接到权限那一步），用一下方法解决：</p>
+<pre class="line-numbers"><code>ERROR 1290 (HY000): The MySQL server is running with the --skip-grant-tables option so it cannot execute this statement
+</code></pre>
+<p>输入：</p>
+<pre class="line-numbers"><code>flush privileges；
+</code></pre>
+<p>此时再次重新创建用户：</p>
+<pre class="line-numbers"><code>create user 'root'@'localhost' identified by '123457';
+</code></pre>
+<p>如果再次报错，这步没报错的也是直接跳到赋予权限那一步，报错的以下操作：</p>
+<pre class="line-numbers"><code>drop user 'root'@'localhost';
+</code></pre>
+<p>再次重新创建用户：</p>
+<pre class="line-numbers"><code>create user 'root'@'localhost' identified by '123457';
+</code></pre>
+<p>结果没有再报错，root用户创建成功。
+下面赋予root权限：</p>
+<pre class="line-numbers"><code>#赋予所有库所有表操作权限
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
+ 
+flush privileges;
+ 
+exit
+</code></pre>
+<p>到这一步没有报错，表明已经成功了，不过要把最开始的配置文件恢复：</p>
+<pre class="line-numbers"><code>#删除配置文件中的
+vim /etc/my.cnf
+skip-grant-tables
+</code></pre>
+<p>退出，重启mysql：</p>
+<pre class="line-numbers"><code>/etc/init.d/mysqld restart
+</code></pre>
+<p>最后，测试：</p>
+<pre class="line-numbers"><code>mysql -uroot -p123457   #可以登入的话，表示前面的操作没问题
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2022/09/20</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Mysql.html'>Mysql</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="16468191777738.html">
                 
@@ -466,6 +586,8 @@ service mysqld start
             <a href="Nodejs.html"><strong>Nodejs</strong></a>
         
             <a href="Git.html"><strong>Git</strong></a>
+        
+            <a href="%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0.html"><strong>机器学习</strong></a>
          
         </p>
 
@@ -482,31 +604,31 @@ service mysqld start
 	      
 		      
 			      <li class="post">
-			        <a href="16602701188846.html">不保留本地修改</a>
+			        <a href="16762508531479.html">分类问题求解（逻辑回归）</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16576035901040.html">Npm源修改</a>
+			        <a href="16753064247480.html">线性回归问题求解</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16575934400731.html">Laravel动态创建表</a>
+			        <a href="16740299909794.html">Jupyter 开启代码提示</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16570024842451.html">跨域</a>
+			        <a href="16740290336448.html">开发工具使用中异常解决</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16569086965834.html">生成本地ssl签名工具：mkcert</a>
+			        <a href="16715444528067.html">机器学习入门</a>
 			      </li>
 		     
 		  

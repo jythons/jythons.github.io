@@ -54,7 +54,7 @@
         
         <li id=""><a target="_self" href="mq.html">MQ</a></li>
         
-        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        <li id=""><a target="_self" href="机器学习.html">机器学习</a></li>
         
         </ul>
 
@@ -97,7 +97,7 @@
         
         <li><a target="_self" href="mq.html">MQ</a></li>
         
-        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        <li><a target="_self" href="机器学习.html">机器学习</a></li>
         
 
     <li><label>Categories</label></li>
@@ -138,6 +138,8 @@
             <li><a href="Nodejs.html">Nodejs</a></li>
         
             <li><a href="Git.html">Git</a></li>
+        
+            <li><a href="%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0.html">机器学习</a></li>
          
 
       </ul>
@@ -159,6 +161,538 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="16370681631438.html">
+                
+                  <h1>Xdebug配置</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="1%E8%83%8C%E6%99%AF" class="anchor" aria-hidden="true" href="#1%E8%83%8C%E6%99%AF"><span class="octicon octicon-link"></span></a>1.背景</h2>
+<p>在不使用xdebug调试代码时，遇到报错，有时需要在代码内主动打印，来定位问题。这样做效率慢，并且在调试完很容易漏删测试代码。为了提高排查问题效率，使用xdebug来调试代码问题，像idea调试java代码一样。下面介绍一下如何配置xdebug，实现远程调试php代码。<br />
+我的环境是使用的docker来部署的代码。在宿主机远程调试docker内的代码。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16370681631438.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2021/11/16</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='PHP.html'>PHP</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16369427253226.html">
+                
+                  <h1>Sublime插件之ctags</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E7%AE%80%E4%BB%8B" class="anchor" aria-hidden="true" href="#%E7%AE%80%E4%BB%8B"><span class="octicon octicon-link"></span></a>简介</h2>
+<p>ctags插件用于实现代码跳转跟踪，用来调试代码。</p>
+<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
+<p><strong>第一步：</strong><br />
+mac下安装：<code>brew install ctags</code></p>
+<p><strong>第二步：</strong><br />
+打开菜单在Preferences菜单中打开Package settings-&gt;ctags-&gt;settings-user和settings-default把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径,即ctags路径</p>
+<p><strong>第三步：</strong><br />
+配置快捷键：配置在sublime中使用Ctrl+左键单击函数跳转、Ctrl+右键单击跳回函数调用位置
+复制以下代码到 Preferences-&gt;Package Settings-&gt;Ctags-&gt;Mouse Bindings-User</p>
+<pre class="line-numbers"><code class="language-json">[
+    {
+        &quot;button&quot;: &quot;button1&quot;,
+        &quot;count&quot;: 1,
+        &quot;press_command&quot;: &quot;drag_select&quot;,
+        &quot;modifiers&quot;: [&quot;ctrl&quot;],
+        &quot;command&quot;: &quot;navigate_to_definition&quot;
+    },
+    {
+        &quot;button&quot;: &quot;button2&quot;,
+        &quot;count&quot;: 1,
+        &quot;modifiers&quot;: [&quot;ctrl&quot;],
+        &quot;command&quot;: &quot;jump_prev&quot;
+    }
+]
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2021/11/15</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Sublime.html'>Sublime</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16353903707629.html">
+                
+                  <h1>POSTMAN自动获取laravel csrf</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3" class="anchor" aria-hidden="true" href="#%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3"><span class="octicon octicon-link"></span></a>后端接口</h2>
+<pre class="line-numbers"><code>public function store(Request $request){
+    return Formater::ajaxReturn(0, 'success',['csrf_token'=&gt;csrf_token()]);
+}
+</code></pre>
+<h2><a id="%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC" class="anchor" aria-hidden="true" href="#%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC"><span class="octicon octicon-link"></span></a>预处理脚本</h2>
+<pre class="line-numbers"><code>var host = pm.environment.get(&quot;URL&quot;);
+
+pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (err, response) {
+    if (response.code === 200) {
+        console.log(response.json());
+        var res = response.json();
+        var csrf_token = res.data.csrf_token;
+
+        pm.environment.set(&quot;csrf_token&quot;, csrf_token);
+    }
+});
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2021/10/28</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Postman.html'>Postman</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16346556525274.html">
+                
+                  <h1>2021-10-19 企业微信授权：redirect_uri unauthorized</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>今天在调试企业微信授权的时候，在授权后获取用户信息的时候，报错:<code>Failed to get user openid:redirect_uri unauthorized</code></p>
+<p>官方显示该错误是因为回调地址域名，没有添加到可信域名当中。但是已经检查多次，已经添加了，又折腾了半天，在官网问答页面看到了相似的问题，官方回复说是获取access_token的secret不是获取用户信息的应用的，但是检查数据库内的secret，发现是正确的。</p>
+<p>后来猜测可能是缓存的数据没有变，改代码，临时关闭缓存，测试通过。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2021/10/19</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html'>每日总结</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16342012831501.html">
+                
+                  <h1>POSTMAN自动生成签名</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<pre class="line-numbers"><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
+var token = &quot;lBZXpB5uRw5M&quot;;
+var timestamps = pm.environment.get(&quot;timestamps&quot;);
+
+var data = request.data; //获取请求参数，转为json
+console.log(&quot;data:&quot;, data)
+var newdata = [];
+newdata.push({
+            name: 'timestamp',
+            value: timestamps
+        })
+for (var a in data) {
+    if (a !== 'sign' &amp;&amp; a !== 'timestamp') { //过滤掉sign参数，生成键值对象{name,value}
+        newdata.push({
+            name: a,
+            value: data[a]
+        })
+    }
+}
+//排序
+newdata.sort(function (a, b) {
+    return a.name === b.name ? 0 : a.name &gt; b.name ? 1 : -1
+});
+//拼接字符串
+for (var ar = [], i = 0; newdata.length &gt; i; i++) {
+    var key = newdata[i].name;
+    var val = newdata[i].value;
+    if(key == 'name'){
+        val = encodeURIComponent(newdata[i].value);
+    }
+    
+    key &amp;&amp; val &amp;&amp; ar.push(key + &quot;=&quot; + val)
+}
+
+str = ar.join(&quot;&amp;&quot;); //拼接字符串
+str = str+token
+// str = encodeURIComponent(str);
+console.log(str);
+
+str = CryptoJS.MD5(str).toString().toLowerCase(); //md5加密后转大写
+pm.environment.set(&quot;sign&quot;, str);  //把sign设置为环境变量
+console.log(str);
+
+
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2021/10/14</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Postman.html'>Postman</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16279600005409.html">
+                
+                  <h1>MYSQL表设计规范</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16279600005409.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2021/08/03</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Mysql.html'>Mysql</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16176799000056.html">
+                
+                  <h1>Nginx+php Docker-compose</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<pre class="line-numbers"><code>version: &quot;2.1&quot;
+services:
+  nginx:
+    image: nginx
+    ports:
+      - &quot;80:80&quot;
+    volumes:
+      - ~/kelala/nginx/www:/usr/share/nginx/html
+      - ~/kelala/nginx/conf:/etc/nginx/conf.d
+      - ~/kelala/nginx/logs:/var/log/nginx
+    networks:
+      - lnmp-network
+  php:
+    image: php:7.3-fpm
+    volumes:
+      - ~/kelala/nginx/www:/usr/share/nginx/html
+    networks:
+      - lnmp-network
+networks:
+  lnmp-network:
+</code></pre>
+<h2><a id="nginx%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#nginx%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>nginx 配置</h2>
+<pre class="line-numbers"><code>server {
+    listen       80;
+    server_name  hdcrmlocal.kerlala.com;
+    root   /usr/share/nginx/html/hdcrm.kerlala.com/public/;
+    index  index.html index.htm index.php;
+
+    location / {
+        
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    #error_page   500 502 503 504  /50x.html;
+    #location = /50x.html {
+    #    root   /usr/share/nginx/html;
+    #}
+
+    location ~ \.php$ {
+        root           /usr/share/nginx/html/hdcrm.kerlala.com/public/;
+        fastcgi_pass   172.19.0.3:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+}
+
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2021/04/06</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Docker.html'>Docker</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16176785301116.html">
+                
+                  <h1>Docker PHP环境搭建</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>拉取PHP镜像</h2>
+<pre class="line-numbers"><code>docker pull php:7.3-fpm
+</code></pre>
+<h2><a id="%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95"><span class="octicon octicon-link"></span></a>安装拓展</h2>
+<p>docker容器内安装php拓展使用如下命令进行安装</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>docker-php-ext-source</td>
+<td>在容器中创建一个/usr/src/php目录</td>
+</tr>
+<tr>
+<td>docker-php-ext-enable</td>
+<td>启用PHP扩展，省去我们手工编辑php.ini的过程</td>
+</tr>
+<tr>
+<td>docker-php-ext-install</td>
+<td>安装并启用PHP扩展</td>
+</tr>
+<tr>
+<td>docker-php-ext-configure</td>
+<td>经常与docker-php-ext-install搭配，在需要自定义扩展的配置时使用</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>例如：安装pdo拓展，使用如下命令即可</p>
+</blockquote>
+<pre class="line-numbers"><code>docker-php-ext-install pdo
+</code></pre>
+<blockquote>
+<p>有些拓展使用 <code>docker-php-ext-install</code> 命令不能安装，可以使用pecl工具进行安装，当装好php的容器之后，容器内已经安装好了pecl工具，所以直接拿来使用即可。使用方法如下：</p>
+</blockquote>
+<pre class="line-numbers"><code>例如安装php的memcached拓展
+1.首先更新源
+apt-get update
+2.安装所需依赖
+apt-get install -y libmemcached-dev zlib1g-dev
+3.安装memcached拓展
+pecl install memcached
+4.启用拓展
+docker-php-ext-enable memcached
+
+安装gd库拓展
+1.首先更新源
+apt-get update
+2.安装所需依赖
+apt-get install -y libwebp-dev libjpeg-dev libpng-dev libfreetype6-dev
+3.安装拓展
+docker-php-ext-install gd 
+
+docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/  \
+  &amp;&amp; docker-php-ext-install -j$(nproc) gd iconv mcrypt
+</code></pre>
+<blockquote>
+<p>安装GD库还是报错：docker-php-ext-configure gd --with-webp=/usr/include/webp --with-jpeg=/usr/include --with-freetype=/usr/include/freetype2/</p>
+</blockquote>
+<blockquote>
+<p>也可以编写一个DockerFile，加入如下命令：</p>
+</blockquote>
+<pre class="line-numbers"><code>FROM php:7.1-fpm
+RUN apt-get update \
+	# 手动安装依赖
+	&amp;&amp; apt-get install -y libmemcached-dev zlib1g-dev \
+	# 安装需要的扩展
+   &amp;&amp; pecl install memcached-2.2.0 \
+   # 启用扩展
+   &amp;&amp; docker-php-ext-enable memcached
+</code></pre>
+<pre class="line-numbers"><code>安装zip扩展所需的依赖扩展
+apt-get update &amp;&amp; apt-get install -y zlib1g-dev &amp;&amp; apt-get install -y libzip-dev
+
+安装并启动zip扩展
+docker-php-ext-install zip
+</code></pre>
+<pre class="line-numbers"><code>./configure --prefix=/usr/local/php/php8 \
+     --with-config-file-path=/usr/local/php/php8/etc \
+     --with-config-file-scan-dir=/usr/local/php/php8/etc/conf.d \
+     --enable-bcmath \
+     --with-bz2=/usr/local/opt/bzip2 \
+     --with-curl=/usr/local/opt/curl \
+     --enable-filter \
+     --enable-fpm \
+     --with-gd \
+     --enable-gd-native-ttf \
+     --with-freetype-dir \
+     --with-jpeg-dir \
+     --with-png-dir \
+     --enable-intl \
+     --enable-mbstring \
+     --with-mcrypt \
+     --enable-mysqlnd \
+     --with-mysql-sock=/tmp/mysql.sock \
+     --with-mysqli=mysqlnd \
+     --with-pdo-mysql=mysqlnd \
+     --with-pdo-sqlite \
+     --with-zlib-dir=/usr/local/opt/zlib \
+     --with-iconv=/usr/local/opt/libiconv \
+     --with-icu-dir=/usr/local/opt/icu4c \
+     --disable-phpdbg \
+     --disable-phpdbg-webhelper \
+     --enable-opcache \
+     --with-openssl=/usr/bin/openssl \
+     --enable-simplexml \
+     --with-sqlite3 \
+     --enable-xmlreader \
+     --enable-xmlwriter \
+     --enable-zip \
+     --enable-sockets \
+     --with-xmlrpc
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2021/04/06</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Docker.html'>Docker</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="16121029199620.html">
                 
@@ -213,282 +747,6 @@
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='Shell.html'>Shell</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16120880849201.html">
-                
-                  <h1>Docker 环境搭建</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16120880849201.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/31</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Shell.html'>Shell</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16120805268878.html">
-                
-                  <h1>Docker 基本使用</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16120805268878.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/31</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Shell.html'>Shell</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16116746644581.html">
-                
-                  <h1>RabbitMQ安装</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16116746644581.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/26</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='MQ.html'>MQ</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16115835473812.html">
-                
-                  <h1>RabbitMQ</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据，RabbitMQ是使用Erlang语言来编写的，并且RabbitMQ是基于AMQP协议的。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16115835473812.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/25</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='MQ.html'>MQ</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16115028294909.html">
-                
-                  <h1>Kafka介绍与高性能分析</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>Kafka是LinkedIn开源的分布式消息系统，目前归属于Apache顶级项目，Kafka主要特点是基于Pull的模式来处理消息消费，追求高吞吐量，一开始的目的就是用于日志收集和传输。
-Kafka0.8版本开始支持复制，不支持事务，对消息的重复、丢失、错误没有严格要求，适合产生大量数据的互联网服务的数据收集业务。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16115028294909.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/24</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='MQ.html'>MQ</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16114984325290.html">
-                
-                  <h1>RabbitMQ集群架构模型和原理解析</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16114984325290.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/24</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='MQ.html'>MQ</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16114877964866.html">
-                
-                  <h1>分布式消息队列（MQ）</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16114877964866.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/24</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='MQ.html'>MQ</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16114678960162.html">
-                
-                  <h1>Logstatsh</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<p>logstash主要是用于数据库的数据采集、转换、充实，然后输出到ES。</p>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16114678960162.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/24</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='ES.html'>ES</a></span>
           				   
                     
 
@@ -590,6 +848,8 @@ Kafka0.8版本开始支持复制，不支持事务，对消息的重复、丢失
             <a href="Nodejs.html"><strong>Nodejs</strong></a>
         
             <a href="Git.html"><strong>Git</strong></a>
+        
+            <a href="%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0.html"><strong>机器学习</strong></a>
          
         </p>
 
@@ -606,31 +866,31 @@ Kafka0.8版本开始支持复制，不支持事务，对消息的重复、丢失
 	      
 		      
 			      <li class="post">
-			        <a href="16602701188846.html">不保留本地修改</a>
+			        <a href="16762508531479.html">分类问题求解（逻辑回归）</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16576035901040.html">Npm源修改</a>
+			        <a href="16753064247480.html">线性回归问题求解</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16575934400731.html">Laravel动态创建表</a>
+			        <a href="16740299909794.html">Jupyter 开启代码提示</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16570024842451.html">跨域</a>
+			        <a href="16740290336448.html">开发工具使用中异常解决</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16569086965834.html">生成本地ssl签名工具：mkcert</a>
+			        <a href="16715444528067.html">机器学习入门</a>
 			      </li>
 		     
 		  

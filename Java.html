@@ -54,7 +54,7 @@
         
         <li id=""><a target="_self" href="mq.html">MQ</a></li>
         
-        <li id=""><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        <li id=""><a target="_self" href="机器学习.html">机器学习</a></li>
         
         </ul>
 
@@ -97,7 +97,7 @@
         
         <li><a target="_self" href="mq.html">MQ</a></li>
         
-        <li><a target="_self" href="phpstorm.html">PhpStorm</a></li>
+        <li><a target="_self" href="机器学习.html">机器学习</a></li>
         
 
     <li><label>Categories</label></li>
@@ -138,6 +138,8 @@
             <li><a href="Nodejs.html">Nodejs</a></li>
         
             <li><a href="Git.html">Git</a></li>
+        
+            <li><a href="%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0.html">机器学习</a></li>
          
 
       </ul>
@@ -159,6 +161,194 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="16672900560432.html">
+                
+                  <h1>MySQL类型与Java类型对应转换</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p><a href="https://blog.csdn.net/java_2017_csdn/article/details/80910223">https://blog.csdn.net/java_2017_csdn/article/details/80910223</a></p>
+<table>
+<thead>
+<tr>
+<th>类型名称</th>
+<th>显示长度</th>
+<th>数据库类型</th>
+<th>JAVA类型</th>
+<th>JDBC类型索引（int）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VARCHAR</td>
+<td>L+N</td>
+<td>VARCHAR</td>
+<td>java.lang.String</td>
+<td>12</td>
+</tr>
+<tr>
+<td>CHAR</td>
+<td>N</td>
+<td>CHAR</td>
+<td>java.lang.String</td>
+<td>1</td>
+</tr>
+<tr>
+<td>BLOB</td>
+<td>L+N</td>
+<td>BLOB</td>
+<td>java.lang.byte[]</td>
+<td>-4</td>
+</tr>
+<tr>
+<td>TEXT</td>
+<td>65535</td>
+<td>VARCHAR</td>
+<td>java.lang.String</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>INTEGER</td>
+<td>4</td>
+<td>INTEGER UNSIGNED</td>
+<td>java.lang.Long</td>
+<td>4</td>
+</tr>
+<tr>
+<td>TINYINT</td>
+<td>3</td>
+<td>TINYINT UNSIGNED</td>
+<td>java.lang.Integer</td>
+<td>-6</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>5</td>
+<td>SMALLINT UNSIGNED</td>
+<td>java.lang.Integer</td>
+<td>5</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>8</td>
+<td>MEDIUMINT UNSIGNED</td>
+<td>java.lang.Integer</td>
+<td>4</td>
+</tr>
+<tr>
+<td>BIT</td>
+<td>1</td>
+<td>BIT</td>
+<td>java.lang.Boolean</td>
+<td>-7</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>20</td>
+<td>BIGINT UNSIGNED</td>
+<td>java.math.BigInteger</td>
+<td>-5</td>
+</tr>
+<tr>
+<td>FLOAT</td>
+<td>4+8</td>
+<td>FLOAT</td>
+<td>java.lang.Float</td>
+<td>7</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>22</td>
+<td>DOUBLE</td>
+<td>java.lang.Double</td>
+<td>8</td>
+</tr>
+<tr>
+<td>DECIMAL</td>
+<td>11</td>
+<td>DECIMAL</td>
+<td>java.math.BigDecimal</td>
+<td>3</td>
+</tr>
+<tr>
+<td>BOOLEAN</td>
+<td>1</td>
+<td>同TINYINT</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ID</td>
+<td>11</td>
+<td>PK (INTEGER UNSIGNED)</td>
+<td>java.lang.Long</td>
+<td>4</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>10</td>
+<td>DATE</td>
+<td>java.sql.Date</td>
+<td>91</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>8</td>
+<td>TIME</td>
+<td>java.sql.Time</td>
+<td>92</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>19</td>
+<td>DATETIME</td>
+<td>java.sql.Timestamp</td>
+<td>93</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>19</td>
+<td>TIMESTAMP</td>
+<td>java.sql.Timestamp</td>
+<td>93</td>
+</tr>
+<tr>
+<td>YEAR</td>
+<td>4</td>
+<td>YEAR</td>
+<td>java.sql.Date</td>
+<td>91</td>
+</tr>
+</tbody>
+</table>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2022/11/01</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="16561693995402.html">
                 
@@ -551,40 +741,6 @@ export PATH=${JAVA_HOME}/bin:$PATH
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="16067500364861.html">
-                
-                  <h1>SpringBoot集成Redis集群</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16067500364861.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2020/11/30</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -672,6 +828,8 @@ export PATH=${JAVA_HOME}/bin:$PATH
             <a href="Nodejs.html"><strong>Nodejs</strong></a>
         
             <a href="Git.html"><strong>Git</strong></a>
+        
+            <a href="%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0.html"><strong>机器学习</strong></a>
          
         </p>
 
@@ -688,31 +846,31 @@ export PATH=${JAVA_HOME}/bin:$PATH
 	      
 		      
 			      <li class="post">
-			        <a href="16602701188846.html">不保留本地修改</a>
+			        <a href="16762508531479.html">分类问题求解（逻辑回归）</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16576035901040.html">Npm源修改</a>
+			        <a href="16753064247480.html">线性回归问题求解</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16575934400731.html">Laravel动态创建表</a>
+			        <a href="16740299909794.html">Jupyter 开启代码提示</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16570024842451.html">跨域</a>
+			        <a href="16740290336448.html">开发工具使用中异常解决</a>
 			      </li>
 		     
 		  
 		      
 			      <li class="post">
-			        <a href="16569086965834.html">生成本地ssl签名工具：mkcert</a>
+			        <a href="16715444528067.html">机器学习入门</a>
 			      </li>
 		     
 		  
