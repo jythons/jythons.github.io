@@ -162,6 +162,329 @@
 		<div class="markdown-body home-categories">
 		
 			<div class="article">
+                <a class="clearlink" href="16467056808644.html">
+                
+                  <h1>laravel 使用kafka</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82"><span class="octicon octicon-link"></span></a>安装环境要求</h2>
+<ul>
+<li>PHP 版本大于 7.0</li>
+<li>Kafka Server 版本大于 0.8.0</li>
+<li>消费模块 Kafka Server 版本需要大于 0.9.0</li>
+</ul>
+<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
+<p>使用 Composer 安装<br />
+添加 composer 依赖 nmred/kafka-php 到项目的   composer.json 文件中即可，如:</p>
+<pre class="line-numbers"><code class="language-json">&quot;require&quot;: {
+   &quot;php&quot;: &quot;&gt;=5.6.4&quot;,
+   &quot;laravel/lumen-framework&quot;: &quot;5.4.*&quot;,
+   &quot;nmred/kafka-php&quot;: &quot;dev-master&quot;
+},
+</code></pre>
+<h2><a id="%E4%BD%BF%E7%94%A8" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8"><span class="octicon octicon-link"></span></a>使用</h2>
+<h3><a id="%E5%88%9B%E5%BB%BAkafkaservice" class="anchor" aria-hidden="true" href="#%E5%88%9B%E5%BB%BAkafkaservice"><span class="octicon octicon-link"></span></a>创建KafkaService</h3>
+<pre class="line-numbers"><code class="language-php">&lt;?php
+namespace App\Http\Services;
+use Kafka;
+
+class KafkaService
+{
+    public function __construct()
+    {
+        date_default_timezone_set('PRC');
+    }
+
+    /*
+     * Produce
+     */
+    public function Producer($topic, $value , $url)
+    {
+        $config = \Kafka\ProducerConfig::getInstance();
+        $config-&gt;setMetadataRefreshIntervalMs(10000);
+        $config-&gt;setMetadataBrokerList($url);
+        $config-&gt;setBrokerVersion('1.0.0');
+        $config-&gt;setRequiredAck(1);
+        $config-&gt;setIsAsyn(false);
+        $config-&gt;setProduceInterval(500);
+        $producer = new \Kafka\Producer(function () use($value,$topic){
+            return [
+                [
+                    'topic' =&gt; $topic,
+                    'value' =&gt; $value,
+                    'key' =&gt; '',
+                ],
+            ];
+        });
+        $producer-&gt;success(function ($result){
+            return &quot;success&quot;;
+        });
+        $producer-&gt;error(function ($errorCode){
+            var_dump($errorCode);
+        });
+        $producer-&gt;send(true);
+    }
+
+    /*
+     * Consumer
+     */
+    public function consumer($group,$topics , $url){
+        $config = \Kafka\ConsumerConfig::getInstance();
+        $config-&gt;setMetadataRefreshIntervalMs(500);
+        $config-&gt;setMetadataBrokerList($url);
+        $config-&gt;setGroupId($group);
+        $config-&gt;setBrokerVersion('1.0.0');
+        $config-&gt;setTopics([$topics]);
+        $config-&gt;setOffsetReset('earliest');
+        $consumer = new \Kafka\Consumer();
+        $consumer-&gt;start(function($topic, $part, $message) {
+            echo &quot;receive a message...\n&quot;;
+            app('consumerKafka')-&gt;consumerData($message['message']['value']);  //你的接收处理逻辑
+            var_dump($message['message']['value']);
+        });
+    }
+}
+</code></pre>
+<h3><a id="%E6%89%A7%E8%A1%8Cproduce%E6%96%B9%E6%B3%95%E7%94%9F%E4%BA%A7%E6%B6%88%E6%81%AF" class="anchor" aria-hidden="true" href="#%E6%89%A7%E8%A1%8Cproduce%E6%96%B9%E6%B3%95%E7%94%9F%E4%BA%A7%E6%B6%88%E6%81%AF"><span class="octicon octicon-link"></span></a>执行produce方法生产消息</h3>
+<pre class="line-numbers"><code class="language-php">&lt;?php
+namespace App\Http\Services;
+use App\Http\Services\KafkaService;
+class ProduceService
+{
+ public function produce()
+    {
+        $topic = env('topic_test'); //配置在env中
+        $url = env('kafka_url_test'); //配置在env中
+        $value =
+            [
+                'code' =&gt; 'test',
+                'data_type' =&gt; 'personal',
+                'action' =&gt; 'update',
+                'data' =&gt;
+                    [
+                        'id' =&gt; 1,
+                        'name' =&gt; 'tom',
+                        'gender' =&gt; 2
+                    ],
+                'redirect_url' =&gt; '',
+                'operator' =&gt; 'system',
+            ];
+        $value = json_encode ($value, JSON_FORCE_OBJECT );
+        $kafka = new KafkaService();
+        $kafka-&gt;Producer($topic, $value , $url);
+    }
+
+}
+</code></pre>
+<h3><a id="%E6%89%A7%E8%A1%8Cphp-artisan-consumer-kafka%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF" class="anchor" aria-hidden="true" href="#%E6%89%A7%E8%A1%8Cphp-artisan-consumer-kafka%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF"><span class="octicon octicon-link"></span></a>执行php artisan consumer:kafka 消费消息</h3>
+<pre class="line-numbers"><code class="language-php">&lt;?php
+namespace App\Console\Commands;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Redis;
+
+class ConsumerKafka extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'consumer:kafka';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = '处理异步kafka消息';
+
+    /**
+     * Create a new command instance.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $this-&gt;log('开始监听消息...');
+        app('kafkaService')-&gt;consumer($group=env('KAFKA_GROUP'),$topics =env('KAFKA_TOPIC'), $url=env('KAFKA_URL'));
+        return $this;
+    }
+
+    private function log($msg = '')
+    {
+        if (!$msg) {
+            return $this;
+        }
+        if (php_sapi_name() == 'cli') {
+            echo $msg, PHP_EOL;
+        }
+        app('myLog')-&gt;lumenLog($msg, 'kafka_consumer');
+        return $this;
+    }
+}
+</code></pre>
+<h2><a id="%E5%8F%82%E8%80%83" class="anchor" aria-hidden="true" href="#%E5%8F%82%E8%80%83"><span class="octicon octicon-link"></span></a>参考</h2>
+<blockquote>
+<p><a href="https://learnku.com/articles/15176/laravel-implementation-of-kafka-message-push-and-receive-processing">https://learnku.com/articles/15176/laravel-implementation-of-kafka-message-push-and-receive-processing</a></p>
+</blockquote>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2022/03/08</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='PHP.html'>PHP</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16463003273433.html">
+                
+                  <h1>反转义字符串方法</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<pre class="line-numbers"><code class="language-java">StringEscapeUtils.unescapeJava()
+</code></pre>
+<h2><a id="%E5%8F%82%E8%80%83" class="anchor" aria-hidden="true" href="#%E5%8F%82%E8%80%83"><span class="octicon octicon-link"></span></a>参考</h2>
+<p>1.<a href="https://blog.csdn.net/weixin_42515336/article/details/114060354">https://blog.csdn.net/weixin_42515336/article/details/114060354</a></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2022/03/03</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Java.html'>Java</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16415257910695.html">
+                
+                  <h1>MySQL索引原理以及查询优化</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="1%E3%80%81%E4%BB%8B%E7%BB%8D" class="anchor" aria-hidden="true" href="#1%E3%80%81%E4%BB%8B%E7%BB%8D"><span class="octicon octicon-link"></span></a>1、介绍</h2>
+<h3><a id="1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95%EF%BC%9F" class="anchor" aria-hidden="true" href="#1-1%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95%EF%BC%9F"><span class="octicon octicon-link"></span></a>1.1、什么是索引？</h3>
+<p>一般的应用系统，读写比例在10:1左右，而且插入操作和一般的更新操作很少出现性能问题，在生产环境中，我们遇到最多的，也是最容易出问题的，还是一些复杂的查询操作，因此对查询语句的优化显然是重中之重。说起加速查询，就不得不提到索引了。</p>
+<h3><a id="1-2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%B4%A2%E5%BC%95%E5%91%A2%EF%BC%9F" class="anchor" aria-hidden="true" href="#1-2%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%B4%A2%E5%BC%95%E5%91%A2%EF%BC%9F"><span class="octicon octicon-link"></span></a>1.2、为什么要有索引呢？</h3>
+<p>索引在MySQL中也叫做“键”，是存储引擎用于快速找到记录的一种数据结构。索引对于良好的性能
+非常关键，尤其是当表中的数据量越来越大时，索引对于性能的影响愈发重要。
+索引优化应该是对查询性能优化最有效的手段了。索引能够轻易将查询性能提高好几个数量级。
+索引相当于字典的音序表，如果要查某个字，如果不使用音序表，则需要从几百页中逐页去查。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                   <a href="16415257910695.html">Read more</a>&nbsp;&nbsp; 
+                    <span class="date">2022/01/07</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Mysql.html'>Mysql</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="16395498007523.html">
+                
+                  <h1>ClickHouse日常使用记录</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2><a id="%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E8%AF%AD%E5%8F%A5" class="anchor" aria-hidden="true" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E8%AF%AD%E5%8F%A5"><span class="octicon octicon-link"></span></a>基本操作语句</h2>
+<h3><a id="%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93" class="anchor" aria-hidden="true" href="#%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="octicon octicon-link"></span></a>导入文件数据到数据库</h3>
+<pre class="line-numbers"><code>clickhouse-client --port=9002 --query &quot;INSERT INTO tutorial.visits_v1 FORMAT TSV&quot; --max_insert_block_size=100000 &lt; ./visits_v1.tsv
+</code></pre>
+<blockquote>
+<p>--port：指定端口<br />
+--query：查询语句</p>
+</blockquote>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2021/12/15</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='ClickHouse.html'>ClickHouse</a></span>
+          				   
+                    
+
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
                 <a class="clearlink" href="16370681631438.html">
                 
                   <h1>Xdebug配置</h1>
@@ -460,307 +783,6 @@ console.log(str);
                 </div>
               </div><!-- article -->
         
-			<div class="article">
-                <a class="clearlink" href="16176799000056.html">
-                
-                  <h1>Nginx+php Docker-compose</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<pre class="line-numbers"><code>version: &quot;2.1&quot;
-services:
-  nginx:
-    image: nginx
-    ports:
-      - &quot;80:80&quot;
-    volumes:
-      - ~/kelala/nginx/www:/usr/share/nginx/html
-      - ~/kelala/nginx/conf:/etc/nginx/conf.d
-      - ~/kelala/nginx/logs:/var/log/nginx
-    networks:
-      - lnmp-network
-  php:
-    image: php:7.3-fpm
-    volumes:
-      - ~/kelala/nginx/www:/usr/share/nginx/html
-    networks:
-      - lnmp-network
-networks:
-  lnmp-network:
-</code></pre>
-<h2><a id="nginx%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#nginx%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>nginx 配置</h2>
-<pre class="line-numbers"><code>server {
-    listen       80;
-    server_name  hdcrmlocal.kerlala.com;
-    root   /usr/share/nginx/html/hdcrm.kerlala.com/public/;
-    index  index.html index.htm index.php;
-
-    location / {
-        
-        try_files $uri $uri/ /index.php$is_args$args;
-    }
-
-    #error_page   500 502 503 504  /50x.html;
-    #location = /50x.html {
-    #    root   /usr/share/nginx/html;
-    #}
-
-    location ~ \.php$ {
-        root           /usr/share/nginx/html/hdcrm.kerlala.com/public/;
-        fastcgi_pass   172.19.0.3:9000;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include        fastcgi_params;
-    }
-}
-
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2021/04/06</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Docker.html'>Docker</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16176785301116.html">
-                
-                  <h1>Docker PHP环境搭建</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2><a id="%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>拉取PHP镜像</h2>
-<pre class="line-numbers"><code>docker pull php:7.3-fpm
-</code></pre>
-<h2><a id="%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95"><span class="octicon octicon-link"></span></a>安装拓展</h2>
-<p>docker容器内安装php拓展使用如下命令进行安装</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>docker-php-ext-source</td>
-<td>在容器中创建一个/usr/src/php目录</td>
-</tr>
-<tr>
-<td>docker-php-ext-enable</td>
-<td>启用PHP扩展，省去我们手工编辑php.ini的过程</td>
-</tr>
-<tr>
-<td>docker-php-ext-install</td>
-<td>安装并启用PHP扩展</td>
-</tr>
-<tr>
-<td>docker-php-ext-configure</td>
-<td>经常与docker-php-ext-install搭配，在需要自定义扩展的配置时使用</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>例如：安装pdo拓展，使用如下命令即可</p>
-</blockquote>
-<pre class="line-numbers"><code>docker-php-ext-install pdo
-</code></pre>
-<blockquote>
-<p>有些拓展使用 <code>docker-php-ext-install</code> 命令不能安装，可以使用pecl工具进行安装，当装好php的容器之后，容器内已经安装好了pecl工具，所以直接拿来使用即可。使用方法如下：</p>
-</blockquote>
-<pre class="line-numbers"><code>例如安装php的memcached拓展
-1.首先更新源
-apt-get update
-2.安装所需依赖
-apt-get install -y libmemcached-dev zlib1g-dev
-3.安装memcached拓展
-pecl install memcached
-4.启用拓展
-docker-php-ext-enable memcached
-
-安装gd库拓展
-1.首先更新源
-apt-get update
-2.安装所需依赖
-apt-get install -y libwebp-dev libjpeg-dev libpng-dev libfreetype6-dev
-3.安装拓展
-docker-php-ext-install gd 
-
-docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/  \
-  &amp;&amp; docker-php-ext-install -j$(nproc) gd iconv mcrypt
-</code></pre>
-<blockquote>
-<p>安装GD库还是报错：docker-php-ext-configure gd --with-webp=/usr/include/webp --with-jpeg=/usr/include --with-freetype=/usr/include/freetype2/</p>
-</blockquote>
-<blockquote>
-<p>也可以编写一个DockerFile，加入如下命令：</p>
-</blockquote>
-<pre class="line-numbers"><code>FROM php:7.1-fpm
-RUN apt-get update \
-	# 手动安装依赖
-	&amp;&amp; apt-get install -y libmemcached-dev zlib1g-dev \
-	# 安装需要的扩展
-   &amp;&amp; pecl install memcached-2.2.0 \
-   # 启用扩展
-   &amp;&amp; docker-php-ext-enable memcached
-</code></pre>
-<pre class="line-numbers"><code>安装zip扩展所需的依赖扩展
-apt-get update &amp;&amp; apt-get install -y zlib1g-dev &amp;&amp; apt-get install -y libzip-dev
-
-安装并启动zip扩展
-docker-php-ext-install zip
-</code></pre>
-<pre class="line-numbers"><code>./configure --prefix=/usr/local/php/php8 \
-     --with-config-file-path=/usr/local/php/php8/etc \
-     --with-config-file-scan-dir=/usr/local/php/php8/etc/conf.d \
-     --enable-bcmath \
-     --with-bz2=/usr/local/opt/bzip2 \
-     --with-curl=/usr/local/opt/curl \
-     --enable-filter \
-     --enable-fpm \
-     --with-gd \
-     --enable-gd-native-ttf \
-     --with-freetype-dir \
-     --with-jpeg-dir \
-     --with-png-dir \
-     --enable-intl \
-     --enable-mbstring \
-     --with-mcrypt \
-     --enable-mysqlnd \
-     --with-mysql-sock=/tmp/mysql.sock \
-     --with-mysqli=mysqlnd \
-     --with-pdo-mysql=mysqlnd \
-     --with-pdo-sqlite \
-     --with-zlib-dir=/usr/local/opt/zlib \
-     --with-iconv=/usr/local/opt/libiconv \
-     --with-icu-dir=/usr/local/opt/icu4c \
-     --disable-phpdbg \
-     --disable-phpdbg-webhelper \
-     --enable-opcache \
-     --with-openssl=/usr/bin/openssl \
-     --enable-simplexml \
-     --with-sqlite3 \
-     --enable-xmlreader \
-     --enable-xmlwriter \
-     --enable-zip \
-     --enable-sockets \
-     --with-xmlrpc
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2021/04/06</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Docker.html'>Docker</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16121029199620.html">
-                
-                  <h1>Docker网络</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16121029199620.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/31</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Shell.html'>Shell</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="16121005012878.html">
-                
-                  <h1>Dockerfile</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                   <a href="16121005012878.html">Read more</a>&nbsp;&nbsp; 
-                    <span class="date">2021/01/31</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='Shell.html'>Shell</a></span>
-          				   
-                    
-
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
               
 
 
@@ -866,31 +888,31 @@ docker-php-ext-install zip
 	      
 		      
 			      <li class="post">
+			        <a href="16769884154113.html">均值漂移聚类（Mean-shift）</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16769865791903.html">KNN（K近邻分类）算法（监督学习）</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16769850950659.html">KMeans（K均值聚类）算法</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="16768995036631.html">无监督学习</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
 			        <a href="16762508531479.html">分类问题求解（逻辑回归）</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16753064247480.html">线性回归问题求解</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16740299909794.html">Jupyter 开启代码提示</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16740290336448.html">开发工具使用中异常解决</a>
-			      </li>
-		     
-		  
-		      
-			      <li class="post">
-			        <a href="16715444528067.html">机器学习入门</a>
 			      </li>
 		     
 		  
