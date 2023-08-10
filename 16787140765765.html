@@ -1,0 +1,554 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>  
+	  
+  	数据分离与混淆矩阵 - 二手码农
+  	
+	</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="atom.xml" rel="alternate" title="二手码农" type="application/atom+xml">
+
+	<link href="asset/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="asset/stylesheets/font-awesome.min.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<script src="asset/javascripts/jquery.min.js"></script>
+	
+
+	<!--[if lt IE 9]><script src="asset/javascripts/html5.js"></script><![endif]-->
+	<!-- <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'> -->
+	<style type="text/css">
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Nunito-Light'), url(asset/font/1TiHc9yag0wq3lDO9cw0voX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito-Regular'), url(asset/font/6TbRXKWJjpj6V2v_WyRbMX-_kf6ByYO6CLYdB4HQE-Y.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Nunito-Bold'), url(asset/font/TttUCfJ272GBgSKaOaD7KoX0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+	</style>
+	
+	<style type="text/css">
+	.container .left-col{ opacity: 1;}
+	#pagenavi a{ font-size: 1.3em;}
+	#pagenavi .next:before{ top: 3px;}
+	#pagenavi .prev:before{ top: 3px;}
+	.container .mid-col .mid-col-container #content .archives .title{ font-size: 1.5em;}
+	.container .mid-col .mid-col-container #content article{ padding: 15px 0px;}
+	#header .subtitle {
+		line-height: 1.2em;
+		padding-top: 8px;
+	}
+	article pre{ background: none; border: none; padding: 0;}
+	article .entry-content{text-align: left;}
+	.share-comment{ padding: 25px 0px; clear: both;}
+	hr{ margin: 20px 0px;border: 0; border-top:solid 1px #ddd;}
+	</style>
+  
+
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner">
+				 
+					
+					<h1><a href="index.html">二手码农</a></h1>
+					<p class="subtitle">工作学习中的点点滴滴。</p>
+					<nav id="main-nav">
+						<ul class="main">
+						
+						  <li id=""><a target="_self" href="index.html">主页</a></li>
+						
+						  <li id=""><a target="_self" href="Java.html">Java</a></li>
+						
+						  <li id=""><a target="_self" href="nginx.html">Nginx</a></li>
+						
+						  <li id=""><a target="_self" href="Shell.html">Shell</a></li>
+						
+						  <li id=""><a target="_self" href="LVS.html">LVS</a></li>
+						
+						  <li id=""><a target="_self" href="Redis.html">Redis</a></li>
+						
+						  <li id=""><a target="_self" href="ES.html">ES</a></li>
+						
+						  <li id=""><a target="_self" href="MQ.html">MQ</a></li>
+						
+						  <li id=""><a target="_self" href="机器学习.html">机器学习</a></li>
+						
+						</ul>
+					</nav>
+
+					<nav id="sub-nav">
+						<div class="social">
+
+
+
+
+
+
+
+
+
+
+<a target="_blank" class="github" target="_blank" href="jythons.github.io" title="GitHub">GitHub</a>
+<a target="_blank" class="email" href="mailto:jythons@sina.com" title="Email">Email</a>
+
+								
+
+								<a class="rss" href="atom.xml" title="RSS">RSS</a>
+							
+						</div>
+					</nav>
+				</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			<div class="mid-col-container"> <div id="content" class="inner">
+
+	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<h1 class="title" itemprop="name">数据分离与混淆矩阵</h1>
+		<div class="entry-content" itemprop="articleBody">
+			<!--more-->
+<h2><a id="%E6%95%B0%E6%8D%AE%E5%88%86%E7%A6%BB" class="anchor" aria-hidden="true" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E7%A6%BB"><span class="octicon octicon-link"></span></a>数据分离</h2>
+<h3><a id="%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E8%AF%84%E4%BC%B0%E6%B5%81%E7%A8%8B" class="anchor" aria-hidden="true" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E4%B8%8E%E8%AF%84%E4%BC%B0%E6%B5%81%E7%A8%8B"><span class="octicon octicon-link"></span></a>模型训练与评估流程</h3>
+<pre><code class="language-mermaid">sequenceDiagram
+participant 数据载入
+participant 数据可视化预处理
+participant 模型创建
+participant 全数据用于模型训练
+participant 模型评估
+
+数据载入-&gt;&gt;数据可视化预处理: 
+数据可视化预处理-&gt;&gt;模型创建: 
+模型创建-&gt;&gt;全数据用于模型训练: 
+全数据用于模型训练-&gt;&gt;模型评估: 
+</code></pre>
+<blockquote>
+<p>没有新数据用于评估模型表现怎么办？</p>
+</blockquote>
+<p>对全数据进行数据分离，部分用于训练，部分用于新数据的结果预测。</p>
+<h3><a id="%E6%B5%81%E7%A8%8B" class="anchor" aria-hidden="true" href="#%E6%B5%81%E7%A8%8B"><span class="octicon octicon-link"></span></a>流程</h3>
+<ol>
+<li>把数据分成两部分：训练集、测试集</li>
+<li>使用训练集数据进行模型训练</li>
+<li>使用测试集数据进行预测，更有效的评估模型对于新数据的预测表现。</li>
+</ol>
+<h3><a id="%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98" class="anchor" aria-hidden="true" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98"><span class="octicon octicon-link"></span></a>代码实战</h3>
+<pre><code class="language-python">from sklearn.model_selection import train_test_split
+
+X_train,X_test,y_train,y_test = train_test_split(X,y,random_state=4,test_size=0.4)
+</code></pre>
+<h2><a id="%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5%EF%BC%88confusion-matrix%EF%BC%89" class="anchor" aria-hidden="true" href="#%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5%EF%BC%88confusion-matrix%EF%BC%89"><span class="octicon octicon-link"></span></a>混淆矩阵（Confusion Matrix）</h2>
+<p><strong>概念：</strong> 混淆矩阵，又称为误差矩阵，用于衡量分类算法的准确程度。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th>预测结果</th>
+<th>预测结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>实际结果</td>
+<td>0</td>
+<td>True Negative(TN)</td>
+<td>False Positive(FP)</td>
+</tr>
+<tr>
+<td>实际结果</td>
+<td>1</td>
+<td>False Negative(FN)</td>
+<td>True Positive(TP)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>True Negative(TN)：预测准确，实际为负样本的数量（实际0，预测0）</li>
+<li>True Positive(TP)：预测准确，实际为正样本的数量（实际1，预测1）</li>
+<li>False Positive(FP)：预测错误，实际为负样本的数量（实际0，预测1）</li>
+<li>False Negative(FN)：预测错误，实际为正样本的数量（实际1，预测0）</li>
+</ul>
+<h3><a id="%E5%87%86%E7%A1%AE%E7%8E%87%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98" class="anchor" aria-hidden="true" href="#%E5%87%86%E7%A1%AE%E7%8E%87%E8%AF%84%E4%BC%B0%E9%97%AE%E9%A2%98"><span class="octicon octicon-link"></span></a>准确率评估问题</h3>
+<p>分类任务中，计算测试数据集预测准确率（accuracy）以评估模型表现<br />
+局限性：无法真实反映模型针对各个分类的预测准确度</p>
+<h5><a id="%E4%B8%BE%E4%BE%8B" class="anchor" aria-hidden="true" href="#%E4%B8%BE%E4%BE%8B"><span class="octicon octicon-link"></span></a>举例</h5>
+<p>假如有如下一千个数据：数据中有900个1，和100个0，预测是0或1<br />
+模型1：预测出850个1预测正确，50个0预测正确，正确率90%<br />
+模型2：预测所有的样本结果都是1，准确率90%（空准确率）</p>
+<blockquote>
+<p>准确率可以方便的用于衡量模型的整体预测效果，但无法反映细节信息，具体表现在：</p>
+<ul>
+<li>没有体现数据预测的<strong>实际分布情况</strong>（0、1本身的分布比例）</li>
+<li>没有体现模型<strong>错误预测的类型</strong></li>
+</ul>
+</blockquote>
+<h3><a id="%E6%9B%B4%E5%A4%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87" class="anchor" aria-hidden="true" href="#%E6%9B%B4%E5%A4%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E6%8C%87%E6%A0%87"><span class="octicon octicon-link"></span></a>更多模型评估指标</h3>
+<p>通过混淆矩阵，计算更丰富的模型评估指标
+<img src="media/16787140765765/WX20230313-215845.png" alt="WX20230313-215845" /></p>
+<h3><a id="%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5%E6%8C%87%E6%A0%87%E7%89%B9%E7%82%B9" class="anchor" aria-hidden="true" href="#%E6%B7%B7%E6%B7%86%E7%9F%A9%E9%98%B5%E6%8C%87%E6%A0%87%E7%89%B9%E7%82%B9"><span class="octicon octicon-link"></span></a>混淆矩阵指标特点</h3>
+<ul>
+<li>分类任务中，相比单一的预测准确率，混淆矩阵提供了更全面的模型评估信息</li>
+<li>通过混淆矩阵，我们可以计算出多样的模型表现衡量指标，从而更好地选择模型</li>
+</ul>
+<h4><a id="%E5%93%AA%E4%B8%AA%E8%A1%A1%E9%87%8F%E6%8C%87%E6%A0%87%E6%9B%B4%E5%85%B3%E9%94%AE%EF%BC%9F" class="anchor" aria-hidden="true" href="#%E5%93%AA%E4%B8%AA%E8%A1%A1%E9%87%8F%E6%8C%87%E6%A0%87%E6%9B%B4%E5%85%B3%E9%94%AE%EF%BC%9F"><span class="octicon octicon-link"></span></a>哪个衡量指标更关键？</h4>
+<ul>
+<li>衡量指标的选择取决于应用场景</li>
+<li>垃圾邮件检测（正样本为“垃圾邮件”）：希望普通邮件（负样本）不要被判断为垃圾邮件（正样本），即：判断为垃圾邮件的样本都是判断正确的，需要管局精确率，还希望所有的垃圾邮件尽可能被判断出来，需要关注召回率</li>
+<li>异常交易检测（正样本为“异常交易”）：希望判断为正常的交易（负样本）中尽可能不存在异常交易，还需要关注特异度</li>
+</ul>
+
+		</div>
+	</article>
+	<div class="share-comment">
+	 
+
+	  
+
+	  
+
+	</div>
+</div>        </div>
+			<footer id="footer" class="inner">Copyright &copy; 2014
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a> &nbsp;&nbsp; 
+Theme by <a href="http://shashankmehta.in/archive/2012/greyshade.html">Shashank Mehta</a>
+      </footer>
+		</div>
+	</div>
+
+
+
+  
+
+
+
+
+
+
+
+
+  	<script>!function(){var deflate=function(){var e,n,r,t,i,o,a,f,d,l,c,u,h,w,m,s,g,p,y,_,v,x,A,C,b,V,E,z,I,S,B,G,L,M,O,D,N,q,T,k,H,U,j,F,P,R,J,K,Q,W,X,Y,Z,$,ee,ne,re=32768,te=0,ie=1,oe=2,ae=6,fe=!0,de=32768,le=64,ce=8192,ue=2*re,he=3,we=258,me=16,se=8192,ge=se,pe=8192,ye=pe-1,_e=re-1,ve=0,xe=4096,Ae=we+he+1,Ce=re-Ae,be=1,Ve=15,Ee=7,ze=29,Ie=256,Se=256,Be=Ie+1+ze,Ge=30,Le=19,Me=16,Oe=17,De=18,Ne=2*Be+1,qe=parseInt((13+he-1)/he),Te=null;function ke(){this.fc=0,this.dl=0}function He(){this.dyn_tree=null,this.static_tree=null,this.extra_bits=null,this.extra_base=0,this.elems=0,this.max_length=0,this.max_code=0}function Ue(e,n,r,t){this.good_length=e,this.max_lazy=n,this.nice_length=r,this.max_chain=t}var je=[0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0],Fe=[0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13],Pe=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,7],Re=[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15],Je=[new Ue(0,0,0,0),new Ue(4,4,8,4),new Ue(4,5,16,8),new Ue(4,6,32,32),new Ue(4,4,16,16),new Ue(8,16,32,32),new Ue(8,16,128,128),new Ue(8,32,128,256),new Ue(32,128,258,1024),new Ue(32,258,258,4096)];function Ke(){var n;return null!=e?(n=e,e=e.next):n=new function(){this.next=null,this.len=0,this.ptr=new Array(ce),this.off=0},n.next=null,n.len=n.off=0,n}function Qe(e){return c[re+e]}function We(e,n){return c[re+e]=n}function Xe(e){Te[o+i++]=e,o+i==ce&&function(){if(0!=i){var e,t;for(e=Ke(),null==n?n=r=e:r=r.next=e,e.len=i-o,t=0;t<e.len;t++)e.ptr[t]=Te[o+t];i=o=0}}()}function Ye(e){e&=65535,o+i<ce-2?(Te[o+i++]=255&e,Te[o+i++]=e>>>8):(Xe(255&e),Xe(e>>>8))}function Ze(){m=(m<<qe^255&f[v+he-1])&ye,s=Qe(m),c[v&_e]=s,We(m,v)}function $e(e,n){_n(n[e].fc,n[e].dl)}function en(e){return 255&(e<256?F[e]:F[256+(e>>7)])}function nn(e,n,r){return e[n].fc<e[r].fc||e[n].fc==e[r].fc&&U[n]<=U[r]}function rn(e,n,r){var t;for(t=0;t<r&&ne<ee.length;t++)e[n+t]=255&ee.charCodeAt(ne++);return t}function tn(e){var n,r,t=b,i=v,o=_,a=v>Ce?v-Ce:ve,d=v+we,l=f[i+o-1],u=f[i+o];_>=z&&(t>>=2);do{if(f[(n=e)+o]==u&&f[n+o-1]==l&&f[n]==f[i]&&f[++n]==f[i+1]){i+=2,n++;do{}while(f[++i]==f[++n]&&f[++i]==f[++n]&&f[++i]==f[++n]&&f[++i]==f[++n]&&f[++i]==f[++n]&&f[++i]==f[++n]&&f[++i]==f[++n]&&f[++i]==f[++n]&&i<d);if(r=we-(d-i),i=d-we,r>o){if(x=e,o=r,fe){if(r>=we)break}else if(r>=I)break;l=f[i+o-1],u=f[i+o]}}}while((e=c[e&_e])>a&&0!=--t);return o}function on(){var e,n,r=ue-C-v;if(-1==r)r--;else if(v>=re+Ce){for(e=0;e<re;e++)f[e]=f[e+re];for(x-=re,v-=re,w-=re,e=0;e<pe;e++)We(e,(n=Qe(e))>=re?n-re:ve);for(e=0;e<re;e++)n=c[e],c[e]=n>=re?n-re:ve;r+=re}A||((e=rn(f,v+C,r))<=0?A=!0:C+=e)}function an(){A||(u=0,h=0,function(){var e,n,r,t,i;if(0!=L[0].dl)return;for(O.dyn_tree=S,O.static_tree=G,O.extra_bits=je,O.extra_base=Ie+1,O.elems=Be,O.max_length=Ve,O.max_code=0,D.dyn_tree=B,D.static_tree=L,D.extra_bits=Fe,D.extra_base=0,D.elems=Ge,D.max_length=Ve,D.max_code=0,N.dyn_tree=M,N.static_tree=null,N.extra_bits=Pe,N.extra_base=0,N.elems=Le,N.max_length=Ee,N.max_code=0,r=0,t=0;t<ze-1;t++)for(P[t]=r,e=0;e<1<<je[t];e++)j[r++]=t;for(j[r-1]=t,i=0,t=0;t<16;t++)for(R[t]=i,e=0;e<1<<Fe[t];e++)F[i++]=t;for(i>>=7;t<Ge;t++)for(R[t]=i<<7,e=0;e<1<<Fe[t]-7;e++)F[256+i++]=t;for(n=0;n<=Ve;n++)q[n]=0;e=0;for(;e<=143;)G[e++].dl=8,q[8]++;for(;e<=255;)G[e++].dl=9,q[9]++;for(;e<=279;)G[e++].dl=7,q[7]++;for(;e<=287;)G[e++].dl=8,q[8]++;for(un(G,Be+1),e=0;e<Ge;e++)L[e].dl=5,L[e].fc=vn(e,5);ln()}(),function(){var e;for(e=0;e<pe;e++)c[re+e]=0;if(V=Je[E].max_lazy,z=Je[E].good_length,fe||(I=Je[E].nice_length),b=Je[E].max_chain,v=0,w=0,(C=rn(f,0,2*re))<=0)return A=!0,void(C=0);for(A=!1;C<Ae&&!A;)on();for(m=0,e=0;e<he-1;e++)m=(m<<qe^255&f[e])&ye}(),n=null,i=0,o=0,E<=3?(_=he-1,y=0):(y=he-1,p=0),a=!1)}function fn(e,r,i){var o;return t||(an(),t=!0,0!=C)?(o=dn(e,r,i))==i?i:a?o:(E<=3?function(){for(;0!=C&&null==n;){var e;if(Ze(),s!=ve&&v-s<=Ce&&(y=tn(s))>C&&(y=C),y>=he)if(e=gn(v-x,y-he),C-=y,y<=V){y--;do{v++,Ze()}while(0!=--y);v++}else v+=y,y=0,m=((m=255&f[v])<<qe^255&f[v+1])&ye;else e=gn(0,255&f[v]),C--,v++;for(e&&(sn(0),w=v);C<Ae&&!A;)on()}}():function(){for(;0!=C&&null==n;){if(Ze(),_=y,g=x,y=he-1,s!=ve&&_<V&&v-s<=Ce&&((y=tn(s))>C&&(y=C),y==he&&v-x>xe&&y--),_>=he&&y<=_){var e;e=gn(v-1-g,_-he),C-=_-1,_-=2;do{v++,Ze()}while(0!=--_);p=0,y=he-1,v++,e&&(sn(0),w=v)}else 0!=p?(gn(0,255&f[v-1])&&(sn(0),w=v),v++,C--):(p=1,v++,C--);for(;C<Ae&&!A;)on()}}(),0==C&&(0!=p&&gn(0,255&f[v-1]),sn(1),a=!0),o+dn(e,o+r,i-o)):(a=!0,0)}function dn(r,t,a){var f,d,l,c;for(f=0;null!=n&&f<a;){for((d=a-f)>n.len&&(d=n.len),l=0;l<d;l++)r[t+f+l]=n.ptr[n.off+l];var u;if(n.off+=d,n.len-=d,f+=d,0==n.len)u=n,n=n.next,(c=u).next=e,e=c}if(f==a)return f;if(o<i){for((d=a-f)>i-o&&(d=i-o),l=0;l<d;l++)r[t+f+l]=Te[o+l];f+=d,i==(o+=d)&&(i=o=0)}return f}function ln(){var e;for(e=0;e<Be;e++)S[e].fc=0;for(e=0;e<Ge;e++)B[e].fc=0;for(e=0;e<Le;e++)M[e].fc=0;S[Se].fc=1,Z=$=0,K=Q=W=0,X=0,Y=1}function cn(e,n){for(var r=T[n],t=n<<1;t<=k&&(t<k&&nn(e,T[t+1],T[t])&&t++,!nn(e,r,T[t]));)T[n]=T[t],n=t,t<<=1;T[n]=r}function un(e,n){var r,t,i=new Array(Ve+1),o=0;for(r=1;r<=Ve;r++)o=o+q[r-1]<<1,i[r]=o;for(t=0;t<=n;t++){var a=e[t].dl;0!=a&&(e[t].fc=vn(i[a]++,a))}}function hn(e){var n,r,t=e.dyn_tree,i=e.static_tree,o=e.elems,a=-1,f=o;for(k=0,H=Ne,n=0;n<o;n++)0!=t[n].fc?(T[++k]=a=n,U[n]=0):t[n].dl=0;for(;k<2;){var d=T[++k]=a<2?++a:0;t[d].fc=1,U[d]=0,Z--,null!=i&&($-=i[d].dl)}for(e.max_code=a,n=k>>1;n>=1;n--)cn(t,n);do{n=T[be],T[be]=T[k--],cn(t,be),r=T[be],T[--H]=n,T[--H]=r,t[f].fc=t[n].fc+t[r].fc,U[n]>U[r]+1?U[f]=U[n]:U[f]=U[r]+1,t[n].dl=t[r].dl=f,T[be]=f++,cn(t,be)}while(k>=2);T[--H]=T[be],function(e){var n,r,t,i,o,a,f=e.dyn_tree,d=e.extra_bits,l=e.extra_base,c=e.max_code,u=e.max_length,h=e.static_tree,w=0;for(i=0;i<=Ve;i++)q[i]=0;for(f[T[H]].dl=0,n=H+1;n<Ne;n++)(i=f[f[r=T[n]].dl].dl+1)>u&&(i=u,w++),f[r].dl=i,r>c||(q[i]++,o=0,r>=l&&(o=d[r-l]),a=f[r].fc,Z+=a*(i+o),null!=h&&($+=a*(h[r].dl+o)));if(0!=w){do{for(i=u-1;0==q[i];)i--;q[i]--,q[i+1]+=2,q[u]--,w-=2}while(w>0);for(i=u;0!=i;i--)for(r=q[i];0!=r;)(t=T[--n])>c||(f[t].dl!=i&&(Z+=(i-f[t].dl)*f[t].fc,f[t].fc=i),r--)}}(e),un(t,a)}function wn(e,n){var r,t,i=-1,o=e[0].dl,a=0,f=7,d=4;for(0==o&&(f=138,d=3),e[n+1].dl=65535,r=0;r<=n;r++)t=o,o=e[r+1].dl,++a<f&&t==o||(a<d?M[t].fc+=a:0!=t?(t!=i&&M[t].fc++,M[Me].fc++):a<=10?M[Oe].fc++:M[De].fc++,a=0,i=t,0==o?(f=138,d=3):t==o?(f=6,d=3):(f=7,d=4))}function mn(e,n){var r,t,i=-1,o=e[0].dl,a=0,f=7,d=4;for(0==o&&(f=138,d=3),r=0;r<=n;r++)if(t=o,o=e[r+1].dl,!(++a<f&&t==o)){if(a<d)do{$e(t,M)}while(0!=--a);else 0!=t?(t!=i&&($e(t,M),a--),$e(Me,M),_n(a-3,2)):a<=10?($e(Oe,M),_n(a-3,3)):($e(De,M),_n(a-11,7));a=0,i=t,0==o?(f=138,d=3):t==o?(f=6,d=3):(f=7,d=4)}}function sn(e){var n,r,t,i,o;if(i=v-w,J[W]=X,hn(O),hn(D),t=function(){var e;for(wn(S,O.max_code),wn(B,D.max_code),hn(N),e=Le-1;e>=3&&0==M[Re[e]].dl;e--);return Z+=3*(e+1)+5+5+4,e}(),(r=$+3+7>>3)<=(n=Z+3+7>>3)&&(n=r),i+4<=n&&w>=0)for(_n((te<<1)+e,3),xn(),Ye(i),Ye(~i),o=0;o<i;o++)Xe(f[w+o]);else r==n?(_n((ie<<1)+e,3),pn(G,L)):(_n((oe<<1)+e,3),function(e,n,r){var t;for(_n(e-257,5),_n(n-1,5),_n(r-4,4),t=0;t<r;t++)_n(M[Re[t]].dl,3);mn(S,e-1),mn(B,n-1)}(O.max_code+1,D.max_code+1,t+1),pn(S,B));ln(),0!=e&&xn()}function gn(e,n){if(l[K++]=n,0==e?S[n].fc++:(e--,S[j[n]+Ie+1].fc++,B[en(e)].fc++,d[Q++]=e,X|=Y),Y<<=1,0==(7&K)&&(J[W++]=X,X=0,Y=1),E>2&&0==(4095&K)){var r,t=8*K,i=v-w;for(r=0;r<Ge;r++)t+=B[r].fc*(5+Fe[r]);if(t>>=3,Q<parseInt(K/2)&&t<parseInt(i/2))return!0}return K==se-1||Q==ge}function pn(e,n){var r,t,i,o,a=0,f=0,c=0,u=0;if(0!=K)do{0==(7&a)&&(u=J[c++]),t=255&l[a++],0==(1&u)?$e(t,e):($e((i=j[t])+Ie+1,e),0!=(o=je[i])&&_n(t-=P[i],o),$e(i=en(r=d[f++]),n),0!=(o=Fe[i])&&_n(r-=R[i],o)),u>>=1}while(a<K);$e(Se,e)}var yn=16;function _n(e,n){h>yn-n?(Ye(u|=e<<h),u=e>>yn-h,h+=n-yn):(u|=e<<h,h+=n)}function vn(e,n){var r=0;do{r|=1&e,e>>=1,r<<=1}while(--n>0);return r>>1}function xn(){h>8?Ye(u):h>0&&Xe(u),u=0,h=0}return function(i,o){var a,u;ee=i,ne=0,void 0===o&&(o=ae),function(i){var o;if(i?i<1?i=1:i>9&&(i=9):i=ae,E=i,t=!1,A=!1,null==Te){for(e=n=r=null,Te=new Array(ce),f=new Array(ue),d=new Array(ge),l=new Array(de+le),c=new Array(1<<me),S=new Array(Ne),o=0;o<Ne;o++)S[o]=new ke;for(B=new Array(2*Ge+1),o=0;o<2*Ge+1;o++)B[o]=new ke;for(G=new Array(Be+2),o=0;o<Be+2;o++)G[o]=new ke;for(L=new Array(Ge),o=0;o<Ge;o++)L[o]=new ke;for(M=new Array(2*Le+1),o=0;o<2*Le+1;o++)M[o]=new ke;O=new He,D=new He,N=new He,q=new Array(Ve+1),T=new Array(2*Be+1),U=new Array(2*Be+1),j=new Array(we-he+1),F=new Array(512),P=new Array(ze),R=new Array(Ge),J=new Array(parseInt(se/8))}}(o);for(var h=new Array(1024),w=[];(a=fn(h,0,h.length))>0;){var m=new Array(a);for(u=0;u<a;u++)m[u]=String.fromCharCode(h[u]);w[w.length]=m.join("")}return ee=null,w.join("")}}();function encode64(e){for(r="",i=0;i<e.length;i+=3)i+2==e.length?r+=append3bytes(e.charCodeAt(i),e.charCodeAt(i+1),0):i+1==e.length?r+=append3bytes(e.charCodeAt(i),0,0):r+=append3bytes(e.charCodeAt(i),e.charCodeAt(i+1),e.charCodeAt(i+2));return r}function append3bytes(e,n,t){return c1=e>>2,c2=(3&e)<<4|n>>4,c3=(15&n)<<2|t>>6,c4=63&t,r="",r+=encode6bit(63&c1),r+=encode6bit(63&c2),r+=encode6bit(63&c3),r+=encode6bit(63&c4),r}function encode6bit(e){return e<10?String.fromCharCode(48+e):(e-=10)<26?String.fromCharCode(65+e):(e-=26)<26?String.fromCharCode(97+e):0==(e-=26)?"-":1==e?"_":"?"}function insertAfter(e,n){e.parentNode.insertBefore(n,e.nextSibling)}var mwebChartEleId="mweb-chart-ele-",glNumber=0;function drawOldSeq(e,n){Diagram.parse(n).drawSVG(e,{theme:"simple"})}function drawOldFlow(e,n){flowchart.parse(n).drawSVG(e)}function drawMermaid(e,n){var r=document.getElementById(e);r.className="mermaid",r.innerHTML=n}function drawPlantUML(e,n){var r=document.getElementById(e),t=unescape(encodeURIComponent(n)),i="https://www.plantuml.com/plantuml/svg/"+encode64(deflate(t,9));r.innerHTML='<a target="_blank" href="'+i+'"><img src="'+i+'" /></a>'}function drawViz_circo(e,n){(new Viz).renderSVGElement(n,{engine:"circo"}).then(function(n){document.getElementById(e).appendChild(n)})}function drawViz_dot(e,n){(new Viz).renderSVGElement(n,{engine:"dot"}).then(function(n){document.getElementById(e).appendChild(n)})}function drawViz_fdp(e,n){(new Viz).renderSVGElement(n,{engine:"fdp"}).then(function(n){document.getElementById(e).appendChild(n)})}function drawViz_neato(e,n){(new Viz).renderSVGElement(n,{engine:"neato"}).then(function(n){document.getElementById(e).appendChild(n)})}function drawViz_osage(e,n){(new Viz).renderSVGElement(n,{engine:"osage"}).then(function(n){document.getElementById(e).appendChild(n)})}function drawViz_twopi(e,n){(new Viz).renderSVGElement(n,{engine:"twopi"}).then(function(n){document.getElementById(e).appendChild(n)})}function drawECharts(eleIID,txt){var ele=document.getElementById(eleIID);try{eval(txt);var myoption=option;myoption.animation=!1,void 0!==myoption.width?ele.style.width=myoption.width+10+"px":ele.style.width="100%",void 0!==myoption.height?ele.style.height=myoption.height+10+"px":ele.style.height="350px";var myChart=echarts.init(ele);myChart.setOption(myoption)}catch(e){}}var init=function(){var e=[[".language-plantuml",drawPlantUML]];"undefined"!=typeof Diagram&&e.push([".language-sequence",drawOldSeq]),"undefined"!=typeof flowchart&&e.push([".language-flow",drawOldFlow]),"undefined"!=typeof mermaid&&e.push([".language-mermaid",drawMermaid]),"undefined"!=typeof Viz&&(e.push([".language-circo",drawViz_circo]),e.push([".language-dot",drawViz_dot]),e.push([".language-fdp",drawViz_fdp]),e.push([".language-neato",drawViz_neato]),e.push([".language-osage",drawViz_osage]),e.push([".language-twopi",drawViz_twopi])),"undefined"!=typeof echarts&&e.push([".language-echarts",drawECharts]);for(var n=0;n<e.length;n++)for(var r=e[n][0],t=e[n][1],i=document.querySelectorAll(r),o=0;o<i.length;o++){var a=i[o],f=a.innerText||a.textContent;a=a.parentElement;var d=document.createElement("div"),l=mwebChartEleId+glNumber;glNumber++,d.innerHTML='<div id="'+l+'"></div>',insertAfter(a,d),a.parentElement.removeChild(a),t(l,f)}"undefined"!=typeof mermaid&&mermaid.initialize({startOnLoad:!0})};document.addEventListener("DOMContentLoaded",function(e){init()})}();</script>
+
+
+
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.4.3/mermaid.min.js"></script>
+
+
+
+
+<script src="asset/prism.js"></script>
+
+
+<style type="text/css">
+figure{margin: 1em 0;padding: 0;}
+  figcaption{text-align:center;}
+
+/* PrismJS 1.14.0
+https://prismjs.com/download.html#themes=prism-coy&languages=markup+css+clike+javascript */
+/**
+ * prism.js Coy theme for JavaScript, CoffeeScript, CSS and HTML
+ * Based on https://github.com/tshedor/workshop-wp-theme (Example: http://workshop.kansan.com/category/sessions/basics or http://workshop.timshedor.com/category/sessions/basics);
+ * @author Tim  Shedor
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+  color: black;
+  background: none;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  position: relative;
+  margin: .5em 0;
+  overflow: visible;
+  padding: 0;
+}
+pre[class*="language-"]>code {
+  position: relative;
+  border-left: 10px solid #358ccb;
+  box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
+  background-color: #fdfdfd;
+  background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+  background-size: 3em 3em;
+  background-origin: content-box;
+  background-attachment: local;
+}
+
+code[class*="language"] {
+  max-height: inherit;
+  height: inherit;
+  padding: 0 1em;
+  display: block;
+  overflow: auto;
+}
+
+/* Margin bottom to accomodate shadow */
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background-color: #fdfdfd;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-bottom: 1em;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  position: relative;
+  padding: .2em;
+  border-radius: 0.3em;
+  color: #c92c2c;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: inline;
+  white-space: normal;
+}
+
+pre[class*="language-"]:before,
+pre[class*="language-"]:after {
+  content: '';
+  z-index: -2;
+  display: block;
+  position: absolute;
+  bottom: 0.75em;
+  left: 0.18em;
+  width: 40%;
+  height: 20%;
+  max-height: 13em;
+  box-shadow: 0px 13px 8px #979797;
+  -webkit-transform: rotate(-2deg);
+  -moz-transform: rotate(-2deg);
+  -ms-transform: rotate(-2deg);
+  -o-transform: rotate(-2deg);
+  transform: rotate(-2deg);
+}
+
+:not(pre) > code[class*="language-"]:after,
+pre[class*="language-"]:after {
+  right: 0.75em;
+  left: auto;
+  -webkit-transform: rotate(2deg);
+  -moz-transform: rotate(2deg);
+  -ms-transform: rotate(2deg);
+  -o-transform: rotate(2deg);
+  transform: rotate(2deg);
+}
+
+.token.comment,
+.token.block-comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #7D8B99;
+}
+
+.token.punctuation {
+  color: #5F6364;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.function-name,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #c92c2c;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.function,
+.token.builtin,
+.token.inserted {
+  color: #2f9c0a;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.token.variable {
+  color: #a67f59;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword,
+.token.class-name {
+  color: #1990b8;
+}
+
+.token.regex,
+.token.important {
+  color: #e90;
+}
+
+.language-css .token.string,
+.style .token.string {
+  color: #a67f59;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.token.important {
+  font-weight: normal;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.namespace {
+  opacity: .7;
+}
+
+@media screen and (max-width: 767px) {
+  pre[class*="language-"]:before,
+  pre[class*="language-"]:after {
+    bottom: 14px;
+    box-shadow: none;
+  }
+
+}
+
+/* Plugin styles */
+.token.tab:not(:empty):before,
+.token.cr:before,
+.token.lf:before {
+  color: #e0d7d1;
+}
+
+/* Plugin styles: Line Numbers */
+pre[class*="language-"].line-numbers.line-numbers {
+  padding-left: 0;
+}
+
+pre[class*="language-"].line-numbers.line-numbers code {
+  padding-left: 3.8em;
+}
+
+pre[class*="language-"].line-numbers.line-numbers .line-numbers-rows {
+  left: 0;
+}
+
+/* Plugin styles: Line Highlight */
+pre[class*="language-"][data-line] {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+pre[data-line] code {
+  position: relative;
+  padding-left: 4em;
+}
+pre .line-highlight {
+  margin-top: 0;
+}
+
+pre[class*="language-"].line-numbers {
+    position: relative;
+    padding-left: 3.8em;
+    counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+    position: relative;
+    white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    font-size: 100%;
+    left: -3.8em;
+    width: 3em; /* works for line-numbers below 1000 lines */
+    letter-spacing: -1px;
+    border-right: 1px solid #999;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+    .line-numbers-rows > span {
+        pointer-events: none;
+        display: block;
+        counter-increment: linenumber;
+    }
+
+        .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+
+</style>
+  
+    
+
+
+</body>
+</html>
