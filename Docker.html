@@ -198,57 +198,11 @@
 		Nginx+php Docker-compose</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<pre><code>version: &quot;2.1&quot;
-services:
-  nginx:
-    image: nginx
-    ports:
-      - &quot;80:80&quot;
-    volumes:
-      - ~/kelala/nginx/www:/usr/share/nginx/html
-      - ~/kelala/nginx/conf:/etc/nginx/conf.d
-      - ~/kelala/nginx/logs:/var/log/nginx
-    networks:
-      - lnmp-network
-  php:
-    image: php:7.3-fpm
-    volumes:
-      - ~/kelala/nginx/www:/usr/share/nginx/html
-    networks:
-      - lnmp-network
-networks:
-  lnmp-network:
-</code></pre>
-<h2><a id="nginx%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#nginx%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>nginx 配置</h2>
-<pre><code>server {
-    listen       80;
-    server_name  hdcrmlocal.kerlala.com;
-    root   /usr/share/nginx/html/hdcrm.kerlala.com/public/;
-    index  index.html index.htm index.php;
-
-    location / {
-        
-        try_files $uri $uri/ /index.php$is_args$args;
-    }
-
-    #error_page   500 502 503 504  /50x.html;
-    #location = /50x.html {
-    #    root   /usr/share/nginx/html;
-    #}
-
-    location ~ \.php$ {
-        root           /usr/share/nginx/html/hdcrm.kerlala.com/public/;
-        fastcgi_pass   172.19.0.3:9000;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include        fastcgi_params;
-    }
-}
-
-</code></pre>
-
-
 			
+
+			 
+			<a href="16176799000056.html#more" class="more-link">Read on &rarr;</a>
+    		
 			
 		</div>
 
@@ -269,126 +223,11 @@ networks:
 		Docker PHP环境搭建</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<h2><a id="%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F" class="anchor" aria-hidden="true" href="#%E6%8B%89%E5%8F%96php%E9%95%9C%E5%83%8F"><span class="octicon octicon-link"></span></a>拉取PHP镜像</h2>
-<pre><code>docker pull php:7.3-fpm
-</code></pre>
-<h2><a id="%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E6%8B%93%E5%B1%95"><span class="octicon octicon-link"></span></a>安装拓展</h2>
-<p>docker容器内安装php拓展使用如下命令进行安装</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>docker-php-ext-source</td>
-<td>在容器中创建一个/usr/src/php目录</td>
-</tr>
-<tr>
-<td>docker-php-ext-enable</td>
-<td>启用PHP扩展，省去我们手工编辑php.ini的过程</td>
-</tr>
-<tr>
-<td>docker-php-ext-install</td>
-<td>安装并启用PHP扩展</td>
-</tr>
-<tr>
-<td>docker-php-ext-configure</td>
-<td>经常与docker-php-ext-install搭配，在需要自定义扩展的配置时使用</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>例如：安装pdo拓展，使用如下命令即可</p>
-</blockquote>
-<pre><code>docker-php-ext-install pdo
-</code></pre>
-<blockquote>
-<p>有些拓展使用 <code>docker-php-ext-install</code> 命令不能安装，可以使用pecl工具进行安装，当装好php的容器之后，容器内已经安装好了pecl工具，所以直接拿来使用即可。使用方法如下：</p>
-</blockquote>
-<pre><code>例如安装php的memcached拓展
-1.首先更新源
-apt-get update
-2.安装所需依赖
-apt-get install -y libmemcached-dev zlib1g-dev
-3.安装memcached拓展
-pecl install memcached
-4.启用拓展
-docker-php-ext-enable memcached
-
-安装gd库拓展
-1.首先更新源
-apt-get update
-2.安装所需依赖
-apt-get install -y libwebp-dev libjpeg-dev libpng-dev libfreetype6-dev
-3.安装拓展
-docker-php-ext-install gd 
-
-docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/  \
-  &amp;&amp; docker-php-ext-install -j$(nproc) gd iconv mcrypt
-</code></pre>
-<blockquote>
-<p>安装GD库还是报错：docker-php-ext-configure gd --with-webp=/usr/include/webp --with-jpeg=/usr/include --with-freetype=/usr/include/freetype2/</p>
-</blockquote>
-<blockquote>
-<p>也可以编写一个DockerFile，加入如下命令：</p>
-</blockquote>
-<pre><code>FROM php:7.1-fpm
-RUN apt-get update \
-	# 手动安装依赖
-	&amp;&amp; apt-get install -y libmemcached-dev zlib1g-dev \
-	# 安装需要的扩展
-   &amp;&amp; pecl install memcached-2.2.0 \
-   # 启用扩展
-   &amp;&amp; docker-php-ext-enable memcached
-</code></pre>
-<pre><code>安装zip扩展所需的依赖扩展
-apt-get update &amp;&amp; apt-get install -y zlib1g-dev &amp;&amp; apt-get install -y libzip-dev
-
-安装并启动zip扩展
-docker-php-ext-install zip
-</code></pre>
-<pre><code>./configure --prefix=/usr/local/php/php8 \
-     --with-config-file-path=/usr/local/php/php8/etc \
-     --with-config-file-scan-dir=/usr/local/php/php8/etc/conf.d \
-     --enable-bcmath \
-     --with-bz2=/usr/local/opt/bzip2 \
-     --with-curl=/usr/local/opt/curl \
-     --enable-filter \
-     --enable-fpm \
-     --with-gd \
-     --enable-gd-native-ttf \
-     --with-freetype-dir \
-     --with-jpeg-dir \
-     --with-png-dir \
-     --enable-intl \
-     --enable-mbstring \
-     --with-mcrypt \
-     --enable-mysqlnd \
-     --with-mysql-sock=/tmp/mysql.sock \
-     --with-mysqli=mysqlnd \
-     --with-pdo-mysql=mysqlnd \
-     --with-pdo-sqlite \
-     --with-zlib-dir=/usr/local/opt/zlib \
-     --with-iconv=/usr/local/opt/libiconv \
-     --with-icu-dir=/usr/local/opt/icu4c \
-     --disable-phpdbg \
-     --disable-phpdbg-webhelper \
-     --enable-opcache \
-     --with-openssl=/usr/bin/openssl \
-     --enable-simplexml \
-     --with-sqlite3 \
-     --enable-xmlreader \
-     --enable-xmlwriter \
-     --enable-zip \
-     --enable-sockets \
-     --with-xmlrpc
-</code></pre>
-
-
 			
+
+			 
+			<a href="16176785301116.html#more" class="more-link">Read on &rarr;</a>
+    		
 			
 		</div>
 

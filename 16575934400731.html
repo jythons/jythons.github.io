@@ -134,7 +134,8 @@
 	<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 		<h1 class="title" itemprop="name">Laravel动态创建表</h1>
 		<div class="entry-content" itemprop="articleBody">
-			<pre><code class="language-php">if(!Schema::hasTable(‘表名称’)){ //添加前检测表是否存在
+			<span id="more"></span><!-- more -->
+<pre><code class="language-php">if(!Schema::hasTable(‘表名称’)){ //添加前检测表是否存在
 Schema::create(‘表名称’, function ($table) { //添加表
 $table-&gt;increments(‘id’); //主键
 $table-&gt;string(‘name’); //列名

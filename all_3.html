@@ -604,82 +604,11 @@ skip-grant-tables
 		Laravel动态创建表</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<pre><code class="language-php">if(!Schema::hasTable(‘表名称’)){ //添加前检测表是否存在
-Schema::create(‘表名称’, function ($table) { //添加表
-$table-&gt;increments(‘id’); //主键
-$table-&gt;string(‘name’); //列名
-//字段类型
-$table-&gt;bigIncrements(‘id’); 自增ID，类型为bigint
-$table-&gt;bigInteger(‘votes’); 等同于数据库中的BIGINT类型
-$table-&gt;binary(‘data’); 等同于数据库中的BLOB类型
-$table-&gt;boolean(‘confirmed’); 等同于数据库中的BOOLEAN类型
-$table-&gt;char(‘name’, 4); 等同于数据库中的CHAR类型
-$table-&gt;date(‘created_at’); 等同于数据库中的DATE类型
-$table-&gt;dateTime(‘created_at’); 等同于数据库中的DATETIME类型
-$table-&gt;dateTimeTz(‘created_at’); 等同于数据库中的DATETIME类型（带时区）
-$table-&gt;decimal(‘amount’, 5, 2); 等同于数据库中的DECIMAL类型，带一个精度和范围
-$table-&gt;double(‘column’, 15, 8); 等同于数据库中的DOUBLE类型，带精度, 总共15位数字，小数点后8位.
-$table-&gt;enum(‘choices’, [‘foo’, ‘bar’]); 等同于数据库中的 ENUM类型
-$table-&gt;float(‘amount’); 等同于数据库中的 FLOAT 类型
-$table-&gt;increments(‘id’); 数据库主键自增ID
-$table-&gt;integer(‘votes’); 等同于数据库中的 INTEGER 类型
-$table-&gt;ipAddress(‘visitor’); 等同于数据库中的 IP 地址
-$table-&gt;json(‘options’); 等同于数据库中的 JSON 类型
-$table-&gt;jsonb(‘options’); 等同于数据库中的 JSONB 类型
-$table-&gt;longText(‘description’); 等同于数据库中的 LONGTEXT 类型
-$table-&gt;macAddress(‘device’); 等同于数据库中的 MAC 地址
-$table-&gt;mediumIncrements(‘id’); 自增ID，类型为无符号的mediumint
-$table-&gt;mediumInteger(‘numbers’); 等同于数据库中的 MEDIUMINT类型
-$table-&gt;mediumText(‘description’); 等同于数据库中的 MEDIUMTEXT类型
-$table-&gt;morphs(‘taggable’); 添加一个 INTEGER类型的 taggable_id 列和一个 STRING类型的 taggable_type列
-$table-&gt;nullableTimestamps(); 和 timestamps()一样但允许 NULL值.
-$table-&gt;rememberToken(); 添加一个 remember_token 列： VARCHAR(100) NULL.
-$table-&gt;smallIncrements(‘id’); 自增ID，类型为无符号的smallint
-$table-&gt;smallInteger(‘votes’); 等同于数据库中的 SMALLINT 类型
-$table-&gt;softDeletes(); 新增一个 deleted_at 列 用于软删除.
-$table-&gt;string(‘email’); 等同于数据库中的 VARCHAR 列 .
-$table-&gt;string(‘name’, 100); 等同于数据库中的 VARCHAR，带一个长度
-$table-&gt;text(‘description’); 等同于数据库中的 TEXT 类型
-$table-&gt;time(‘sunrise’); 等同于数据库中的 TIME类型
-$table-&gt;timeTz(‘sunrise’); 等同于数据库中的 TIME 类型（带时区）
-$table-&gt;tinyInteger(‘numbers’); 等同于数据库中的 TINYINT 类型
-$table-&gt;timestamp(‘added_on’); 等同于数据库中的 TIMESTAMP 类型
-$table-&gt;timestampTz(‘added_on’); 等同于数据库中的 TIMESTAMP 类型（带时区）
-$table-&gt;timestamps(); 添加 created_at 和 updated_at列
-$table-&gt;timestampsTz(); 添加 created_at 和 updated_at列（带时区）
-$table-&gt;unsignedBigInteger(‘votes’); 等同于数据库中无符号的 BIGINT 类型
-$table-&gt;unsignedInteger(‘votes’); 等同于数据库中无符号的 INT 类型
-$table-&gt;unsignedMediumInteger(‘votes’); 等同于数据库中无符号的 MEDIUMINT 类型
-$table-&gt;unsignedSmallInteger(‘votes’); 等同于数据库中无符号的 SMALLINT 类型
-$table-&gt;unsignedTinyInteger(‘votes’); 等同于数据库中无符号的 TINYINT 类型
-$table-&gt;uuid(‘id’); 等同于数据库的UUID
-</code></pre>
-<pre><code class="language-php">默认等等：
--&gt;after(‘column’) 将该列置于另一个列之后 (仅适用于MySQL)
--&gt;comment(‘my comment’) 添加注释信息
--&gt;default( v a l u e ) 指 定 列 的 默 认 值 − &amp;gt; f i r s t ( ) 将 该 列 置 为 表 中 第 一 个 列 ( 仅 适 用 于 M y S Q L ) − &amp;gt; n u l l a b l e ( ) 允 许 该 列 的 值 为 N U L L − &amp;gt; s t o r e d A s ( value) 指定列的默认值 -&amp;gt;first() 将该列置为表中第一个列 (仅适用于MySQL) -&amp;gt;nullable() 允许该列的值为NULL -&amp;gt;storedAs( value)指定列的默认值−&gt;first()将该列置为表中第一个列(仅适用于MySQL)−&gt;nullable()允许该列的值为NULL−&gt;storedAs(expression) 创建一个存储生成列（只支持MySQL）
--&gt;unsigned() 设置 integer 列为 UNSIGNED
--&gt;virtualAs($expression) 创建一个虚拟生成列（只支持MySQL）
-
-索引等等
-可用索引类型：
-
-命令 描述
-$table-&gt;primary(‘id’); 添加主键索引
-$table-&gt;primary([‘first’, ‘last’]); 添加混合索引
-$table-&gt;unique(‘email’); 添加唯一索引
-$table-&gt;unique(‘state’, ‘my_index_name’); 指定自定义索引名称，如果不指定，laravel会自动给它起 个名字
-$table-&gt;index(‘state’); 添加普通索引
-删除索引：
-
-命令 描述
-$table-&gt;dropPrimary(‘users_id_primary’); 从 “users”表中删除主键索引
-$table-&gt;dropUnique(‘users_email_unique’); 从 “users”表中删除唯一索引
-$table-&gt;dropIndex(‘geo_state_index’); 从 “geo”表中删除普通索引
-</code></pre>
-
-
 			
+
+			 
+			<a href="16575934400731.html#more" class="more-link">Read on &rarr;</a>
+    		
 			
 		</div>
 

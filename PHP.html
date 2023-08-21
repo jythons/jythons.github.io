@@ -198,82 +198,11 @@
 		Laravel动态创建表</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<pre><code class="language-php">if(!Schema::hasTable(‘表名称’)){ //添加前检测表是否存在
-Schema::create(‘表名称’, function ($table) { //添加表
-$table-&gt;increments(‘id’); //主键
-$table-&gt;string(‘name’); //列名
-//字段类型
-$table-&gt;bigIncrements(‘id’); 自增ID，类型为bigint
-$table-&gt;bigInteger(‘votes’); 等同于数据库中的BIGINT类型
-$table-&gt;binary(‘data’); 等同于数据库中的BLOB类型
-$table-&gt;boolean(‘confirmed’); 等同于数据库中的BOOLEAN类型
-$table-&gt;char(‘name’, 4); 等同于数据库中的CHAR类型
-$table-&gt;date(‘created_at’); 等同于数据库中的DATE类型
-$table-&gt;dateTime(‘created_at’); 等同于数据库中的DATETIME类型
-$table-&gt;dateTimeTz(‘created_at’); 等同于数据库中的DATETIME类型（带时区）
-$table-&gt;decimal(‘amount’, 5, 2); 等同于数据库中的DECIMAL类型，带一个精度和范围
-$table-&gt;double(‘column’, 15, 8); 等同于数据库中的DOUBLE类型，带精度, 总共15位数字，小数点后8位.
-$table-&gt;enum(‘choices’, [‘foo’, ‘bar’]); 等同于数据库中的 ENUM类型
-$table-&gt;float(‘amount’); 等同于数据库中的 FLOAT 类型
-$table-&gt;increments(‘id’); 数据库主键自增ID
-$table-&gt;integer(‘votes’); 等同于数据库中的 INTEGER 类型
-$table-&gt;ipAddress(‘visitor’); 等同于数据库中的 IP 地址
-$table-&gt;json(‘options’); 等同于数据库中的 JSON 类型
-$table-&gt;jsonb(‘options’); 等同于数据库中的 JSONB 类型
-$table-&gt;longText(‘description’); 等同于数据库中的 LONGTEXT 类型
-$table-&gt;macAddress(‘device’); 等同于数据库中的 MAC 地址
-$table-&gt;mediumIncrements(‘id’); 自增ID，类型为无符号的mediumint
-$table-&gt;mediumInteger(‘numbers’); 等同于数据库中的 MEDIUMINT类型
-$table-&gt;mediumText(‘description’); 等同于数据库中的 MEDIUMTEXT类型
-$table-&gt;morphs(‘taggable’); 添加一个 INTEGER类型的 taggable_id 列和一个 STRING类型的 taggable_type列
-$table-&gt;nullableTimestamps(); 和 timestamps()一样但允许 NULL值.
-$table-&gt;rememberToken(); 添加一个 remember_token 列： VARCHAR(100) NULL.
-$table-&gt;smallIncrements(‘id’); 自增ID，类型为无符号的smallint
-$table-&gt;smallInteger(‘votes’); 等同于数据库中的 SMALLINT 类型
-$table-&gt;softDeletes(); 新增一个 deleted_at 列 用于软删除.
-$table-&gt;string(‘email’); 等同于数据库中的 VARCHAR 列 .
-$table-&gt;string(‘name’, 100); 等同于数据库中的 VARCHAR，带一个长度
-$table-&gt;text(‘description’); 等同于数据库中的 TEXT 类型
-$table-&gt;time(‘sunrise’); 等同于数据库中的 TIME类型
-$table-&gt;timeTz(‘sunrise’); 等同于数据库中的 TIME 类型（带时区）
-$table-&gt;tinyInteger(‘numbers’); 等同于数据库中的 TINYINT 类型
-$table-&gt;timestamp(‘added_on’); 等同于数据库中的 TIMESTAMP 类型
-$table-&gt;timestampTz(‘added_on’); 等同于数据库中的 TIMESTAMP 类型（带时区）
-$table-&gt;timestamps(); 添加 created_at 和 updated_at列
-$table-&gt;timestampsTz(); 添加 created_at 和 updated_at列（带时区）
-$table-&gt;unsignedBigInteger(‘votes’); 等同于数据库中无符号的 BIGINT 类型
-$table-&gt;unsignedInteger(‘votes’); 等同于数据库中无符号的 INT 类型
-$table-&gt;unsignedMediumInteger(‘votes’); 等同于数据库中无符号的 MEDIUMINT 类型
-$table-&gt;unsignedSmallInteger(‘votes’); 等同于数据库中无符号的 SMALLINT 类型
-$table-&gt;unsignedTinyInteger(‘votes’); 等同于数据库中无符号的 TINYINT 类型
-$table-&gt;uuid(‘id’); 等同于数据库的UUID
-</code></pre>
-<pre><code class="language-php">默认等等：
--&gt;after(‘column’) 将该列置于另一个列之后 (仅适用于MySQL)
--&gt;comment(‘my comment’) 添加注释信息
--&gt;default( v a l u e ) 指 定 列 的 默 认 值 − &amp;gt; f i r s t ( ) 将 该 列 置 为 表 中 第 一 个 列 ( 仅 适 用 于 M y S Q L ) − &amp;gt; n u l l a b l e ( ) 允 许 该 列 的 值 为 N U L L − &amp;gt; s t o r e d A s ( value) 指定列的默认值 -&amp;gt;first() 将该列置为表中第一个列 (仅适用于MySQL) -&amp;gt;nullable() 允许该列的值为NULL -&amp;gt;storedAs( value)指定列的默认值−&gt;first()将该列置为表中第一个列(仅适用于MySQL)−&gt;nullable()允许该列的值为NULL−&gt;storedAs(expression) 创建一个存储生成列（只支持MySQL）
--&gt;unsigned() 设置 integer 列为 UNSIGNED
--&gt;virtualAs($expression) 创建一个虚拟生成列（只支持MySQL）
-
-索引等等
-可用索引类型：
-
-命令 描述
-$table-&gt;primary(‘id’); 添加主键索引
-$table-&gt;primary([‘first’, ‘last’]); 添加混合索引
-$table-&gt;unique(‘email’); 添加唯一索引
-$table-&gt;unique(‘state’, ‘my_index_name’); 指定自定义索引名称，如果不指定，laravel会自动给它起 个名字
-$table-&gt;index(‘state’); 添加普通索引
-删除索引：
-
-命令 描述
-$table-&gt;dropPrimary(‘users_id_primary’); 从 “users”表中删除主键索引
-$table-&gt;dropUnique(‘users_email_unique’); 从 “users”表中删除唯一索引
-$table-&gt;dropIndex(‘geo_state_index’); 从 “geo”表中删除普通索引
-</code></pre>
-
-
 			
+
+			 
+			<a href="16575934400731.html#more" class="more-link">Read on &rarr;</a>
+    		
 			
 		</div>
 
@@ -294,162 +223,11 @@ $table-&gt;dropIndex(‘geo_state_index’); 从 “geo”表中删除普通索�
 		跨域</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<p>CORS是一个W3C标准，全称是&quot;跨域资源共享&quot;（Cross-origin resource sharing）。
-它允许浏览器向跨源服务器，发出XMLHttpRequest请求，从而克服了AJAX只能同源使用的限制。
-本文详细介绍CORS的内部机制。</p>
-<h2><a id="%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B" class="anchor" aria-hidden="true" href="#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B"><span class="octicon octicon-link"></span></a>一、简介</h2>
-<p>CORS需要浏览器和服务器同时支持。目前，所有浏览器都支持该功能，IE浏览器不能低于IE10。</p>
-<p>整个CORS通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS通信与同源的AJAX通信没有差别，代码完全一样。浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。</p>
-<p>因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。</p>
-<h2><a id="%E4%BA%8C%E3%80%81%E4%B8%A4%E7%A7%8D%E8%AF%B7%E6%B1%82" class="anchor" aria-hidden="true" href="#%E4%BA%8C%E3%80%81%E4%B8%A4%E7%A7%8D%E8%AF%B7%E6%B1%82"><span class="octicon octicon-link"></span></a>二、两种请求</h2>
-<p>浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。</p>
-<p>只要同时满足以下两大条件，就属于简单请求。</p>
-<p>（1) 请求方法是以下三种方法之一：</p>
-<pre><code>HEAD
-GET
-POST
-</code></pre>
-<p>（2）HTTP的头信息不超出以下几种字段：</p>
-<pre><code>Accept
-Accept-Language
-Content-Language
-Last-Event-ID
-</code></pre>
-<p>Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain
-这是为了兼容表单（form），因为历史上表单一直可以发出跨域请求。AJAX 的跨域设计就是，只要表单可以发，AJAX 就可以直接发。</p>
-<p>凡是不同时满足上面两个条件，就属于非简单请求。</p>
-<p>浏览器对这两种请求的处理，是不一样的。</p>
-<h2><a id="%E4%B8%89%E3%80%81%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82" class="anchor" aria-hidden="true" href="#%E4%B8%89%E3%80%81%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82"><span class="octicon octicon-link"></span></a>三、简单请求</h2>
-<h3><a id="3-1%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B" class="anchor" aria-hidden="true" href="#3-1%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="octicon octicon-link"></span></a>3.1 基本流程</h3>
-<p>对于简单请求，浏览器直接发出CORS请求。具体来说，就是在头信息之中，增加一个Origin字段。</p>
-<p>下面是一个例子，浏览器发现这次跨源AJAX请求是简单请求，就自动在头信息之中，添加一个Origin字段。</p>
-<pre><code>GET /cors HTTP/1.1
-Origin: http://api.bob.com
-Host: api.alice.com
-Accept-Language: en-US
-Connection: keep-alive
-User-Agent: Mozilla/5.0...
-</code></pre>
-<p>上面的头信息中，Origin字段用来说明，本次请求来自哪个源（协议 + 域名 + 端口）。服务器根据这个值，决定是否同意这次请求。</p>
-<p>如果Origin指定的源，不在许可范围内，服务器会返回一个正常的HTTP回应。浏览器发现，这个回应的头信息没有包含Access-Control-Allow-Origin字段（详见下文），就知道出错了，从而抛出一个错误，被XMLHttpRequest的onerror回调函数捕获。注意，这种错误无法通过状态码识别，因为HTTP回应的状态码有可能是200。</p>
-<p>如果Origin指定的域名在许可范围内，服务器返回的响应，会多出几个头信息字段。</p>
-<p>Access-Control-Allow-Origin: <a href="http://api.bob.com">http://api.bob.com</a>
-Access-Control-Allow-Credentials: true
-Access-Control-Expose-Headers: FooBar
-Content-Type: text/html; charset=utf-8
-上面的头信息之中，有三个与CORS请求相关的字段，都以Access-Control-开头。</p>
-<p>（1）Access-Control-Allow-Origin</p>
-<p>该字段是必须的。它的值要么是请求时Origin字段的值，要么是一个*，表示接受任意域名的请求。</p>
-<p>（2）Access-Control-Allow-Credentials</p>
-<p>该字段可选。它的值是一个布尔值，表示是否允许发送Cookie。默认情况下，Cookie不包括在CORS请求之中。设为true，即表示服务器明确许可，Cookie可以包含在请求中，一起发给服务器。这个值也只能设为true，如果服务器不要浏览器发送Cookie，删除该字段即可。</p>
-<p>（3）Access-Control-Expose-Headers</p>
-<p>该字段可选。CORS请求时，XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在Access-Control-Expose-Headers里面指定。上面的例子指定，getResponseHeader('FooBar')可以返回FooBar字段的值。</p>
-<h3><a id="3-2-withcredentials%E5%B1%9E%E6%80%A7" class="anchor" aria-hidden="true" href="#3-2-withcredentials%E5%B1%9E%E6%80%A7"><span class="octicon octicon-link"></span></a>3.2 withCredentials 属性</h3>
-<p>上面说到，CORS请求默认不发送Cookie和HTTP认证信息。如果要把Cookie发到服务器，一方面要服务器同意，指定Access-Control-Allow-Credentials字段。</p>
-<p>Access-Control-Allow-Credentials: true</p>
-<p>另一方面，开发者必须在AJAX请求中打开withCredentials属性。</p>
-<p>var xhr = new XMLHttpRequest();
-xhr.withCredentials = true;
-否则，即使服务器同意发送Cookie，浏览器也不会发送。或者，服务器要求设置Cookie，浏览器也不会处理。</p>
-<p>但是，如果省略withCredentials设置，有的浏览器还是会一起发送Cookie。这时，可以显式关闭withCredentials。</p>
-<p>xhr.withCredentials = false;
-需要注意的是，如果要发送Cookie，Access-Control-Allow-Origin就不能设为星号，必须指定明确的、与请求网页一致的域名。同时，Cookie依然遵循同源政策，只有用服务器域名设置的Cookie才会上传，其他域名的Cookie并不会上传，且（跨源）原网页代码中的document.cookie也无法读取服务器域名下的Cookie。</p>
-<h2><a id="%E5%9B%9B%E3%80%81%E9%9D%9E%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82" class="anchor" aria-hidden="true" href="#%E5%9B%9B%E3%80%81%E9%9D%9E%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82"><span class="octicon octicon-link"></span></a>四、非简单请求</h2>
-<h3><a id="4-1%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82" class="anchor" aria-hidden="true" href="#4-1%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82"><span class="octicon octicon-link"></span></a>4.1 预检请求</h3>
-<p>非简单请求是那种对服务器有特殊要求的请求，比如请求方法是PUT或DELETE，或者Content-Type字段的类型是application/json。</p>
-<p>非简单请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为&quot;预检&quot;请求（preflight）。</p>
-<p>浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。</p>
-<p>下面是一段浏览器的JavaScript脚本。</p>
-<pre><code>var url = 'http://api.alice.com/cors';
-var xhr = new XMLHttpRequest();
-xhr.open('PUT', url, true);
-xhr.setRequestHeader('X-Custom-Header', 'value');
-xhr.send();
-</code></pre>
-<p>上面代码中，HTTP请求的方法是PUT，并且发送一个自定义头信息X-Custom-Header。</p>
-<p>浏览器发现，这是一个非简单请求，就自动发出一个&quot;预检&quot;请求，要求服务器确认可以这样请求。下面是这个&quot;预检&quot;请求的HTTP头信息。</p>
-<pre><code>OPTIONS /cors HTTP/1.1
-Origin: http://api.bob.com
-Access-Control-Request-Method: PUT
-Access-Control-Request-Headers: X-Custom-Header
-Host: api.alice.com
-Accept-Language: en-US
-Connection: keep-alive
-User-Agent: Mozilla/5.0...
-</code></pre>
-<p>&quot;预检&quot;请求用的请求方法是OPTIONS，表示这个请求是用来询问的。头信息里面，关键字段是Origin，表示请求来自哪个源。</p>
-<p>除了Origin字段，&quot;预检&quot;请求的头信息包括两个特殊字段。</p>
-<p>（1）Access-Control-Request-Method</p>
-<p>该字段是必须的，用来列出浏览器的CORS请求会用到哪些HTTP方法，上例是PUT。</p>
-<p>（2）Access-Control-Request-Headers</p>
-<p>该字段是一个逗号分隔的字符串，指定浏览器CORS请求会额外发送的头信息字段，上例是X-Custom-Header。</p>
-<h3><a id="4-2%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82%E7%9A%84%E5%9B%9E%E5%BA%94" class="anchor" aria-hidden="true" href="#4-2%E9%A2%84%E6%A3%80%E8%AF%B7%E6%B1%82%E7%9A%84%E5%9B%9E%E5%BA%94"><span class="octicon octicon-link"></span></a>4.2 预检请求的回应</h3>
-<p>服务器收到&quot;预检&quot;请求以后，检查了Origin、Access-Control-Request-Method和Access-Control-Request-Headers字段以后，确认允许跨源请求，就可以做出回应。</p>
-<pre><code>HTTP/1.1 200 OK
-Date: Mon, 01 Dec 2008 01:15:39 GMT
-Server: Apache/2.0.61 (Unix)
-Access-Control-Allow-Origin: http://api.bob.com
-Access-Control-Allow-Methods: GET, POST, PUT
-Access-Control-Allow-Headers: X-Custom-Header
-Content-Type: text/html; charset=utf-8
-Content-Encoding: gzip
-Content-Length: 0
-Keep-Alive: timeout=2, max=100
-Connection: Keep-Alive
-Content-Type: text/plain
-</code></pre>
-<p>上面的HTTP回应中，关键的是Access-Control-Allow-Origin字段，表示<a href="http://api.bob.com%E5%8F%AF%E4%BB%A5%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE%E3%80%82%E8%AF%A5%E5%AD%97%E6%AE%B5%E4%B9%9F%E5%8F%AF%E4%BB%A5%E8%AE%BE%E4%B8%BA%E6%98%9F%E5%8F%B7%EF%BC%8C%E8%A1%A8%E7%A4%BA%E5%90%8C%E6%84%8F%E4%BB%BB%E6%84%8F%E8%B7%A8%E6%BA%90%E8%AF%B7%E6%B1%82%E3%80%82">http://api.bob.com可以请求数据。该字段也可以设为星号，表示同意任意跨源请求。</a></p>
-<p>Access-Control-Allow-Origin: *
-如果服务器否定了&quot;预检&quot;请求，会返回一个正常的HTTP回应，但是没有任何CORS相关的头信息字段。这时，浏览器就会认定，服务器不同意预检请求，因此触发一个错误，被XMLHttpRequest对象的onerror回调函数捕获。控制台会打印出如下的报错信息。</p>
-<p>XMLHttpRequest cannot load <a href="http://api.alice.com">http://api.alice.com</a>.
-Origin <a href="http://api.bob.com">http://api.bob.com</a> is not allowed by Access-Control-Allow-Origin.
-服务器回应的其他CORS相关字段如下。</p>
-<pre><code>Access-Control-Allow-Methods: GET, POST, PUT
-Access-Control-Allow-Headers: X-Custom-Header
-Access-Control-Allow-Credentials: true
-Access-Control-Max-Age: 1728000
-</code></pre>
-<p>（1）Access-Control-Allow-Methods</p>
-<p>该字段必需，它的值是逗号分隔的一个字符串，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次&quot;预检&quot;请求。</p>
-<p>（2）Access-Control-Allow-Headers</p>
-<p>如果浏览器请求包括Access-Control-Request-Headers字段，则Access-Control-Allow-Headers字段是必需的。它也是一个逗号分隔的字符串，表明服务器支持的所有头信息字段，不限于浏览器在&quot;预检&quot;中请求的字段。</p>
-<p>（3）Access-Control-Allow-Credentials</p>
-<p>该字段与简单请求时的含义相同。</p>
-<p>（4）Access-Control-Max-Age</p>
-<p>该字段可选，用来指定本次预检请求的有效期，单位为秒。上面结果中，有效期是20天（1728000秒），即允许缓存该条回应1728000秒（即20天），在此期间，不用发出另一条预检请求。</p>
-<h3><a id="4-3%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E6%AD%A3%E5%B8%B8%E8%AF%B7%E6%B1%82%E5%92%8C%E5%9B%9E%E5%BA%94" class="anchor" aria-hidden="true" href="#4-3%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9A%84%E6%AD%A3%E5%B8%B8%E8%AF%B7%E6%B1%82%E5%92%8C%E5%9B%9E%E5%BA%94"><span class="octicon octicon-link"></span></a>4.3 浏览器的正常请求和回应</h3>
-<p>一旦服务器通过了&quot;预检&quot;请求，以后每次浏览器正常的CORS请求，就都跟简单请求一样，会有一个Origin头信息字段。服务器的回应，也都会有一个Access-Control-Allow-Origin头信息字段。</p>
-<p>下面是&quot;预检&quot;请求之后，浏览器的正常CORS请求。</p>
-<pre><code>PUT /cors HTTP/1.1
-Origin: http://api.bob.com
-Host: api.alice.com
-X-Custom-Header: value
-Accept-Language: en-US
-Connection: keep-alive
-User-Agent: Mozilla/5.0...
-</code></pre>
-<p>上面头信息的Origin字段是浏览器自动添加的。</p>
-<p>下面是服务器正常的回应。</p>
-<pre><code>Access-Control-Allow-Origin: http://api.bob.com
-Content-Type: text/html; charset=utf-8
-</code></pre>
-<p>上面头信息中，Access-Control-Allow-Origin字段是每次回应都必定包含的。</p>
-<h2><a id="%E4%BA%94%E3%80%81cookie%E7%9A%84secure%E3%80%81httponly%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE" class="anchor" aria-hidden="true" href="#%E4%BA%94%E3%80%81cookie%E7%9A%84secure%E3%80%81httponly%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE"><span class="octicon octicon-link"></span></a>五、cookie的secure、httponly属性设置</h2>
-<p>1 secure属性
-当设置为true时，表示创建的 Cookie 会被以安全的形式向服务器传输，也就是只能在 HTTPS 连接中被浏览器传递到服务器端进行会话验证，如果是 HTTP 连接则不会传递该信息，所以不会被窃取到Cookie 的具体内容。</p>
-<p>2 HttpOnly属性
-如果在Cookie中设置了&quot;HttpOnly&quot;属性，那么通过程序(JS脚本、Applet等)将无法读取到Cookie信息，这样能有效的防止XSS攻击。</p>
-<p>对于以上两个属性，
-首先，secure属性是防止信息在传递的过程中被监听捕获后信息泄漏，HttpOnly属性的目的是防止程序获取cookie后进行攻击。</p>
-<h2><a id="%E5%8F%82%E8%80%83" class="anchor" aria-hidden="true" href="#%E5%8F%82%E8%80%83"><span class="octicon octicon-link"></span></a>参考</h2>
-<ul>
-<li><a href="http://t.zoukankan.com/geniusxjq-p-4280022.html">http://t.zoukankan.com/geniusxjq-p-4280022.html</a></li>
-<li><a href="https://www.csdn.net/tags/NtzaAg4sNjk1ODEtYmxvZwO0O0OO0O0O.html">https://www.csdn.net/tags/NtzaAg4sNjk1ODEtYmxvZwO0O0OO0O0O.html</a></li>
-<li><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html">http://www.ruanyifeng.com/blog/2016/04/cors.html</a></li>
-</ul>
-
-
 			
+
+			 
+			<a href="16570024842451.html#more" class="more-link">Read on &rarr;</a>
+    		
 			
 		</div>
 
@@ -470,17 +248,11 @@ Content-Type: text/html; charset=utf-8
 		laravel 获取目录方法</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<pre><code>base_path()    //站点根目录
-app_path()     //app目录
-public_path()  //public目录
-storage_path()  //storage 目录
-resource_path()  //resources 目录
-config_path()    //config 目录
-database_path()  //database 目录
-</code></pre>
-
-
 			
+
+			 
+			<a href="16518882443295.html#more" class="more-link">Read on &rarr;</a>
+    		
 			
 		</div>
 
@@ -501,52 +273,11 @@ database_path()  //database 目录
 		laravel使用ClickHouse数据库</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<blockquote>
-<p>ClickHouse<a href="https://clickhouse.tech/docs/zh/">中文文档</a></p>
-</blockquote>
-<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
-<p><strong>1.使用composer安装ClickHouse依赖</strong></p>
-<pre><code class="language-php">composer require the-tinderbox/clickhouse-builder
-</code></pre>
-<p><strong>2.在config/app.php添加依赖</strong></p>
-<pre><code class="language-php">'providers' =&gt; [
-    ...
-    Tinderbox\ClickhouseBuilder\Integrations\Laravel\ClickhouseServiceProvider::class,
-    ...
-]
-</code></pre>
-<p><strong>3.连接配置</strong></p>
-<pre><code class="language-php">'connections' =&gt; [
-    'clickhouse' =&gt; [
-        'driver' =&gt; 'clickhouse',
-        'host' =&gt; 'ip',
-        'port' =&gt; '',
-        'database' =&gt; '',
-        'username' =&gt; '',
-        'password' =&gt; '',
-        'options' =&gt; [
-            'timeout' =&gt; 10,
-            'protocol' =&gt; 'https'
-        ]
-    ]
-]
-</code></pre>
-<h2><a id="%E4%BD%BF%E7%94%A8" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8"><span class="octicon octicon-link"></span></a>使用</h2>
-<blockquote>
-<p>使用方式基本与MySQL使用的方式一致</p>
-</blockquote>
-<pre><code class="language-php">DB::connection('clickhouse')-&gt;table(表名)-&gt;select(raw(&quot;sum(click_cnt) as click_cnt&quot;), &quot;zone_id&quot;);;
-
-DB::connection('clickhouse')-&gt;table($table)-&gt;insert($popDataToArr);
-
-</code></pre>
-<h2><a id="%E5%8F%82%E8%80%83" class="anchor" aria-hidden="true" href="#%E5%8F%82%E8%80%83"><span class="octicon octicon-link"></span></a>参考</h2>
-<blockquote>
-<p><a href="https://blog.csdn.net/qq_32404231/article/details/118930322">https://blog.csdn.net/qq_32404231/article/details/118930322</a></p>
-</blockquote>
-
-
 			
+
+			 
+			<a href="16467194160892.html#more" class="more-link">Read on &rarr;</a>
+    		
 			
 		</div>
 
@@ -567,176 +298,11 @@ DB::connection('clickhouse')-&gt;table($table)-&gt;insert($popDataToArr);
 		laravel 使用kafka</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<h2><a id="%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82"><span class="octicon octicon-link"></span></a>安装环境要求</h2>
-<ul>
-<li>PHP 版本大于 7.0</li>
-<li>Kafka Server 版本大于 0.8.0</li>
-<li>消费模块 Kafka Server 版本需要大于 0.9.0</li>
-</ul>
-<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
-<p>使用 Composer 安装<br />
-添加 composer 依赖 nmred/kafka-php 到项目的   composer.json 文件中即可，如:</p>
-<pre><code class="language-json">&quot;require&quot;: {
-   &quot;php&quot;: &quot;&gt;=5.6.4&quot;,
-   &quot;laravel/lumen-framework&quot;: &quot;5.4.*&quot;,
-   &quot;nmred/kafka-php&quot;: &quot;dev-master&quot;
-},
-</code></pre>
-<h2><a id="%E4%BD%BF%E7%94%A8" class="anchor" aria-hidden="true" href="#%E4%BD%BF%E7%94%A8"><span class="octicon octicon-link"></span></a>使用</h2>
-<h3><a id="%E5%88%9B%E5%BB%BAkafkaservice" class="anchor" aria-hidden="true" href="#%E5%88%9B%E5%BB%BAkafkaservice"><span class="octicon octicon-link"></span></a>创建KafkaService</h3>
-<pre><code class="language-php">&lt;?php
-namespace App\Http\Services;
-use Kafka;
-
-class KafkaService
-{
-    public function __construct()
-    {
-        date_default_timezone_set('PRC');
-    }
-
-    /*
-     * Produce
-     */
-    public function Producer($topic, $value , $url)
-    {
-        $config = \Kafka\ProducerConfig::getInstance();
-        $config-&gt;setMetadataRefreshIntervalMs(10000);
-        $config-&gt;setMetadataBrokerList($url);
-        $config-&gt;setBrokerVersion('1.0.0');
-        $config-&gt;setRequiredAck(1);
-        $config-&gt;setIsAsyn(false);
-        $config-&gt;setProduceInterval(500);
-        $producer = new \Kafka\Producer(function () use($value,$topic){
-            return [
-                [
-                    'topic' =&gt; $topic,
-                    'value' =&gt; $value,
-                    'key' =&gt; '',
-                ],
-            ];
-        });
-        $producer-&gt;success(function ($result){
-            return &quot;success&quot;;
-        });
-        $producer-&gt;error(function ($errorCode){
-            var_dump($errorCode);
-        });
-        $producer-&gt;send(true);
-    }
-
-    /*
-     * Consumer
-     */
-    public function consumer($group,$topics , $url){
-        $config = \Kafka\ConsumerConfig::getInstance();
-        $config-&gt;setMetadataRefreshIntervalMs(500);
-        $config-&gt;setMetadataBrokerList($url);
-        $config-&gt;setGroupId($group);
-        $config-&gt;setBrokerVersion('1.0.0');
-        $config-&gt;setTopics([$topics]);
-        $config-&gt;setOffsetReset('earliest');
-        $consumer = new \Kafka\Consumer();
-        $consumer-&gt;start(function($topic, $part, $message) {
-            echo &quot;receive a message...\n&quot;;
-            app('consumerKafka')-&gt;consumerData($message['message']['value']);  //你的接收处理逻辑
-            var_dump($message['message']['value']);
-        });
-    }
-}
-</code></pre>
-<h3><a id="%E6%89%A7%E8%A1%8Cproduce%E6%96%B9%E6%B3%95%E7%94%9F%E4%BA%A7%E6%B6%88%E6%81%AF" class="anchor" aria-hidden="true" href="#%E6%89%A7%E8%A1%8Cproduce%E6%96%B9%E6%B3%95%E7%94%9F%E4%BA%A7%E6%B6%88%E6%81%AF"><span class="octicon octicon-link"></span></a>执行produce方法生产消息</h3>
-<pre><code class="language-php">&lt;?php
-namespace App\Http\Services;
-use App\Http\Services\KafkaService;
-class ProduceService
-{
- public function produce()
-    {
-        $topic = env('topic_test'); //配置在env中
-        $url = env('kafka_url_test'); //配置在env中
-        $value =
-            [
-                'code' =&gt; 'test',
-                'data_type' =&gt; 'personal',
-                'action' =&gt; 'update',
-                'data' =&gt;
-                    [
-                        'id' =&gt; 1,
-                        'name' =&gt; 'tom',
-                        'gender' =&gt; 2
-                    ],
-                'redirect_url' =&gt; '',
-                'operator' =&gt; 'system',
-            ];
-        $value = json_encode ($value, JSON_FORCE_OBJECT );
-        $kafka = new KafkaService();
-        $kafka-&gt;Producer($topic, $value , $url);
-    }
-
-}
-</code></pre>
-<h3><a id="%E6%89%A7%E8%A1%8Cphp-artisan-consumer-kafka%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF" class="anchor" aria-hidden="true" href="#%E6%89%A7%E8%A1%8Cphp-artisan-consumer-kafka%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF"><span class="octicon octicon-link"></span></a>执行php artisan consumer:kafka 消费消息</h3>
-<pre><code class="language-php">&lt;?php
-namespace App\Console\Commands;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Redis;
-
-class ConsumerKafka extends Command
-{
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'consumer:kafka';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = '处理异步kafka消息';
-
-    /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
-        $this-&gt;log('开始监听消息...');
-        app('kafkaService')-&gt;consumer($group=env('KAFKA_GROUP'),$topics =env('KAFKA_TOPIC'), $url=env('KAFKA_URL'));
-        return $this;
-    }
-
-    private function log($msg = '')
-    {
-        if (!$msg) {
-            return $this;
-        }
-        if (php_sapi_name() == 'cli') {
-            echo $msg, PHP_EOL;
-        }
-        app('myLog')-&gt;lumenLog($msg, 'kafka_consumer');
-        return $this;
-    }
-}
-</code></pre>
-<h2><a id="%E5%8F%82%E8%80%83" class="anchor" aria-hidden="true" href="#%E5%8F%82%E8%80%83"><span class="octicon octicon-link"></span></a>参考</h2>
-<blockquote>
-<p><a href="https://learnku.com/articles/15176/laravel-implementation-of-kafka-message-push-and-receive-processing">https://learnku.com/articles/15176/laravel-implementation-of-kafka-message-push-and-receive-processing</a></p>
-</blockquote>
-
-
 			
+
+			 
+			<a href="16467056808644.html#more" class="more-link">Read on &rarr;</a>
+    		
 			
 		</div>
 
@@ -757,10 +323,7 @@ class ConsumerKafka extends Command
 		Xdebug配置</a></h1>
 		<div class="entry-content" itemprop="articleBody">
 			
-			<h2><a id="1%E8%83%8C%E6%99%AF" class="anchor" aria-hidden="true" href="#1%E8%83%8C%E6%99%AF"><span class="octicon octicon-link"></span></a>1.背景</h2>
-<p>在不使用xdebug调试代码时，遇到报错，有时需要在代码内主动打印，来定位问题。这样做效率慢，并且在调试完很容易漏删测试代码。为了提高排查问题效率，使用xdebug来调试代码问题，像idea调试java代码一样。下面介绍一下如何配置xdebug，实现远程调试php代码。<br />
-我的环境是使用的docker来部署的代码。在宿主机远程调试docker内的代码。</p>
-
+			
 
 			 
 			<a href="16370681631438.html#more" class="more-link">Read on &rarr;</a>
