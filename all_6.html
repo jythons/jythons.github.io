@@ -99,6 +99,8 @@
 						
 						  <li id=""><a target="_self" href="机器学习.html">机器学习</a></li>
 						
+						  <li id=""><a target="_self" href="大数据.html">大数据</a></li>
+						
 						</ul>
 					</nav>
 
@@ -131,6 +133,215 @@
 <div itemscope itemtype="http://schema.org/Blog">
 
 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2021-11-15T10:18:45+08:00" itemprop="datePublished">2021/11/15</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Sublime.html'>Sublime</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16369427253226.html" itemprop="url">
+		Sublime插件之ctags</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2><a id="%E7%AE%80%E4%BB%8B" class="anchor" aria-hidden="true" href="#%E7%AE%80%E4%BB%8B"><span class="octicon octicon-link"></span></a>简介</h2>
+<p>ctags插件用于实现代码跳转跟踪，用来调试代码。</p>
+<h2><a id="%E5%AE%89%E8%A3%85" class="anchor" aria-hidden="true" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h2>
+<p><strong>第一步：</strong><br />
+mac下安装：<code>brew install ctags</code></p>
+<p><strong>第二步：</strong><br />
+打开菜单在Preferences菜单中打开Package settings-&gt;ctags-&gt;settings-user和settings-default把default中的配置全部复制到user中，然后改一下command配置项，为ctags的可执行文件路径,即ctags路径</p>
+<p><strong>第三步：</strong><br />
+配置快捷键：配置在sublime中使用Ctrl+左键单击函数跳转、Ctrl+右键单击跳回函数调用位置
+复制以下代码到 Preferences-&gt;Package Settings-&gt;Ctags-&gt;Mouse Bindings-User</p>
+<pre><code class="language-json">[
+    {
+        &quot;button&quot;: &quot;button1&quot;,
+        &quot;count&quot;: 1,
+        &quot;press_command&quot;: &quot;drag_select&quot;,
+        &quot;modifiers&quot;: [&quot;ctrl&quot;],
+        &quot;command&quot;: &quot;navigate_to_definition&quot;
+    },
+    {
+        &quot;button&quot;: &quot;button2&quot;,
+        &quot;count&quot;: 1,
+        &quot;modifiers&quot;: [&quot;ctrl&quot;],
+        &quot;command&quot;: &quot;jump_prev&quot;
+    }
+]
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2021-10-28T11:06:10+08:00" itemprop="datePublished">2021/10/28</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Postman.html'>Postman</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16353903707629.html" itemprop="url">
+		POSTMAN自动获取laravel csrf</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2><a id="%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3" class="anchor" aria-hidden="true" href="#%E5%90%8E%E7%AB%AF%E6%8E%A5%E5%8F%A3"><span class="octicon octicon-link"></span></a>后端接口</h2>
+<pre><code>public function store(Request $request){
+    return Formater::ajaxReturn(0, 'success',['csrf_token'=&gt;csrf_token()]);
+}
+</code></pre>
+<h2><a id="%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC" class="anchor" aria-hidden="true" href="#%E9%A2%84%E5%A4%84%E7%90%86%E8%84%9A%E6%9C%AC"><span class="octicon octicon-link"></span></a>预处理脚本</h2>
+<pre><code>var host = pm.environment.get(&quot;URL&quot;);
+
+pm.sendRequest(host+&quot;/activity/zhenxing/store/41/z359Md3q&quot;, function (err, response) {
+    if (response.code === 200) {
+        console.log(response.json());
+        var res = response.json();
+        var csrf_token = res.data.csrf_token;
+
+        pm.environment.set(&quot;csrf_token&quot;, csrf_token);
+    }
+});
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2021-10-19T23:00:52+08:00" itemprop="datePublished">2021/10/19</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='%E6%AF%8F%E6%97%A5%E6%80%BB%E7%BB%93.html'>每日总结</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16346556525274.html" itemprop="url">
+		2021-10-19 企业微信授权：redirect_uri unauthorized</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>今天在调试企业微信授权的时候，在授权后获取用户信息的时候，报错:<code>Failed to get user openid:redirect_uri unauthorized</code></p>
+<p>官方显示该错误是因为回调地址域名，没有添加到可信域名当中。但是已经检查多次，已经添加了，又折腾了半天，在官网问答页面看到了相似的问题，官方回复说是获取access_token的secret不是获取用户信息的应用的，但是检查数据库内的secret，发现是正确的。</p>
+<p>后来猜测可能是缓存的数据没有变，改代码，临时关闭缓存，测试通过。</p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2021-10-14T16:48:03+08:00" itemprop="datePublished">2021/10/14</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Postman.html'>Postman</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16342012831501.html" itemprop="url">
+		POSTMAN自动生成签名</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<pre><code>pm.environment.set(&quot;timestamps&quot;, Math.floor(new Date().getTime() / 1000));
+var token = &quot;lBZXpB5uRw5M&quot;;
+var timestamps = pm.environment.get(&quot;timestamps&quot;);
+
+var data = request.data; //获取请求参数，转为json
+console.log(&quot;data:&quot;, data)
+var newdata = [];
+newdata.push({
+            name: 'timestamp',
+            value: timestamps
+        })
+for (var a in data) {
+    if (a !== 'sign' &amp;&amp; a !== 'timestamp') { //过滤掉sign参数，生成键值对象{name,value}
+        newdata.push({
+            name: a,
+            value: data[a]
+        })
+    }
+}
+//排序
+newdata.sort(function (a, b) {
+    return a.name === b.name ? 0 : a.name &gt; b.name ? 1 : -1
+});
+//拼接字符串
+for (var ar = [], i = 0; newdata.length &gt; i; i++) {
+    var key = newdata[i].name;
+    var val = newdata[i].value;
+    if(key == 'name'){
+        val = encodeURIComponent(newdata[i].value);
+    }
+    
+    key &amp;&amp; val &amp;&amp; ar.push(key + &quot;=&quot; + val)
+}
+
+str = ar.join(&quot;&amp;&quot;); //拼接字符串
+str = str+token
+// str = encodeURIComponent(str);
+console.log(str);
+
+str = CryptoJS.MD5(str).toString().toLowerCase(); //md5加密后转大写
+pm.environment.set(&quot;sign&quot;, str);  //把sign设置为环境变量
+console.log(str);
+
+
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2021-08-03T11:06:40+08:00" itemprop="datePublished">2021/08/03</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Mysql.html'>Mysql</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16279600005409.html" itemprop="url">
+		MYSQL表设计规范</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			
+
+			 
+			<a href="16279600005409.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
@@ -411,134 +622,6 @@ docker-php-ext-install zip
 
 			 
 			<a href="16120880849201.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2021-01-31T16:08:46+08:00" itemprop="datePublished">2021/01/31</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Shell.html'>Shell</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16120805268878.html" itemprop="url">
-		Docker 基本使用</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="16120805268878.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2021-01-26T23:24:24+08:00" itemprop="datePublished">2021/01/26</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='MQ.html'>MQ</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16116746644581.html" itemprop="url">
-		RabbitMQ安装</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="16116746644581.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2021-01-25T22:05:47+08:00" itemprop="datePublished">2021/01/25</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='MQ.html'>MQ</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16115835473812.html" itemprop="url">
-		RabbitMQ</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据，RabbitMQ是使用Erlang语言来编写的，并且RabbitMQ是基于AMQP协议的。</p>
-
-
-			 
-			<a href="16115835473812.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2021-01-24T23:40:29+08:00" itemprop="datePublished">2021/01/24</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='MQ.html'>MQ</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16115028294909.html" itemprop="url">
-		Kafka介绍与高性能分析</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>Kafka是LinkedIn开源的分布式消息系统，目前归属于Apache顶级项目，Kafka主要特点是基于Pull的模式来处理消息消费，追求高吞吐量，一开始的目的就是用于日志收集和传输。
-Kafka0.8版本开始支持复制，不支持事务，对消息的重复、丢失、错误没有严格要求，适合产生大量数据的互联网服务的数据收集业务。</p>
-
-
-			 
-			<a href="16115028294909.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2021-01-24T22:27:12+08:00" itemprop="datePublished">2021/01/24</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='MQ.html'>MQ</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16114984325290.html" itemprop="url">
-		RabbitMQ集群架构模型和原理解析</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="16114984325290.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>

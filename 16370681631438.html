@@ -99,6 +99,8 @@
 						
 						  <li id=""><a target="_self" href="机器学习.html">机器学习</a></li>
 						
+						  <li id=""><a target="_self" href="大数据.html">大数据</a></li>
+						
 						</ul>
 					</nav>
 
@@ -145,6 +147,8 @@
 <p>需要在本地和docker内先安装php的xdebug拓展，安装方法如下：<br />
 <strong>本地安装：</strong></p>
 <pre><code>pecl install xdebug
+# 因为下面的配置是基于xdebug3.*的，php7.*版本使用下面的命令，
+pecl install xdebug-3.1.6 
 </code></pre>
 <blockquote>
 <p>安装成功后，会自动配置带php.ini内，pecl在安装php环境的时候，会自动安装，如果没有添加到环境变量，可以去php的安装目录下：<code>/bin</code>文件夹下查找</p>
@@ -152,6 +156,8 @@
 <p><strong>docker安装：</strong></p>
 <pre><code>1.安装xdebug拓展
 pecl install xdebug
+# 因为下面的配置是基于xdebug3.*的，php7.*版本使用下面的命令，
+pecl install xdebug-3.1.6 
 
 2.为php开启xdebug插件
 docker-php-ext-enable xdebug

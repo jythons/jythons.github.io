@@ -99,6 +99,8 @@
 						
 						  <li id=""><a target="_self" href="机器学习.html">机器学习</a></li>
 						
+						  <li id=""><a target="_self" href="大数据.html">大数据</a></li>
+						
 						</ul>
 					</nav>
 
@@ -131,6 +133,146 @@
 <div itemscope itemtype="http://schema.org/Blog">
 
 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-02T23:50:52+08:00" itemprop="datePublished">2020/11/02</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16043322529866.html" itemprop="url">
+		搭建 LVS-DR 模式</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2><a id="%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8Eip%E7%BA%A6%E5%AE%9A" class="anchor" aria-hidden="true" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8Eip%E7%BA%A6%E5%AE%9A"><span class="octicon octicon-link"></span></a>服务器与 IP 约定</h2>
+<p><img src="media/16043322529866/%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8EIP%E7%BA%A6%E5%AE%9A.png" alt="服务器与IP约定" /></p>
+<p>首先需要有一个LVS，LVS需要有两个IP，分别是：DIP（Direct IP）和VIP (Virtual IP)；DIP就是内网IP，用于与内网上游服务器通信使用；VIP是虚拟IP，用于客户端交互使用。
+然后上游服务器Nginx，Nginx服务器需要配置两个IP，分别是：RIP（Real Server IP）和VIP (Virtual IP); RIP也是内网IP，VIP也是虚拟IP，用户的请求处理完毕，通过VIP返回给客户端；Nginx服务器的VIP要和LVS的虚拟IP保持一致。</p>
+
+
+			 
+			<a href="16043322529866.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-02T23:24:05+08:00" itemprop="datePublished">2020/11/02</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16043306453976.html" itemprop="url">
+		LVS的三种模式</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<blockquote>
+<p>NAT，基于网络地址转换；
+TUN，基于IP隧道的模式；
+DR，直接路由模式。</p>
+</blockquote>
+
+
+			 
+			<a href="16043306453976.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-02T00:40:05+08:00" itemprop="datePublished">2020/11/02</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='LVS.html'>LVS</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16042488055175.html" itemprop="url">
+		LVS简介</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>LVS (Linux Virtual Server)，linux虚拟服务，他是由章文嵩博士主导的开源的负载均衡项目，LVS（ipvs）被Linux系统默认集成到了Linux内核中；
+LVS也是一个负载均衡调度器，是一个四层的负载均衡（Nginx是7层的负载均衡，是在内容层对请求报文的负载均衡），四层负载均衡是一个基于IP+Port的负载均衡。
+<a href="http://www.linux-vs.org/index/html">官网地址</a></p>
+
+
+			 
+			<a href="16042488055175.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-01T23:59:24+08:00" itemprop="datePublished">2020/11/01</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16042463644403.html" itemprop="url">
+		Keepalived 双机热备原理</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>双机主备的缺点：如果在主节点比较稳定，一直没有问题的话，这时备用节点的服务器一直不使用，这样会造成成本开销加大。
+因此就要采用双机热备的策略，将备用节点利用起来，在没有问题时，备用节点用来做其他的事情。</p>
+
+
+			 
+			<a href="16042463644403.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-11-01T23:17:55+08:00" itemprop="datePublished">2020/11/01</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16042438752112.html" itemprop="url">
+		Keepalived配置Nginx自动重启</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>当主节点 Nginx 服务挂掉之后，Keepalived 还会继续挂在主节点上运行，这时请求网站时，网站是不能访问的，这时需要将 Nginx 重新启动，否则网站是不能访问的，如果 Nginx 不能再次启动，这时就需要将 Keepalived 主节点切换成备用节点。这时就需要写一个脚本，来实现这个功能。</p>
+
+
+			 
+			<a href="16042438752112.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
@@ -266,145 +408,6 @@
 
 			 
 			<a href="16038978992618.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-28T22:50:09+08:00" itemprop="datePublished">2020/10/28</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038966099434.html" itemprop="url">
-		负载均衡之url_hash</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>从字面上可以看出，他是基于URL的hash算法，根据URL获得的hash值将请求分配到不同的节点上
-<img src="media/16038966099434/URL-hash.png" alt="URL-hash" /></p>
-
-
-			 
-			<a href="16038966099434.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-27T23:53:01+08:00" itemprop="datePublished">2020/10/27</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038139816578.html" itemprop="url">
-		负载均衡之ip_hash</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>##hash算法</p>
-<blockquote>
-<p>hash(ip) % node_counts = index
-通过对客户端IP进行哈希然后根据上方公式分配到对应的服务器处理，之后的每次请求，只要客户端的IP没有变化，所有的请求都会请求到这台服务器上。
-由于nginx的ip_hash算法是根据IP的前三个数值进行的hash，所以内网使用时，只会访问同一台服务器上。如果有人进行不正当的大量请求，这时所有的请求都会转发到同一台服务器上，这时会造成这台服务器的负载升高。
-当使用ip_hash的方式进行负载均衡时，如果要临时移除一台服务器时，不能直接将这个server删除，要将这要服务器标记为down。
-该算法，在增加或减少节点时，都需要重新计算。</p>
-</blockquote>
-
-
-			 
-			<a href="16038139816578.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-27T23:50:35+08:00" itemprop="datePublished">2020/10/27</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Shell.html'>Shell</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038138353128.html" itemprop="url">
-		shell编程</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>总结一下shell编程的语法规则以及注意事项。</p>
-
-
-			 
-			<a href="16038138353128.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-27T23:32:53+08:00" itemprop="datePublished">2020/10/27</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16038127730075.html" itemprop="url">
-		一致性哈希算法</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<blockquote>
-<p>根据hash算法，对服务器节点进行hsah，然后放到一个顺时针闭环上，当用户访问时，通过hash，顺时针找到距离他最近的节点</p>
-</blockquote>
-
-
-			 
-			<a href="16038127730075.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-10-20T23:06:36+08:00" itemprop="datePublished">2020/10/20</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='nginx.html'>nginx</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16032063964658.html" itemprop="url">
-		Nginx Tomcat集群搭建</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="16032063964658.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>
