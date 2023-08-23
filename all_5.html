@@ -136,6 +136,90 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2022-03-09T17:46:17+08:00" itemprop="datePublished">2022/03/09</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Mysql.html'>Mysql</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16468191777738.html" itemprop="url">
+		Ubuntu 18.04 Mysql每次访问需要加sudo的问题</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2><a id="1%E4%BF%AE%E6%94%B9-root%E7%94%A8%E6%88%B7" class="anchor" aria-hidden="true" href="#1%E4%BF%AE%E6%94%B9-root%E7%94%A8%E6%88%B7"><span class="octicon octicon-link"></span></a>1.修改root用户</h2>
+<pre><code class="language-sql">mysql&gt; use mysql;
+mysql&gt; select User,Host,plugin from user;
+</code></pre>
+<p>查看root用户权限，是否是<code>mysql_native_password</code>，如果不是，则将<code>auth_sock</code>改为<code>mysql_native_password</code></p>
+<pre><code class="language-sql">mysql&gt; update user set plugin='mysql_native_password' where user='root'; 
+</code></pre>
+<p>或者习性下面语句，这样就不需要执行第二步的内容了</p>
+<pre><code class="language-sql">ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+</code></pre>
+<h2><a id="2%E4%BF%AE%E6%94%B9%E6%88%96%E8%80%85%E8%AE%BE%E7%BD%AE-root%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81" class="anchor" aria-hidden="true" href="#2%E4%BF%AE%E6%94%B9%E6%88%96%E8%80%85%E8%AE%BE%E7%BD%AE-root%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81"><span class="octicon octicon-link"></span></a>2.修改或者设置root用户密码</h2>
+<p>首先用debian-sys-maint登录，密码在/etc/mysql/debian.cnf文件</p>
+<pre><code class="language-sql">mysql&gt; mysql -u debian-sys-maint -p
+</code></pre>
+<p>然后修改root密码（密码可与之前的一样）：</p>
+<pre><code class="language-sql">mysql&gt; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456';
+</code></pre>
+<p>然后，quit;退出。</p>
+<p>经过这两步之后便可以使用 mysql -u root -p登录 Mysql， 不需要带上sudo.</p>
+<h2><a id="%E5%8F%82%E8%80%83" class="anchor" aria-hidden="true" href="#%E5%8F%82%E8%80%83"><span class="octicon octicon-link"></span></a>参考</h2>
+<p><a href="https://blog.csdn.net/zlf1227/article/details/91808443?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-0.pc_relevant_antiscan_v2&amp;spm=1001.2101.3001.4242.1&amp;utm_relevant_index=3">Ubuntu 18.04 Mysql每次访问需要加sudo的问题</a></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2022-03-09T16:38:47+08:00" itemprop="datePublished">2022/03/09</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Mysql.html'>Mysql</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16468151277290.html" itemprop="url">
+		Mysql免密登录</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>解决方法：</p>
+<pre><code>sudo vim /etc/mysql/my.cnf
+</code></pre>
+<p>添加：</p>
+<pre><code>[mysqld]
+skip-grant-tables
+</code></pre>
+<p>保存，退出。
+然后执行以下两条命令来重启mysql服务：</p>
+<pre><code>service mysqld stop
+service mysqld start
+</code></pre>
+<p>或者直接执行重启服务的命令:</p>
+<pre><code>service mysqld restart
+</code></pre>
+<p>重启完以后，上面对配置的修改才正式生效，这时候再登录就不用加sudo了。</p>
+<p>原文链接：<a href="https://blog.csdn.net/BigData_Mining/article/details/107318193">https://blog.csdn.net/BigData_Mining/article/details/107318193</a></p>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2022-03-09T14:29:52+08:00" itemprop="datePublished">2022/03/09</time>
 			</div>
 			<div class="tags">posted in 
@@ -381,62 +465,6 @@ $ export EDITOR</p>
 
 			 
 			<a href="16415257910695.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2021-12-15T14:30:00+08:00" itemprop="datePublished">2021/12/15</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ClickHouse.html'>ClickHouse</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16395498007523.html" itemprop="url">
-		ClickHouse日常使用记录</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2><a id="%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E8%AF%AD%E5%8F%A5" class="anchor" aria-hidden="true" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C%E8%AF%AD%E5%8F%A5"><span class="octicon octicon-link"></span></a>基本操作语句</h2>
-<h3><a id="%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93" class="anchor" aria-hidden="true" href="#%E5%AF%BC%E5%85%A5%E6%96%87%E4%BB%B6%E6%95%B0%E6%8D%AE%E5%88%B0%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="octicon octicon-link"></span></a>导入文件数据到数据库</h3>
-<pre><code>clickhouse-client --port=9002 --query &quot;INSERT INTO tutorial.visits_v1 FORMAT TSV&quot; --max_insert_block_size=100000 &lt; ./visits_v1.tsv
-</code></pre>
-<blockquote>
-<p>--port：指定端口<br />
---query：查询语句</p>
-</blockquote>
-
-
-			
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2021-11-16T21:09:23+08:00" itemprop="datePublished">2021/11/16</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='PHP.html'>PHP</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16370681631438.html" itemprop="url">
-		Xdebug配置</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="16370681631438.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>

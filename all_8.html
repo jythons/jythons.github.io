@@ -136,6 +136,62 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2021-01-23T15:09:07+08:00" itemprop="datePublished">2021/01/23</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Shell.html'>Shell</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16113857471276.html" itemprop="url">
+		常用命令</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2><a id="%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E5%8E%BB%E9%99%A4%E6%B3%A8%E9%87%8A" class="anchor" aria-hidden="true" href="#%E8%BE%93%E5%87%BA%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E5%8E%BB%E9%99%A4%E6%B3%A8%E9%87%8A"><span class="octicon octicon-link"></span></a>输出文件内容去除注释</h2>
+<pre><code>more file.conf | grep ^[^#]
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2021-01-22T23:04:47+08:00" itemprop="datePublished">2021/01/22</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ES.html'>ES</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16113278876159.html" itemprop="url">
+		ES集群</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<h2><a id="1%E9%9B%86%E7%BE%A4%E7%9A%84%E6%A6%82%E5%BF%B5" class="anchor" aria-hidden="true" href="#1%E9%9B%86%E7%BE%A4%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="octicon octicon-link"></span></a>1 集群的概念</h2>
+<blockquote>
+<p>ES 集群中主分片和副本分片是不能放到同一个服务器中的。这样可以保证主分片挂掉之后，数据依然可用。</p>
+</blockquote>
+<p><img src="media/16113278876159/ES%E9%9B%86%E7%BE%A4%E6%A6%82%E5%BF%B5.png" alt="ES集群概念" /></p>
+
+
+			 
+			<a href="16113278876159.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2021-01-20T22:37:34+08:00" itemprop="datePublished">2021/01/20</time>
 			</div>
 			<div class="tags">posted in 
@@ -340,69 +396,6 @@ ES 本身不支持中文的分词</p>
 			 
 			<a href="16090525942611.html#more" class="more-link">Read on &rarr;</a>
     		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-12-10T22:37:20+08:00" itemprop="datePublished">2020/12/10</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='ES.html'>ES</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16076110407363.html" itemprop="url">
-		Elasticsearch原理</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			
-
-			 
-			<a href="16076110407363.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-12-07T23:25:19+08:00" itemprop="datePublished">2020/12/07</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Java.html'>Java</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16073547198404.html" itemprop="url">
-		SpringBoot使用模版</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<p>SpringBoot使用html模版，Controller需要使用注解：@Controller</p>
-<h2><a id="pom%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#pom%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>pom配置</h2>
-<pre><code>&lt;dependency&gt;
-	  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-	  &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
-<h2><a id="yml%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#yml%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>yml配置</h2>
-<pre><code>spring:
-    thymeleaf:
-    mode: HTML
-    encoding: UTF-8
-    prefix: classpath:/templates/
-    suffix: .html
-</code></pre>
-
-
-			
 			
 		</div>
 

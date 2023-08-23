@@ -136,6 +136,69 @@
 	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 		<div class="meta">
 			<div class="date">
+				<time datetime="2020-12-10T22:37:20+08:00" itemprop="datePublished">2020/12/10</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='ES.html'>ES</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16076110407363.html" itemprop="url">
+		Elasticsearch原理</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			
+
+			 
+			<a href="16076110407363.html#more" class="more-link">Read on &rarr;</a>
+    		
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
+				<time datetime="2020-12-07T23:25:19+08:00" itemprop="datePublished">2020/12/07</time>
+			</div>
+			<div class="tags">posted in 
+			
+			    <a class='category' href='Java.html'>Java</a>&nbsp;
+			 
+			</div>
+		</div>
+		<h1 class="title" itemprop="name"><a href="16073547198404.html" itemprop="url">
+		SpringBoot使用模版</a></h1>
+		<div class="entry-content" itemprop="articleBody">
+			
+			<p>SpringBoot使用html模版，Controller需要使用注解：@Controller</p>
+<h2><a id="pom%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#pom%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>pom配置</h2>
+<pre><code>&lt;dependency&gt;
+	  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+	  &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2><a id="yml%E9%85%8D%E7%BD%AE" class="anchor" aria-hidden="true" href="#yml%E9%85%8D%E7%BD%AE"><span class="octicon octicon-link"></span></a>yml配置</h2>
+<pre><code>spring:
+    thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+</code></pre>
+
+
+			
+			
+		</div>
+
+	</article>
+ 
+	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+		<div class="meta">
+			<div class="date">
 				<time datetime="2020-12-07T22:38:45+08:00" itemprop="datePublished">2020/12/07</time>
 			</div>
 			<div class="tags">posted in 
@@ -369,64 +432,6 @@ appendfilename &quot;appendonly.aof&quot;
 
 			 
 			<a href="16062286652893.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-23T23:53:25+08:00" itemprop="datePublished">2020/11/23</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16061468058717.html" itemprop="url">
-		Redis 缓存过期机制</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<ul>
-<li>（主动）定期删除</li>
-<li>（被动）惰性删除</li>
-</ul>
-
-
-			 
-			<a href="16061468058717.html#more" class="more-link">Read on &rarr;</a>
-    		
-			
-		</div>
-
-	</article>
- 
-	<article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-		<div class="meta">
-			<div class="date">
-				<time datetime="2020-11-18T23:32:18+08:00" itemprop="datePublished">2020/11/18</time>
-			</div>
-			<div class="tags">posted in 
-			
-			    <a class='category' href='Redis.html'>Redis</a>&nbsp;
-			 
-			</div>
-		</div>
-		<h1 class="title" itemprop="name"><a href="16057135385527.html" itemprop="url">
-		Redis 主从复制原理</a></h1>
-		<div class="entry-content" itemprop="articleBody">
-			
-			<h2><a id="%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84" class="anchor" aria-hidden="true" href="#%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84"><span class="octicon octicon-link"></span></a>主从架构</h2>
-<p>单机单个节点，redis并发支持上万，但是随着业务的复杂度，redis的并发度还是会有上限的。因此还是需要在架构上进行优化。
-主从架构是一种水平横向拓展的架构，读写分离。 主节点负责数据的写入，从节点负责读操作。
-<img src="media/16057135385527/redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84.png" alt="redis主从架构" /></p>
-
-
-			 
-			<a href="16057135385527.html#more" class="more-link">Read on &rarr;</a>
     		
 			
 		</div>
